@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "891366340844",
+    "firebase_url": "https://vieclamphothong.firebaseio.com",
+    "project_id": "vieclamphothong",
+    "storage_bucket": "vieclamphothong.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:891366340844:android:58151b61f22b3170d58dc9",
+        "android_client_info": {
+          "package_name": "com.vieclam.phothong"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "891366340844-nd03forg6l0felkoqkn418nidrv7upk6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vieclam.phothong",
+            "certificate_hash": "ef689e7e5864cb254d70f37e9fae9edff5a3eb15"
+          }
+        },
+        {
+          "client_id": "891366340844-kniiprc17ksqui534mk6are8ckpqjogj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNfbPMKC5PME-Rek3wMzE61dBSV-xwaMk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "891366340844-kniiprc17ksqui534mk6are8ckpqjogj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "891366340844-0nu00e4r1barpn7nqnlrvln433fsbgrr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.vieclam.phothong"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
