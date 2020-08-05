@@ -49,7 +49,11 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Vui lòng bật location</string>
+	<string>Vui lòng bật định vị</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Vui lòng bật định vị</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Vui lòng bật định vị</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>

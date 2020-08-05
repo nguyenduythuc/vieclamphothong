@@ -1,5 +1,6 @@
 import React from 'react';
 import {SafeAreaView, View, Text, StyleSheet} from 'react-native';
+import {useSelector} from 'react-redux';
 import {ListItem, Icon} from 'react-native-elements';
 
 const list = [
@@ -29,9 +30,13 @@ const list = [
   },
 ];
 const AccountScreen = ({navigation}) => {
+  const user = useSelector((state) => state.user);
+
   function onSelectedItem(screen) {
     navigation.navigate(screen);
   }
+
+  console.log(user);
 
   return (
     <SafeAreaView>

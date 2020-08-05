@@ -11,6 +11,7 @@ import {SafeAreaView, StyleSheet, View, Text, Dimensions} from 'react-native';
 import {Card, SearchBar, Icon, Divider} from 'react-native-elements';
 import {JobItem} from '../components';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import Geolocation from '@react-native-community/geolocation';
 import Carousel from 'react-native-snap-carousel';
 
 const ENTRIES1 = [
@@ -65,27 +66,26 @@ const ENTRIES1 = [
     range: '1',
   },
 ];
+
 const HomeScreen = ({navigation}) => {
   const [entries, setEntries] = useState([]);
   const [search, setSearch] = useState('');
+  const [currentPosition, setCurentPosition] = useState({
+    latitude: 21.036419,
+    longitude: 105.80353,
+    latitudeDelta: 0.015,
+    longitudeDelta: 0.0121,
+  });
   const carouselRef = useRef(null);
   useEffect(() => {
     setEntries(ENTRIES1);
-  }, []);
-  useEffect(() => {
-    // this.watchID = navigator.geolocation.watchPosition(
-    //   (position) => {
-    //     // Create the object to update this.state.mapRegion through the onRegionChange function
-    //     let region = {
-    //       latitude: position.coords.latitude,
-    //       longitude: position.coords.longitude,
-    //       latitudeDelta: 0.00922 * 1.5,
-    //       longitudeDelta: 0.00421 * 1.5,
-    //     };
-    //     this.onRegionChange(region, region.latitude, region.longitude);
-    //   },
-    //   (error) => console.log(error),
-    // );
+
+    // Geolocation.getCurrentPosition((info) => {
+    //   const newPosition = {...currentPosition};
+    //   newPosition.latitude = info.coords.latitude;
+    //   newPosition.longitude = info.coords.longitude;
+    //   setCurentPosition(newPosition);
+    // });
   }, []);
 
   const onSearch = useCallback((text) => {
@@ -125,12 +125,7 @@ const HomeScreen = ({navigation}) => {
         <MapView
           provider={PROVIDER_GOOGLE} // remove if not using Google Maps
           style={styles.map}
-          region={{
-            latitude: 37.78825,
-            longitude: -122.4324,
-            latitudeDelta: 0.015,
-            longitudeDelta: 0.0121,
-          }}
+          region={currentPosition}
         />
         <Carousel
           ref={carouselRef}

@@ -1,0 +1,109 @@
+import qs from 'querystringify';
+
+const baseUrl = 'https://s-job.vn';
+
+let HEADERS = {
+  Accept: 'application/json',
+  'Content-Type': 'application/json',
+  'x-client-app-code': 'timviecphothong',
+};
+
+const onResponse = async (request, result) => {
+  try {
+    console.log('request :', request);
+    const body = await result.text();
+    const newBody = JSON.parse(body);
+    // Response is json but not a successful response
+    if (result.status !== 200) {
+      const exception = {
+        exception: newBody,
+        type: 'object',
+      };
+      throw exception;
+    }
+
+    // SUCCESS: Return valid response
+    return newBody;
+  } catch (e) {
+    if (e?.type === 'object') {
+      throw e;
+    }
+    // console.log(result.status, result._bodyText); // uncomment this line if unexpected error occured
+    // SUCCESS: when response is {} and status 200 but parsing JSON failed. Still is success response
+    if (result.status === 200) {
+      return result;
+    }
+    // // FAILED: Throw unknown exceptions
+    const exception = {
+      exception: result,
+      type: 'raw',
+    };
+    throw exception;
+  }
+};
+
+const config = {
+  post: (endpoint: string, params: Object) => {
+    const url = baseUrl + endpoint;
+    const options = {
+      method: 'POST',
+      body: JSON.stringify(params),
+      headers: HEADERS,
+    };
+    const request = {
+      url,
+      options,
+    };
+
+    return fetch(url, options).then((result) => onResponse(request, result));
+  },
+
+  get: (endpoint: string, params: Object = {}) => {
+    const url = `${baseUrl}${endpoint}${qs.stringify(params, true)}`;
+    const options = {
+      method: 'GET',
+      headers: HEADERS,
+    };
+    const request = {
+      url,
+      options,
+    };
+    return fetch(url, options).then((result) => onResponse(request, result));
+  },
+
+  put: (endpoint: string, params: Object) => {
+    const url = baseUrl + endpoint;
+    const options = {
+      method: 'PUT',
+      headers: HEADERS,
+      body: JSON.stringify(params),
+    };
+    const request = {
+      url,
+      options,
+    };
+    return fetch(url, options).then((result) => onResponse(request, result));
+  },
+
+  delete: (endpoint: string, params: Object) => {
+    const url = `${baseUrl}${endpoint}${qs.stringify(params, true)}`;
+    const options = {
+      method: 'DELETE',
+      headers: HEADERS,
+    };
+    const request = {
+      url,
+      options,
+    };
+    return fetch(url, options).then((result) => onResponse(request, result));
+  },
+};
+
+const setToken = (_token: string) => {
+  HEADERS = {
+    ...HEADERS,
+    Authorization: `Bearer ${_token}`,
+  };
+};
+
+export {config, setToken};
