@@ -3,12 +3,13 @@ import {SafeAreaView, StyleSheet, View, Image, Text} from 'react-native';
 import {Input, Button} from 'react-native-elements';
 import DeviceInfo from 'react-native-device-info';
 
-const bg = require('../assets/bg2.png');
+const bg = require('../assets/bg1.png');
 const RegisterScreen = ({route, navigation}) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [fullname, setFullname] = useState('');
   const [password, setPassword] = useState('');
   const [passwordValidated, setPasswordValidated] = useState(false);
+  const logo = require('../assets/logo-transparent.png');
 
   const onTypingPhoneNumber = useCallback((text) => setPhoneNumber(text), []);
   const onTypingFullname = useCallback((text) => setFullname(text), []);
@@ -47,6 +48,7 @@ const RegisterScreen = ({route, navigation}) => {
     <>
       <Image source={bg} style={styles.bgImage} />
       <SafeAreaView style={styles.container}>
+        <Image source={logo} style={styles.logoImage} />
         <View style={styles.loginForm}>
           <Input
             inputStyle={styles.inputStyle}
@@ -59,7 +61,7 @@ const RegisterScreen = ({route, navigation}) => {
             inputStyle={styles.inputStyle}
             inputContainerStyle={styles.inputContainerStyle}
             onChangeText={onTypingPassword}
-            placeholder="Mật khẩu"
+            placeholder="Mật khẩu (6 số)"
             placeholderTextColor="white"
             secureTextEntry
           />
@@ -151,6 +153,11 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
     color: 'white',
     textAlign: 'left',
+  },
+  logoImage: {
+    width: 130,
+    height: 130,
+    marginBottom: 60,
   },
 });
 

@@ -8,7 +8,7 @@ import {useDispatch} from 'react-redux';
 import {AuthApi} from '../api';
 import {actions} from '../app-redux';
 
-const bg = require('../assets/bg2.png');
+const bg = require('../assets/bg1.png');
 const logo = require('../assets/logo-transparent.png');
 const LoginScreen = ({navigation}) => {
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -73,7 +73,7 @@ const LoginScreen = ({navigation}) => {
             </>
           )}
           <View style={styles.otpAndPasswordButton}>
-            <Button
+            {/* <Button
               title="Gửi mã OTP"
               titleStyle={styles.sendOTP}
               type="clear"
@@ -82,7 +82,7 @@ const LoginScreen = ({navigation}) => {
               title="Quên mật khẩu?"
               titleStyle={styles.sendOTP}
               type="clear"
-            />
+            /> */}
           </View>
           <Button
             style={styles.buttonLoginWrapper}
@@ -92,9 +92,16 @@ const LoginScreen = ({navigation}) => {
             title="Đăng nhập"
             type="outline"
           />
+          <View style={styles.otpAndPasswordButton}>
+            <Button
+              title="Quên mật khẩu?"
+              titleStyle={styles.sendOTP}
+              type="clear"
+            />
+          </View>
         </View>
         <View style={styles.registerWrapper}>
-          <Text style={styles.registerText}>Chưa có tài khoản?</Text>
+          <Text style={styles.registerText}>Bạn chưa có tài khoản?</Text>
           <Button
             titleStyle={styles.register}
             onPress={onRegister}
@@ -119,6 +126,7 @@ const styles = StyleSheet.create({
   logoImage: {
     width: 130,
     height: 130,
+    marginTop: 30,
   },
   logo: {
     paddingTop: 30,
@@ -137,16 +145,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
     paddingVertical: 10,
     borderRadius: 25,
+    fontSize: 24,
   },
   otpAndPasswordButton: {
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     flexDirection: 'row',
     width: '100%',
     paddingHorizontal: 20,
     marginTop: 20,
     marginBottom: 40,
   },
-  buttonLoginColor: {color: 'rgb(38,76,193)'},
+  buttonLoginColor: {color: 'rgb(38,76,193)', fontSize: 20},
   sendOTP: {
     color: 'white',
     marginBottom: 10,
@@ -156,6 +165,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     fontSize: 20,
+    textDecorationLine: 'underline',
   },
   mask: {
     width: 20,

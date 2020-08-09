@@ -4,7 +4,7 @@ import {Button} from 'react-native-elements';
 import {useDispatch} from 'react-redux';
 import {actions} from '../app-redux';
 
-const bg = require('../assets/bg2.png');
+const bg = require('../assets/bg1.png');
 const logo = require('../assets/logo-transparent.png');
 function navigateToLogin(type, dispatch, navigation) {
   dispatch(actions.user.saveUserType(type));
