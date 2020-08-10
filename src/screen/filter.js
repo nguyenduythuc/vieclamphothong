@@ -162,7 +162,7 @@ const Filter = () => {
     [checkBoxExperience],
   );
 
-  //checkbox group
+  //checkbox grou
   const [checkBoxSalary, setCheckBoxSalary] = useState(false);
   const [checkBoxSalaryList, setCheckBoxSalaryList] = useState([]);
   const listIdsSalary = salaryList.map((item) => item.id);
