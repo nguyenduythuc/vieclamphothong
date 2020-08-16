@@ -422,7 +422,7 @@ const Filter = () => {
             <Button
               title="Xóa tùy chọn"
               buttonStyle={styles.btnDeleteOptions}
-              type="outline"
+              type="clear"
               titleStyle={{color: '#4a5568'}}
               onPress={() => {}}
             />
@@ -431,7 +431,7 @@ const Filter = () => {
             <Button
               title="Xem kết quả"
               buttonStyle={styles.btnViewResult}
-              type="outline"
+              type="clear"
               titleStyle={{color: 'white'}}
               onPress={() => {}}
             />

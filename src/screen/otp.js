@@ -16,6 +16,7 @@ const OTPScreen = ({navigation, route}) => {
   useEffect(() => {
     async function getOTPCode() {
       try {
+        auth().languageCode = 'vi';
         const firebasePhonenumber = phoneNumber.replace('0', '+84');
         const confirmation = await auth().signInWithPhoneNumber(
           firebasePhonenumber,

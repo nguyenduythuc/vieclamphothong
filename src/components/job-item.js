@@ -8,12 +8,12 @@
 
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import {Card, Divider} from 'react-native-elements';
+import {Card, Divider, Button} from 'react-native-elements';
 
-const JobItem = ({item}) => {
+const JobItem = ({item, isButton, isSeen}) => {
   return (
     <Card containerStyle={styles.cardContainer}>
-      <Text style={styles.title} numberOfLines={2}>
+      <Text style={isSeen ? styles.titleSeen : styles.title} numberOfLines={2}>
         {item.title}
       </Text>
       <View style={styles.row}>
@@ -25,11 +25,33 @@ const JobItem = ({item}) => {
         <Text>{`Còn ${item.timeLeft} ngày`}</Text>
       </View>
       <Divider style={styles.divider} />
-      <Text style={styles.title} numberOfLines={2}>
+      <Text style={styles.title2} numberOfLines={2}>
         {item.company}
       </Text>
       <Text style={styles.marginBottom}>{item.address}</Text>
       <Text>{`Cách bạn: ${item.range}km`}</Text>
+      {isButton && (
+        <View style={styles.btnFooter}>
+          <View style={styles.col}>
+            <Button
+              title="Ứng tuyển"
+              buttonStyle={styles.btnDeleteOptions}
+              type="outline"
+              titleStyle={{color: '#4a5568'}}
+              onPress={() => {}}
+            />
+          </View>
+          <View style={styles.col}>
+            <Button
+              title="Lưu"
+              buttonStyle={styles.btnViewResult}
+              type="outline"
+              titleStyle={{color: 'white'}}
+              onPress={() => {}}
+            />
+          </View>
+        </View>
+      )}
     </Card>
   );
 };
@@ -41,6 +63,16 @@ const styles = StyleSheet.create({
   },
   title: {
     marginBottom: 10,
+    color: '#3182ce',
+    fontSize: 20,
+  },
+  titleSeen: {
+    marginBottom: 10,
+    color: 'grey',
+    fontSize: 20,
+  },
+  title2: {
+    marginBottom: 10,
   },
   row: {
     width: '100%',
@@ -50,6 +82,20 @@ const styles = StyleSheet.create({
   },
   divider: {backgroundColor: 'grey', marginBottom: 10},
   marginBottom: {marginBottom: 10},
+  btnFooter: {
+    marginTop: 15,
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    flexWrap: 'wrap',
+  },
+  btnDeleteOptions: {
+    backgroundColor: '#fed7d7',
+  },
+  btnViewResult: {
+    backgroundColor: '#48bb78',
+  },
 });
 
 export default JobItem;
