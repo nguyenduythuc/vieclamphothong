@@ -8,6 +8,8 @@ import TOSScreen from '../screen/tos';
 import FilterScreen from '../screen/filter';
 import ListJobs from '../screen/list-jobs';
 import ListSeenJobs from '../screen/list-seen-jobs';
+import ListSavedJobs from '../screen/list-saved-jobs';
+import ListAppliedJobs from '../screen/list-applied-jobs';
 import HomeTabNavigator from './home-tab-navigator';
 
 const Stack = createStackNavigator();
@@ -16,9 +18,9 @@ export default function Route() {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="ListSeenJobs"
-        component={ListSeenJobs}
-        options={{title: 'Danh sách công việc đã xem'}}
+        name="ListAppliedJobs"
+        component={ListAppliedJobs}
+        options={{title: 'Công việc đã ứng tuyển'}}
       />
       <Stack.Screen
         name="Welcome"
@@ -59,6 +61,16 @@ export default function Route() {
         name="ListJob"
         component={ListJobs}
         options={{title: 'Danh sách công việc'}}
+      />
+      <Stack.Screen
+        name="ListSeenJobs"
+        component={ListSeenJobs}
+        options={{title: 'Danh sách công việc đã xem'}}
+      />
+      <Stack.Screen
+        name="ListSavedJobs"
+        component={ListSavedJobs}
+        options={{title: 'Công việc đã lưu'}}
       />
     </Stack.Navigator>
   );

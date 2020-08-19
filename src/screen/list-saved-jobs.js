@@ -8,7 +8,15 @@
  */
 
 import React, {useState, useCallback, useEffect} from 'react';
-import {SafeAreaView, ScrollView, View, Text, StyleSheet} from 'react-native';
+import {
+  SafeAreaView,
+  ScrollView,
+  View,
+  Text,
+  StyleSheet,
+  Button,
+} from 'react-native';
+import Modal from 'react-native-modal';
 import {Icon} from 'react-native-elements';
 import {JobItem} from '../components';
 
@@ -65,13 +73,18 @@ const ENTRIES1 = [
   },
 ];
 
-const ListSeenJobs = ({navigation}) => {
+const ListSavedJobs = ({navigation}) => {
   const [entries, setEntries] = useState([]);
+  const [isModalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     console.log('didmount');
     setEntries(ENTRIES1);
   }, []);
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
 
   const onFilter = useCallback(() => {
     navigation.navigate('Filter');
@@ -89,17 +102,33 @@ const ListSeenJobs = ({navigation}) => {
               type="antdesign"
               color="#517fa4"
             />
-            <Icon name="sc-telegram" type="evilicon" color="#517fa4" />
+            <Icon
+              name="sort-descending"
+              type="material-community"
+              color="#517fa4"
+              onPress={toggleModal}
+            />
           </View>
         </View>
         <View style={styles.hairLine} />
         <View style={styles.row}>
           <View style={styles.item}>
             {entries.map((item, idx) => (
-              <JobItem item={item} isSeen />
+              <JobItem item={item} isSaved />
             ))}
           </View>
         </View>
+        <Modal
+          isVisible={isModalVisible}
+          onSwipeComplete={toggleModal}
+          onBackdropPress={toggleModal}
+          swipeDirection={['up', 'left', 'right', 'down']}
+          style={styles.modalWrapper}>
+          <View style={styles.view}>
+            <Text>Hello!</Text>
+            <Button title="Hide modal" onPress={toggleModal} />
+          </View>
+        </Modal>
       </ScrollView>
     </SafeAreaView>
   );
@@ -127,6 +156,16 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     marginBottom: 10,
   },
+  modalWrapper: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    // margin: 30,
+  },
+  view: {
+    // justifyContent: 'flex-end',
+    // margin: 0,
+    backgroundColor: 'white',
+  },
 });
 
-export default ListSeenJobs;
+export default ListSavedJobs;

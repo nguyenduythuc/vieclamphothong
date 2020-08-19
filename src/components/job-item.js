@@ -8,14 +8,24 @@
 
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import {Card, Divider, Button} from 'react-native-elements';
+import {Card, Divider, Button, Icon} from 'react-native-elements';
 
-const JobItem = ({item, isButton, isSeen}) => {
+const JobItem = ({item, isList, isSeen, isSaved, isApplied}) => {
   return (
     <Card containerStyle={styles.cardContainer}>
-      <Text style={isSeen ? styles.titleSeen : styles.title} numberOfLines={2}>
-        {item.title}
-      </Text>
+      <View style={styles.cardHeader}>
+        <Text
+          style={isSeen ? styles.titleSeen : styles.title}
+          numberOfLines={2}>
+          {item.title}
+        </Text>
+        <Icon
+          name="delete-forever-outline"
+          type="material-community"
+          color="red"
+          style={styles.iconDelete}
+        />
+      </View>
       <View style={styles.row}>
         <Text>{`Lương: ${item.salary}`}</Text>
         <Text>{`Số lượng: ${item.quantity}`}</Text>
@@ -30,8 +40,17 @@ const JobItem = ({item, isButton, isSeen}) => {
       </Text>
       <Text style={styles.marginBottom}>{item.address}</Text>
       <Text>{`Cách bạn: ${item.range}km`}</Text>
-      {isButton && (
-        <View style={styles.btnFooter}>
+      {isApplied && (
+        <View>
+          <Divider style={styles.divider} />
+          <Text style={styles.status} numberOfLines={2}>
+            {`Tình trạng: ${item.status}`}
+          </Text>
+          <Text style={styles.time}>{`Đã nộp: ${item.time} ngày trước`}</Text>
+        </View>
+      )}
+      <View style={styles.btnFooter}>
+        {(isSaved || isList || isSeen) && (
           <View style={styles.col}>
             <Button
               title="Ứng tuyển"
@@ -41,6 +60,8 @@ const JobItem = ({item, isButton, isSeen}) => {
               onPress={() => {}}
             />
           </View>
+        )}
+        {(isSeen || isList) && (
           <View style={styles.col}>
             <Button
               title="Lưu"
@@ -50,8 +71,8 @@ const JobItem = ({item, isButton, isSeen}) => {
               onPress={() => {}}
             />
           </View>
-        </View>
-      )}
+        )}
+      </View>
     </Card>
   );
 };
@@ -65,11 +86,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     color: '#3182ce',
     fontSize: 20,
+    // width: '90%',
   },
   titleSeen: {
     marginBottom: 10,
     color: 'grey',
     fontSize: 20,
+    // width: '90%',
   },
   title2: {
     marginBottom: 10,
@@ -95,6 +118,20 @@ const styles = StyleSheet.create({
   },
   btnViewResult: {
     backgroundColor: '#48bb78',
+  },
+  cardHeader: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  iconDelete: {
+    color: 'red',
+  },
+  status: {
+    color: 'purple',
+  },
+  time: {
+    fontStyle: 'italic',
   },
 });
 

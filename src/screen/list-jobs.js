@@ -96,7 +96,7 @@ const ListJobs = ({navigation}) => {
         <View style={styles.row}>
           <View style={styles.item}>
             {entries.map((item, idx) => (
-              <JobItem item={item} isButton />
+              <JobItem item={item} isList />
             ))}
           </View>
         </View>
