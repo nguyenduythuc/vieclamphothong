@@ -10,6 +10,8 @@ import ListJobs from '../screen/list-jobs';
 import ListSeenJobs from '../screen/list-seen-jobs';
 import ListSavedJobs from '../screen/list-saved-jobs';
 import ListAppliedJobs from '../screen/list-applied-jobs';
+import InterviewLetter from '../screen/interview-letter';
+import Profile from '../screen/profile';
 import HomeTabNavigator from './home-tab-navigator';
 
 const Stack = createStackNavigator();
@@ -18,9 +20,9 @@ export default function Route() {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="ListAppliedJobs"
-        component={ListAppliedJobs}
-        options={{title: 'Công việc đã ứng tuyển'}}
+        name="Profile"
+        component={Profile}
+        options={{title: 'Hồ sơ'}}
       />
       <Stack.Screen
         name="Welcome"
@@ -71,6 +73,16 @@ export default function Route() {
         name="ListSavedJobs"
         component={ListSavedJobs}
         options={{title: 'Công việc đã lưu'}}
+      />
+      <Stack.Screen
+        name="ListAppliedJobs"
+        component={ListAppliedJobs}
+        options={{title: 'Công việc đã ứng tuyển'}}
+      />
+      <Stack.Screen
+        name="InterviewLetter"
+        component={InterviewLetter}
+        options={{title: 'Thư mời phỏng vấn'}}
       />
     </Stack.Navigator>
   );
