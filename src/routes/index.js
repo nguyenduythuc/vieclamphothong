@@ -12,6 +12,7 @@ import ListSavedJobs from '../screen/list-saved-jobs';
 import ListAppliedJobs from '../screen/list-applied-jobs';
 import InterviewLetter from '../screen/interview-letter';
 import Profile from '../screen/profile';
+import EmployerInfo from '../screen/employer-info';
 import HomeTabNavigator from './home-tab-navigator';
 
 const Stack = createStackNavigator();
@@ -20,9 +21,9 @@ export default function Route() {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="Profile"
-        component={Profile}
-        options={{title: 'Hồ sơ'}}
+        name="EmployerInfo"
+        component={EmployerInfo}
+        options={{title: 'Công ty TNHH Samsung'}}
       />
       <Stack.Screen
         name="Welcome"
@@ -84,6 +85,16 @@ export default function Route() {
         component={InterviewLetter}
         options={{title: 'Thư mời phỏng vấn'}}
       />
+      <Stack.Screen
+        name="Profile"
+        component={Profile}
+        options={{title: 'Hồ sơ'}}
+      />
+      {/* <Stack.Screen
+        name="EmployerInfo"
+        component={EmployerInfo}
+        options={{title: 'Công ty TNHH Samsung'}}
+      /> */}
     </Stack.Navigator>
   );
 }

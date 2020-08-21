@@ -10,7 +10,7 @@
 import React, {useState, useCallback, useEffect} from 'react';
 import {SafeAreaView, ScrollView, View, Text, StyleSheet} from 'react-native';
 import {Icon} from 'react-native-elements';
-import {JobItem} from '../components';
+import {JobItem, Sortable} from '../components';
 
 const ENTRIES1 = [
   {
@@ -64,14 +64,44 @@ const ENTRIES1 = [
     range: '1',
   },
 ];
+const ENTRIES2 = [
+  {
+    id: 1,
+    text: 'Luơng tăng dần',
+  },
+  {
+    id: 2,
+    text: 'Lương giảm dần',
+  },
+  {
+    id: 3,
+    text: 'Khoảng cách xa dần',
+  },
+  {
+    id: 4,
+    text: 'Sao đánh giá',
+  },
+  {
+    id: 5,
+    text: 'Công việc đã xem',
+  },
+];
 
 const ListSeenJobs = ({navigation}) => {
   const [entries, setEntries] = useState([]);
+  const [sortList, setSortList] = useState([]);
+  const [isModalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     console.log('didmount');
     setEntries(ENTRIES1);
+    setSortList(ENTRIES2);
   }, []);
+  const toggleModal = (string) => {
+    // setModalVisible(!isModalVisible);
+    console.log(string);
+    setModalVisible(!isModalVisible);
+  };
 
   const onFilter = useCallback(() => {
     navigation.navigate('Filter');
@@ -89,7 +119,12 @@ const ListSeenJobs = ({navigation}) => {
               type="antdesign"
               color="#517fa4"
             />
-            <Icon name="sc-telegram" type="evilicon" color="#517fa4" />
+            <Icon
+              name="sort-descending"
+              type="material-community"
+              color="#517fa4"
+              onPress={toggleModal}
+            />
           </View>
         </View>
         <View style={styles.hairLine} />
@@ -100,6 +135,12 @@ const ListSeenJobs = ({navigation}) => {
             ))}
           </View>
         </View>
+        <Sortable
+          toggleModal={toggleModal}
+          isModalVisible={isModalVisible}
+          sortList={sortList}
+          title="LỌC KẾT QUẢ"
+        />
       </ScrollView>
     </SafeAreaView>
   );

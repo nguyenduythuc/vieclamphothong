@@ -75,40 +75,17 @@ const ENTRIES1 = [
 
 const ListSavedJobs = ({navigation}) => {
   const [entries, setEntries] = useState([]);
-  const [isModalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     console.log('didmount');
     setEntries(ENTRIES1);
   }, []);
 
-  const toggleModal = () => {
-    setModalVisible(!isModalVisible);
-  };
-
-  const onFilter = useCallback(() => {
-    navigation.navigate('Filter');
-  }, [navigation]);
-
   return (
     <SafeAreaView>
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.blockTitle}>
           <Text style={styles.blockTitleText}>Tổng số: 5 công việc</Text>
-          <View style={styles.row}>
-            <Icon
-              onPress={onFilter}
-              name="filter"
-              type="antdesign"
-              color="#517fa4"
-            />
-            <Icon
-              name="sort-descending"
-              type="material-community"
-              color="#517fa4"
-              onPress={toggleModal}
-            />
-          </View>
         </View>
         <View style={styles.hairLine} />
         <View style={styles.row}>
@@ -118,17 +95,6 @@ const ListSavedJobs = ({navigation}) => {
             ))}
           </View>
         </View>
-        <Modal
-          isVisible={isModalVisible}
-          onSwipeComplete={toggleModal}
-          onBackdropPress={toggleModal}
-          swipeDirection={['up', 'left', 'right', 'down']}
-          style={styles.modalWrapper}>
-          <View style={styles.view}>
-            <Text>Hello!</Text>
-            <Button title="Hide modal" onPress={toggleModal} />
-          </View>
-        </Modal>
       </ScrollView>
     </SafeAreaView>
   );

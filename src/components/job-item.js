@@ -19,12 +19,14 @@ const JobItem = ({item, isList, isSeen, isSaved, isApplied}) => {
           numberOfLines={2}>
           {item.title}
         </Text>
-        <Icon
-          name="delete-forever-outline"
-          type="material-community"
-          color="red"
-          style={styles.iconDelete}
-        />
+        {(isApplied || isSaved) && (
+          <Icon
+            name="delete-forever-outline"
+            type="material-community"
+            color="red"
+            style={styles.iconDelete}
+          />
+        )}
       </View>
       <View style={styles.row}>
         <Text>{`Lương: ${item.salary}`}</Text>

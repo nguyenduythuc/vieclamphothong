@@ -14,7 +14,6 @@ import {Slider, Button, CheckBox} from 'react-native-elements';
 function getKm(distance) {
   return Math.floor(distance * 100);
 }
-const listFake = [1, 2, 3, 4, 5, 6];
 const placeList = [
   {id: 1, name: 'Xí nghiệp'},
   {id: 2, name: 'Nhà hàng'},

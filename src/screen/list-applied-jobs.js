@@ -18,7 +18,7 @@ import {
 } from 'react-native';
 import Modal from 'react-native-modal';
 import {Icon} from 'react-native-elements';
-import {JobItem} from '../components';
+import {JobItem, Sortable} from '../components';
 
 const ENTRIES1 = [
   {
@@ -82,23 +82,44 @@ const ENTRIES1 = [
     time: 3,
   },
 ];
+const ENTRIES2 = [
+  {
+    id: 1,
+    text: 'Đang đợi doanh nghiệp trả lời',
+  },
+  {
+    id: 2,
+    text: 'Được mời phỏng vấn',
+  },
+  {
+    id: 3,
+    text: 'Đã đồng ý phỏng vấn',
+  },
+  {
+    id: 4,
+    text: 'Đã từ chối phỏng vấn',
+  },
+  {
+    id: 5,
+    text: 'Doanh nghiệp đã từ chối',
+  },
+];
 
 const ListSavedJobs = ({navigation}) => {
   const [entries, setEntries] = useState([]);
+  const [sortList, setSortList] = useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     console.log('didmount');
     setEntries(ENTRIES1);
+    setSortList(ENTRIES2);
   }, []);
 
-  const toggleModal = () => {
+  const toggleModal = (string) => {
+    console.log(string);
     setModalVisible(!isModalVisible);
   };
-
-  const onFilter = useCallback(() => {
-    navigation.navigate('Filter');
-  }, [navigation]);
 
   return (
     <SafeAreaView>
@@ -106,12 +127,6 @@ const ListSavedJobs = ({navigation}) => {
         <View style={styles.blockTitle}>
           <Text style={styles.blockTitleText}>Tổng số: 5 công việc</Text>
           <View style={styles.row}>
-            <Icon
-              onPress={onFilter}
-              name="filter"
-              type="antdesign"
-              color="#517fa4"
-            />
             <Icon
               name="sort-descending"
               type="material-community"
@@ -128,17 +143,12 @@ const ListSavedJobs = ({navigation}) => {
             ))}
           </View>
         </View>
-        <Modal
-          isVisible={isModalVisible}
-          onSwipeComplete={toggleModal}
-          onBackdropPress={toggleModal}
-          swipeDirection={['up', 'left', 'right', 'down']}
-          style={styles.modalWrapper}>
-          <View style={styles.view}>
-            <Text>Hello!</Text>
-            <Button title="Hide modal" onPress={toggleModal} />
-          </View>
-        </Modal>
+        <Sortable
+          toggleModal={toggleModal}
+          isModalVisible={isModalVisible}
+          sortList={sortList}
+          title="LỌC TRẠNG THÁI"
+        />
       </ScrollView>
     </SafeAreaView>
   );
@@ -169,11 +179,8 @@ const styles = StyleSheet.create({
   modalWrapper: {
     flex: 1,
     justifyContent: 'flex-end',
-    // margin: 30,
   },
   view: {
-    // justifyContent: 'flex-end',
-    // margin: 0,
     backgroundColor: 'white',
   },
 });

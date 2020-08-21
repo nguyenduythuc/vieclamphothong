@@ -7,7 +7,7 @@
  * @flow
  */
 
-import React, {useState, useCallback, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -16,7 +16,7 @@ import {
   StyleSheet,
   Image,
 } from 'react-native';
-import {Icon, Card, Divider, Button} from 'react-native-elements';
+import {Card, Divider, Button} from 'react-native-elements';
 const profile = {
   name: 'Nguyễn Văn Tuấn',
   birthDay: '12/12/1992',
