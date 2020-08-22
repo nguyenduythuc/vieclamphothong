@@ -19,14 +19,17 @@ import {
 } from 'react-native';
 import {Card, Divider, Button} from 'react-native-elements';
 import {TabView, SceneMap} from 'react-native-tab-view';
+import {JobDetail} from '../components';
 
 const bg = require('../assets/cc.jpg');
 const JobRoute = () => (
-  <View style={[styles.scene, {backgroundColor: '#ff4081'}]} />
+  <View style={[styles.scene]}>
+    <JobDetail />
+  </View>
 );
 
 const CommentRoute = () => (
-  <View style={[styles.scene, {backgroundColor: '#673ab7'}]} />
+  <View style={[styles.scene]} />
 );
 
 const AboutRoute = () => (
@@ -66,7 +69,7 @@ const EmployerInfo = ({navigation}) => {
           initialLayout={initialLayout}
           activeColor={'black'}
           labelStyle={'black'}
-          style={{height: 300}}
+          // style={{height: 300}}
         />
       </ScrollView>
     </SafeAreaView>
