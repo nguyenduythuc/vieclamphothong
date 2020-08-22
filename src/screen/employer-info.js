@@ -19,7 +19,7 @@ import {
 } from 'react-native';
 import {Card, Divider, Button} from 'react-native-elements';
 import {TabView, SceneMap} from 'react-native-tab-view';
-import {JobDetail} from '../components';
+import {JobDetail, Comment, About} from '../components';
 
 const bg = require('../assets/cc.jpg');
 const JobRoute = () => (
@@ -29,11 +29,15 @@ const JobRoute = () => (
 );
 
 const CommentRoute = () => (
-  <View style={[styles.scene]} />
+  <View style={[styles.scene]}>
+    <Comment />
+  </View>
 );
 
 const AboutRoute = () => (
-  <View style={[styles.scene, {backgroundColor: 'back'}]} />
+  <View style={[styles.scene]}>
+    <About />
+  </View>
 );
 
 const initialLayout = {width: Dimensions.get('window').width};
