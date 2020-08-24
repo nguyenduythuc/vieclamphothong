@@ -13,6 +13,9 @@ import {JobItem} from '../components';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import Carousel from 'react-native-snap-carousel';
+import {RecruitmentApi} from '../api';
+import {useDispatch, useSelector} from 'react-redux';
+import {actions} from '../app-redux';
 
 const ENTRIES1 = [
   {
@@ -68,6 +71,7 @@ const ENTRIES1 = [
 ];
 
 const HomeScreen = ({navigation}) => {
+  const dispatch = useDispatch();
   const [entries, setEntries] = useState([]);
   const [search, setSearch] = useState('');
   const [currentPosition, setCurentPosition] = useState({
@@ -77,16 +81,21 @@ const HomeScreen = ({navigation}) => {
     longitudeDelta: 0.0121,
   });
   const carouselRef = useRef(null);
+  const listJobs = useSelector((state) => state.recruitment.listJobs);
   useEffect(() => {
     setEntries(ENTRIES1);
-
+    RecruitmentApi.getList('').then((response) => {
+      dispatch(actions.recruitment.saveListJobs(response.data));
+      // console.log(response);
+      console.log(listJobs);
+    });
     // Geolocation.getCurrentPosition((info) => {
     //   const newPosition = {...currentPosition};
     //   newPosition.latitude = info.coords.latitude;
     //   newPosition.longitude = info.coords.longitude;
     //   setCurentPosition(newPosition);
     // });
-  }, []);
+  }, [dispatch, listJobs]);
 
   const onSearch = useCallback((text) => {
     setSearch(text);
@@ -132,7 +141,7 @@ const HomeScreen = ({navigation}) => {
           sliderWidth={width}
           sliderHeight={height * 0.09}
           itemWidth={width - 80}
-          data={entries}
+          data={listJobs}
           renderItem={renderItem}
         />
       </SafeAreaView>

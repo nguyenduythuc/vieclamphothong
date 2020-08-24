@@ -1,18 +1,29 @@
 // In App.js in a new project
 
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {PersistGate} from 'redux-persist/integration/react';
-import {Provider} from 'react-redux';
+import {Provider, useSelector} from 'react-redux';
 import {configStore} from './app-redux';
 import Route from './routes';
+import {setToken} from './api';
 
 const {store, persistor} = configStore();
-const App = () => {
+const App = ({navigation}) => {
+  const navigationRef = useRef(null);
+  const {user} = store.getState();
+  useEffect(() => {
+    setTimeout(() => {
+      if (user?.user?.token) {
+        setToken(user.user.token);
+        navigationRef.current?.navigate('Home');
+      }
+    }, 0);
+  }, [user, navigation]);
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <NavigationContainer>
+        <NavigationContainer ref={navigationRef}>
           <Route />
         </NavigationContainer>
       </PersistGate>

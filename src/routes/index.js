@@ -21,11 +21,6 @@ export default function Route() {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="EmployerInfo"
-        component={EmployerInfo}
-        options={{title: 'Công ty TNHH Samsung'}}
-      />
-      <Stack.Screen
         name="Welcome"
         component={WelcomeScreen}
         options={{headerShown: false}}
@@ -90,11 +85,11 @@ export default function Route() {
         component={Profile}
         options={{title: 'Hồ sơ'}}
       />
-      {/* <Stack.Screen
+      <Stack.Screen
         name="EmployerInfo"
         component={EmployerInfo}
         options={{title: 'Công ty TNHH Samsung'}}
-      /> */}
+      />
     </Stack.Navigator>
   );
 }

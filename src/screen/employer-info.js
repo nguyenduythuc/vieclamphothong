@@ -21,7 +21,7 @@ import {Card, Divider, Button} from 'react-native-elements';
 import {TabView, SceneMap} from 'react-native-tab-view';
 import {JobDetail, Comment, About} from '../components';
 
-const bg = require('../assets/cc.jpg');
+const bg = require('../assets/samsung.jpg');
 const JobRoute = () => (
   <View style={[styles.scene]}>
     <JobDetail />
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   imageProfile: {
-    height: 180,
+    height: 300,
     borderRadius: 12,
   },
   scene: {

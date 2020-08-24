@@ -2,6 +2,7 @@ const Types = {
   TEST: 'TEST',
   SAVE_USER: 'USER/SAVE',
   SAVE_USER_TYPE: 'USER/SAVE-TYPE',
+  SAVE_LIST_JOBS: 'RECRUITMENT/SAVE_LIST_JOBS',
 };
 
 export default Types;

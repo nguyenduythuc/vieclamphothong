@@ -9,6 +9,8 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {Card, Divider, Button, Icon} from 'react-native-elements';
+import {formatCurrencyToSring} from '../utils/common';
+import moment from 'moment';
 
 const JobItem = ({item, isList, isSeen, isSaved, isApplied}) => {
   return (
@@ -29,19 +31,27 @@ const JobItem = ({item, isList, isSeen, isSaved, isApplied}) => {
         )}
       </View>
       <View style={styles.row}>
-        <Text>{`Lương: ${item.salary}`}</Text>
+        <View style={styles.colText}>
+          <Text>Lương: </Text>
+          <Text style={styles.redText}>{`${formatCurrencyToSring(
+            item.min_salary,
+          )}tr-${formatCurrencyToSring(item.max_salary)}tr`}</Text>
+        </View>
         <Text>{`Số lượng: ${item.quantity}`}</Text>
       </View>
       <View style={styles.row}>
-        <Text>{`Hạn nộp: ${item.expiry}`}</Text>
-        <Text>{`Còn ${item.timeLeft} ngày`}</Text>
+        <Text>{`Hạn nộp: ${moment(item.expired_at).format(
+          'DD/MM/YYYY',
+        )}`}</Text>
+        <Text
+          style={styles.redText}>{`Còn ${item.expired_in_number} ngày`}</Text>
       </View>
       <Divider style={styles.divider} />
       <Text style={styles.title2} numberOfLines={2}>
-        {item.company}
+        {item.company.name}
       </Text>
-      <Text style={styles.marginBottom}>{item.address}</Text>
-      <Text>{`Cách bạn: ${item.range}km`}</Text>
+      <Text style={styles.marginBottom}>{item.workplace.name}</Text>
+      <Text>{`Cách bạn: ${item.distance} km`}</Text>
       {isApplied && (
         <View>
           <Divider style={styles.divider} />
@@ -134,6 +144,13 @@ const styles = StyleSheet.create({
   },
   time: {
     fontStyle: 'italic',
+  },
+  colText: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  redText: {
+    color: 'red',
   },
 });
 

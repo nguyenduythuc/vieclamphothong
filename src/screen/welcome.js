@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback} from 'react';
 import {SafeAreaView, StyleSheet, Image, View, Text} from 'react-native';
 import {Button} from 'react-native-elements';
 import {useDispatch} from 'react-redux';
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     paddingTop: 30,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   welcome: {
     textAlign: 'center',
