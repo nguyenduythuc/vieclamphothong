@@ -7,8 +7,16 @@ function saveListJobs(data) {
   };
 }
 
+function saveListFilters(data) {
+  return {
+    type: types.SAVE_LIST_FILTERS,
+    data: data,
+  };
+}
+
 const recruitment = {
   saveListJobs,
+  saveListFilters,
 };
 
 export default recruitment;

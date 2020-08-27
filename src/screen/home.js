@@ -17,62 +17,8 @@ import {RecruitmentApi} from '../api';
 import {useDispatch, useSelector} from 'react-redux';
 import {actions} from '../app-redux';
 
-const ENTRIES1 = [
-  {
-    title: 'Nhân viên sản xuất',
-    salary: '8 - 10tr',
-    quantity: 10,
-    expiry: '01-01-2020',
-    timeLeft: 20,
-    company: 'Công ty TNHH Samsung Bắc Ninh',
-    address: 'Yên Phong, Yên Trung, Bắc Ninh',
-    range: '1',
-  },
-  {
-    title: 'Earlier this morning, NYC',
-    salary: '8 - 10tr',
-    quantity: 10,
-    expiry: '01-01-2020',
-    timeLeft: 20,
-    company: 'Công ty TNHH Samsung Bắc Ninh',
-    address: 'Yên Phong, Yên Trung, Bắc Ninh',
-    range: '1',
-  },
-  {
-    title: 'White Pocket Sunset',
-    salary: '8 - 10tr',
-    quantity: 10,
-    expiry: '01-01-2020',
-    timeLeft: 20,
-    company: 'Công ty TNHH Samsung Bắc Ninh',
-    address: 'Yên Phong, Yên Trung, Bắc Ninh',
-    range: '1',
-  },
-  {
-    title: 'Acrocorinth, Greece',
-    salary: '8 - 10tr',
-    quantity: 10,
-    expiry: '01-01-2020',
-    timeLeft: 20,
-    company: 'Công ty TNHH Samsung Bắc Ninh',
-    address: 'Yên Phong, Yên Trung, Bắc Ninh',
-    range: '1',
-  },
-  {
-    title: 'The lone tree, majestic landscape of New Zealand',
-    salary: '8 - 10tr',
-    quantity: 10,
-    expiry: '01-01-2020',
-    timeLeft: 20,
-    company: 'Công ty TNHH Samsung Bắc Ninh',
-    address: 'Yên Phong, Yên Trung, Bắc Ninh',
-    range: '1',
-  },
-];
-
 const HomeScreen = ({navigation}) => {
   const dispatch = useDispatch();
-  const [entries, setEntries] = useState([]);
   const [search, setSearch] = useState('');
   const [currentPosition, setCurentPosition] = useState({
     latitude: 21.036419,
@@ -83,7 +29,9 @@ const HomeScreen = ({navigation}) => {
   const carouselRef = useRef(null);
   const listJobs = useSelector((state) => state.recruitment.listJobs);
   useEffect(() => {
-    setEntries(ENTRIES1);
+    if (listJobs.length > 0) {
+      return;
+    }
     RecruitmentApi.getList('').then((response) => {
       dispatch(actions.recruitment.saveListJobs(response.data));
       // console.log(response);

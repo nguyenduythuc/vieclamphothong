@@ -2,6 +2,7 @@ import types from '../types';
 
 const INITIAL_STATE = {
   listJobs: null,
+  listFilters: {},
 };
 
 export const recruitment = (state = INITIAL_STATE, action) => {
@@ -11,6 +12,12 @@ export const recruitment = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         listJobs: action.data,
+      };
+    case types.SAVE_LIST_FILTERS:
+      delete action.type;
+      return {
+        ...state,
+        listFilters: action.data,
       };
     default:
       return state;
