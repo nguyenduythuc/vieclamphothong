@@ -10,6 +10,9 @@
 import React, {useState, useCallback, useEffect} from 'react';
 import {SafeAreaView, ScrollView, View, Text, StyleSheet} from 'react-native';
 import {Slider, Button, CheckBox} from 'react-native-elements';
+import {RecruitmentApi} from '../api';
+import {useDispatch, useSelector} from 'react-redux';
+import {actions} from '../app-redux';
 
 function getKm(distance) {
   return Math.floor(distance * 100);
@@ -69,14 +72,19 @@ const experienceList = [
 ];
 const Filter = () => {
   const [distance, setDistance] = useState(0);
+  const dispatch = useDispatch();
+  const listFilters = useSelector((state) => state.recruitment.listFilters);
   useEffect(() => {
     console.log('didmount');
-  }, []);
+    RecruitmentApi.getAllFilters().then((response) => {
+      dispatch(actions.recruitment.saveListFilters(response));
+    });
+  }, [dispatch]);
 
   //checkbox group
   const [checkBoxPlace, setCheckBoxPlace] = useState(false);
   const [checkBoxPlaceList, setCheckBoxPlaceList] = useState([]);
-  const listIdsPlace = placeList.map((item) => item.id);
+  const listIdsPlace = listFilters?.workplace.map((item) => item.id);
   const onCheckAllPlace = useCallback(() => {
     !checkBoxPlace
       ? setCheckBoxPlaceList(listIdsPlace)
@@ -99,7 +107,7 @@ const Filter = () => {
   //checkbox group
   const [checkBoxWork, setCheckBoxWork] = useState(false);
   const [checkBoxWorkList, setCheckBoxWorkList] = useState([]);
-  const listIdsWork = workList.map((item) => item.id);
+  const listIdsWork = listFilters?.occupation.map((item) => item.id);
   const onCheckAllWork = useCallback(() => {
     !checkBoxWork ? setCheckBoxWorkList(listIdsWork) : setCheckBoxWorkList([]);
     setCheckBoxWork(!checkBoxWork);
@@ -161,10 +169,10 @@ const Filter = () => {
     [checkBoxExperience],
   );
 
-  //checkbox grou
+  //checkbox group
   const [checkBoxSalary, setCheckBoxSalary] = useState(false);
   const [checkBoxSalaryList, setCheckBoxSalaryList] = useState([]);
-  const listIdsSalary = salaryList.map((item) => item.id);
+  const listIdsSalary = listFilters?.salaryRange.map((item) => item.id);
   const onCheckAllSalary = useCallback(() => {
     !checkBoxSalary
       ? setCheckBoxSalaryList(listIdsSalary)
@@ -187,6 +195,10 @@ const Filter = () => {
   const getDistance = useCallback(() => {
     return `${getKm(distance)} Km`;
   }, [distance]);
+
+  const onPressViewResult = useCallback(() => {
+    console.log(listIdsSalary);
+  }, [listIdsSalary]);
 
   return (
     <SafeAreaView>
@@ -219,26 +231,27 @@ const Filter = () => {
         />
 
         <View style={styles.row}>
-          {placeList.map((item, idx) => (
-            <View style={styles.col}>
-              <Button
-                title={item.name}
-                buttonStyle={
-                  checkBoxPlaceList.includes(item.id)
-                    ? styles.btnActive
-                    : styles.btnNoneActive
-                }
-                titleStyle={{
-                  color: checkBoxPlaceList.includes(item.id)
-                    ? 'white'
-                    : 'black',
-                }}
-                onPress={() => {
-                  onCheckOnePlace(item.id);
-                }}
-              />
-            </View>
-          ))}
+          {listFilters?.workplace &&
+            listFilters?.workplace.map((item, idx) => (
+              <View style={styles.col}>
+                <Button
+                  title={item.name}
+                  buttonStyle={
+                    checkBoxPlaceList.includes(item.id)
+                      ? styles.btnActive
+                      : styles.btnNoneActive
+                  }
+                  titleStyle={{
+                    color: checkBoxPlaceList.includes(item.id)
+                      ? 'white'
+                      : 'black',
+                  }}
+                  onPress={() => {
+                    onCheckOnePlace(item.id);
+                  }}
+                />
+              </View>
+            ))}
         </View>
 
         <View style={styles.blockTitle}>
@@ -256,24 +269,27 @@ const Filter = () => {
         />
 
         <View style={styles.row}>
-          {workList.map((item, idx) => (
-            <View style={styles.col}>
-              <Button
-                title={item.name}
-                buttonStyle={
-                  checkBoxWorkList.includes(item.id)
-                    ? styles.btnActive
-                    : styles.btnNoneActive
-                }
-                titleStyle={{
-                  color: checkBoxWorkList.includes(item.id) ? 'white' : 'black',
-                }}
-                onPress={() => {
-                  onCheckOneWork(item.id);
-                }}
-              />
-            </View>
-          ))}
+          {listFilters?.occupation &&
+            listFilters?.occupation.map((item, idx) => (
+              <View style={styles.col}>
+                <Button
+                  title={item.name}
+                  buttonStyle={
+                    checkBoxWorkList.includes(item.id)
+                      ? styles.btnActive
+                      : styles.btnNoneActive
+                  }
+                  titleStyle={{
+                    color: checkBoxWorkList.includes(item.id)
+                      ? 'white'
+                      : 'black',
+                  }}
+                  onPress={() => {
+                    onCheckOneWork(item.id);
+                  }}
+                />
+              </View>
+            ))}
         </View>
 
         <View style={styles.blockTitle}>
@@ -281,7 +297,7 @@ const Filter = () => {
         </View>
         <View style={styles.hairLine} />
         <View style={styles.row}>
-          {standardList.map((item, idx) => (
+          {listFilters?.educationBackground.map((item, idx) => (
             <View style={styles.col}>
               <Button
                 title={item.name}
@@ -307,21 +323,21 @@ const Filter = () => {
         </View>
         <View style={styles.hairLine} />
         <View style={styles.row}>
-          {genderList.map((item, idx) => (
+          {listFilters?.gender.map((item, idx) => (
             <View style={styles.col}>
               <Button
-                title={item.name}
+                title={item}
                 type="outline"
                 buttonStyle={
-                  checkBoxGender === item.id
+                  checkBoxGender === item
                     ? styles.btnActive
                     : styles.btnNoneActive
                 }
                 titleStyle={{
-                  color: checkBoxGender === item.id ? 'white' : 'black',
+                  color: checkBoxGender === item ? 'white' : 'black',
                 }}
                 onPress={() => {
-                  onCheckOneGender(item.id);
+                  onCheckOneGender(item);
                 }}
               />
             </View>
@@ -333,10 +349,10 @@ const Filter = () => {
         </View>
         <View style={styles.hairLine} />
         <View style={styles.row}>
-          {ageList.map((item, idx) => (
+          {listFilters?.ageRange.map((item, idx) => (
             <View style={styles.col}>
               <Button
-                title={item.name}
+                title={item.min + '-' + item.max + ' tuổi'}
                 type="outline"
                 buttonStyle={
                   checkBoxAge === item.id
@@ -369,26 +385,27 @@ const Filter = () => {
         />
 
         <View style={styles.row}>
-          {salaryList.map((item, idx) => (
-            <View style={styles.col}>
-              <Button
-                title={item.name}
-                buttonStyle={
-                  checkBoxSalaryList.includes(item.id)
-                    ? styles.btnActive
-                    : styles.btnNoneActive
-                }
-                titleStyle={{
-                  color: checkBoxSalaryList.includes(item.id)
-                    ? 'white'
-                    : 'black',
-                }}
-                onPress={() => {
-                  onCheckOneSalary(item.id);
-                }}
-              />
-            </View>
-          ))}
+          {listFilters?.salaryRange &&
+            listFilters?.salaryRange.map((item, idx) => (
+              <View style={styles.col}>
+                <Button
+                  title={item.min + 'tr' + '-' + item.max + 'tr'}
+                  buttonStyle={
+                    checkBoxSalaryList.includes(item.id)
+                      ? styles.btnActive
+                      : styles.btnNoneActive
+                  }
+                  titleStyle={{
+                    color: checkBoxSalaryList.includes(item.id)
+                      ? 'white'
+                      : 'black',
+                  }}
+                  onPress={() => {
+                    onCheckOneSalary(item.id);
+                  }}
+                />
+              </View>
+            ))}
         </View>
 
         <View style={styles.blockTitle}>
@@ -432,7 +449,7 @@ const Filter = () => {
               buttonStyle={styles.btnViewResult}
               type="clear"
               titleStyle={{color: 'white'}}
-              onPress={() => {}}
+              onPress={() => onPressViewResult()}
             />
           </View>
         </View>

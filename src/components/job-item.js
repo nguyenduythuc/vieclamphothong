@@ -51,7 +51,10 @@ const JobItem = ({item, isList, isSeen, isSaved, isApplied}) => {
         {item.company.name}
       </Text>
       <Text style={styles.marginBottom}>{item.workplace.name}</Text>
-      <Text>{`Cách bạn: ${item.distance} km`}</Text>
+      <View style={styles.colText}>
+        <Text>Cách bạn: </Text>
+        <Text style={styles.redText}>{item.distance} km</Text>
+      </View>
       {isApplied && (
         <View>
           <Divider style={styles.divider} />

@@ -6,6 +6,7 @@ let HEADERS = {
   Accept: 'application/json',
   'Content-Type': 'application/json',
   'x-client-app-code': 'timviecphothong',
+  'Access-Control-Allow-Origin': '*',
 };
 
 const onResponse = async (request, result) => {
