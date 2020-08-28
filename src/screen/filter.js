@@ -17,12 +17,6 @@ import {actions} from '../app-redux';
 function getKm(distance) {
   return Math.floor(distance * 100);
 }
-const experienceList = [
-  {id: 1, name: 'Không'},
-  {id: 2, name: '1-2 năm'},
-  {id: 3, name: '3-5 năm'},
-  {id: 4, name: 'Trên 5 năm'},
-];
 const Filter = () => {
   const [distance, setDistance] = useState(0);
   const dispatch = useDispatch();
@@ -79,15 +73,18 @@ const Filter = () => {
   );
 
   //checkbox one
-  const [checkBoxStandard, setCheckBoxStandard] = useState('');
-  const onCheckOneStandard = useCallback(
-    (standard) => {
-      let tempStandard = checkBoxStandard;
-      tempStandard === standard
-        ? setCheckBoxStandard('')
-        : setCheckBoxStandard(standard);
+  const [
+    checkBoxEducationBackground,
+    setCheckBoxEducationBackground,
+  ] = useState('');
+  const onCheckOneEducationBackground = useCallback(
+    (educationBackground) => {
+      let tempEducationBackground = checkBoxEducationBackground;
+      tempEducationBackground === educationBackground
+        ? setCheckBoxEducationBackground('')
+        : setCheckBoxEducationBackground(educationBackground);
     },
-    [checkBoxStandard],
+    [checkBoxEducationBackground],
   );
 
   //checkbox one
@@ -150,8 +147,43 @@ const Filter = () => {
   }, [distance]);
 
   const onPressViewResult = useCallback(() => {
-    console.log(checkBoxStandard);
-  }, [checkBoxStandard]);
+    const queryResult =
+      'include=educational_background,occupation,workplace,company' +
+      generateQueryString('workplace_id', checkBoxPlaceList) +
+      generateQueryString('occupation_id', checkBoxWorkList) +
+      generateQueryString('gender', [checkBoxGender]) +
+      generateQueryString('salaryRange', checkBoxSalaryList) +
+      generateQueryString('ageRange', [checkBoxAge]) +
+      generateQueryString('experienceRange', [checkBoxExperience]) +
+      generateQueryString('educationBackground_id', [
+        checkBoxEducationBackground,
+      ]);
+    RecruitmentApi.getList(queryResult).then((response) => {
+      dispatch(actions.recruitment.saveListJobs(response.data));
+      console.log(response.data);
+    });
+  }, [
+    checkBoxPlaceList,
+    checkBoxWorkList,
+    checkBoxGender,
+    checkBoxSalaryList,
+    checkBoxAge,
+    checkBoxExperience,
+    checkBoxEducationBackground,
+    dispatch,
+  ]);
+
+  const generateQueryString = (key, arrayValue) => {
+    let query = `&filter[${key}]=`;
+    arrayValue.forEach((element, idx) => {
+      query += element;
+      query += idx === arrayValue.length - 1 ? '' : ',';
+    });
+    if (arrayValue.length === 0) {
+      query = '';
+    }
+    return query;
+  };
 
   return (
     <SafeAreaView>
@@ -256,15 +288,16 @@ const Filter = () => {
                 title={item.name}
                 type="outline"
                 buttonStyle={
-                  checkBoxStandard === item.id
+                  checkBoxEducationBackground === item.id
                     ? styles.btnActive
                     : styles.btnNoneActive
                 }
                 titleStyle={{
-                  color: checkBoxStandard === item.id ? 'white' : 'black',
+                  color:
+                    checkBoxEducationBackground === item.id ? 'white' : 'black',
                 }}
                 onPress={() => {
-                  onCheckOneStandard(item.id);
+                  onCheckOneEducationBackground(item.id);
                 }}
               />
             </View>
@@ -279,18 +312,18 @@ const Filter = () => {
           {listFilters?.gender.map((item, idx) => (
             <View style={styles.col}>
               <Button
-                title={item}
+                title={item.value}
                 type="outline"
                 buttonStyle={
-                  checkBoxGender === item
+                  checkBoxGender === item.key
                     ? styles.btnActive
                     : styles.btnNoneActive
                 }
                 titleStyle={{
-                  color: checkBoxGender === item ? 'white' : 'black',
+                  color: checkBoxGender === item.key ? 'white' : 'black',
                 }}
                 onPress={() => {
-                  onCheckOneGender(item);
+                  onCheckOneGender(item.key);
                 }}
               />
             </View>
@@ -342,7 +375,7 @@ const Filter = () => {
             listFilters?.salaryRange.map((item, idx) => (
               <View style={styles.col}>
                 <Button
-                  title={item.min + 'tr' + '-' + item.max + 'tr'}
+                  title={item.label}
                   buttonStyle={
                     checkBoxSalaryList.includes(item.id)
                       ? styles.btnActive
@@ -366,25 +399,26 @@ const Filter = () => {
         </View>
         <View style={styles.hairLine} />
         <View style={styles.row}>
-          {experienceList.map((item, idx) => (
-            <View style={styles.col}>
-              <Button
-                title={item.name}
-                type="outline"
-                buttonStyle={
-                  checkBoxExperience === item.id
-                    ? styles.btnActive
-                    : styles.btnNoneActive
-                }
-                titleStyle={{
-                  color: checkBoxExperience === item.id ? 'white' : 'black',
-                }}
-                onPress={() => {
-                  onCheckOneExperience(item.id);
-                }}
-              />
-            </View>
-          ))}
+          {listFilters?.experienceRange &&
+            listFilters?.experienceRange.map((item, idx) => (
+              <View style={styles.col}>
+                <Button
+                  title={item.label}
+                  type="outline"
+                  buttonStyle={
+                    checkBoxExperience === item.id
+                      ? styles.btnActive
+                      : styles.btnNoneActive
+                  }
+                  titleStyle={{
+                    color: checkBoxExperience === item.id ? 'white' : 'black',
+                  }}
+                  onPress={() => {
+                    onCheckOneExperience(item.id);
+                  }}
+                />
+              </View>
+            ))}
         </View>
         <View style={styles.btnFooter}>
           <View style={styles.col}>

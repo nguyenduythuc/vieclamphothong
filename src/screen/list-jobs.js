@@ -48,16 +48,6 @@ const ListJobs = ({navigation}) => {
     console.log('didmount');
     setSortList(ENTRIES2);
   }, []);
-  useEffect(() => {
-    if (listJobs.length > 0) {
-      return;
-    }
-    RecruitmentApi.getList(
-      'filter[location]=21.312542,105.704714,10&include=educational_background,occupation,workplace,company',
-    ).then((response) => {
-      dispatch(actions.recruitment.saveListJobs(response.data));
-    });
-  }, [dispatch, listJobs]);
 
   const toggleModal = (string) => {
     // setModalVisible(!isModalVisible);
