@@ -10,7 +10,7 @@ import React, {useEffect, useCallback, useRef, useState} from 'react';
 import {SafeAreaView, StyleSheet, View, Text, Dimensions} from 'react-native';
 import {Card, SearchBar, Icon, Divider} from 'react-native-elements';
 import {JobItem} from '../components';
-import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import Carousel from 'react-native-snap-carousel';
 import {RecruitmentApi} from '../api';
@@ -84,8 +84,19 @@ const HomeScreen = ({navigation}) => {
         <MapView
           provider={PROVIDER_GOOGLE} // remove if not using Google Maps
           style={styles.map}
-          region={currentPosition}
-        />
+          region={currentPosition}>
+          {listJobs.map(({location, title, description}) => (
+            <Marker
+              coordinate={{
+                longitude: location.coordinates[0],
+                latitude: location.coordinates[1],
+              }}
+              centerOffset={{ x: -18, y: -60 }}
+              title={title}
+              description={description}
+            />
+          ))}
+        </MapView>
         <Carousel
           ref={carouselRef}
           sliderWidth={width}
