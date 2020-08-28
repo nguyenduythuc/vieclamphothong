@@ -17,53 +17,6 @@ import {actions} from '../app-redux';
 function getKm(distance) {
   return Math.floor(distance * 100);
 }
-const placeList = [
-  {id: 1, name: 'Xí nghiệp'},
-  {id: 2, name: 'Nhà hàng'},
-  {id: 3, name: 'Cửa hàng'},
-  {id: 4, name: 'Khách sạn'},
-  {id: 5, name: 'Quán ăn'},
-  {id: 6, name: 'Quán coffe'},
-  {id: 7, name: 'Loại Khác'},
-];
-const workList = [
-  {id: 1, name: 'Sản xuất'},
-  {id: 2, name: 'Vệ sinh'},
-  {id: 3, name: 'Bảo vệ'},
-  {id: 4, name: 'Bán hàng'},
-  {id: 5, name: 'Nấu ăn'},
-  {id: 6, name: 'Phục vụ'},
-];
-const standardList = [
-  {id: 1, name: 'THCS'},
-  {id: 2, name: 'THPT'},
-  {id: 3, name: 'TTGDTX'},
-  {id: 4, name: 'Trung Cấp'},
-  {id: 5, name: 'Cao Đẳng'},
-  {id: 6, name: 'Đại Học'},
-  {id: 7, name: 'Sinh Viên'},
-  {id: 8, name: 'Loại Khác'},
-];
-const genderList = [
-  {id: 1, name: 'Nam'},
-  {id: 2, name: 'Nữ'},
-];
-const ageList = [
-  {id: 1, name: '15-18 tuổi'},
-  {id: 2, name: '19-22 tuổi'},
-  {id: 3, name: '23-26 tuổi'},
-  {id: 4, name: '27-30 tuổi'},
-  {id: 5, name: 'Trên 30 tuổi'},
-];
-const salaryList = [
-  {id: 1, name: 'Theo giờ'},
-  {id: 2, name: '1tr-3tr'},
-  {id: 3, name: '4tr-6tr'},
-  {id: 4, name: '7tr-9tr'},
-  {id: 5, name: '10tr-12tr'},
-  {id: 6, name: '13tr-15tr'},
-  {id: 7, name: 'Trên 15tr'},
-];
 const experienceList = [
   {id: 1, name: 'Không'},
   {id: 2, name: '1-2 năm'},
@@ -197,8 +150,8 @@ const Filter = () => {
   }, [distance]);
 
   const onPressViewResult = useCallback(() => {
-    console.log(listIdsSalary);
-  }, [listIdsSalary]);
+    console.log(checkBoxStandard);
+  }, [checkBoxStandard]);
 
   return (
     <SafeAreaView>

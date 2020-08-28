@@ -56,7 +56,7 @@ export default function Route() {
         options={{title: 'Lọc kết quả'}}
       />
       <Stack.Screen
-        name="ListJob"
+        name="ListJobs"
         component={ListJobs}
         options={{title: 'Danh sách công việc'}}
       />

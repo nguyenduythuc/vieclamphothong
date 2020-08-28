@@ -130,9 +130,11 @@ const styles = StyleSheet.create({
   },
   btnDeleteOptions: {
     backgroundColor: '#fed7d7',
+    paddingHorizontal: 30,
   },
   btnViewResult: {
     backgroundColor: '#48bb78',
+    paddingHorizontal: 30,
   },
   cardHeader: {
     display: 'flex',

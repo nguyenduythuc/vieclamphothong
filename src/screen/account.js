@@ -9,25 +9,37 @@ const list = [
     screen: 'Profile',
   },
   {
+    title: 'Danh sách công việc',
+    screen: 'ListJobs',
+  },
+  {
+    title: 'Công việc đã xem',
+    screen: 'ListSeenJobs',
+  },
+  {
     title: 'Công việc đã lưu',
-    screen: 'SavedJob',
+    screen: 'ListSavedJobs',
   },
   {
-    title: 'Lịch phỏng vấn',
-    screen: 'InterviewDate',
+    title: 'Công việc đã ứng tuyển',
+    screen: 'ListAppliedJobs',
   },
-  {
-    title: 'Hotline',
-    screen: 'Hotline',
-  },
-  {
-    title: 'Cài đặt',
-    screen: 'Setting',
-  },
-  {
-    title: 'Thông báo',
-    screen: 'Notification',
-  },
+  // {
+  //   title: 'Lịch phỏng vấn',
+  //   screen: 'InterviewDate',
+  // },
+  // {
+  //   title: 'Hotline',
+  //   screen: 'Hotline',
+  // },
+  // {
+  //   title: 'Cài đặt',
+  //   screen: 'Setting',
+  // },
+  // {
+  //   title: 'Thông báo',
+  //   screen: 'Notification',
+  // },
 ];
 const AccountScreen = ({navigation}) => {
   const user = useSelector((state) => state.user);

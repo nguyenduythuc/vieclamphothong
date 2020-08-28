@@ -11,59 +11,10 @@ import React, {useState, useCallback, useEffect} from 'react';
 import {SafeAreaView, ScrollView, View, Text, StyleSheet} from 'react-native';
 import {Icon} from 'react-native-elements';
 import {JobItem, Sortable} from '../components';
+import {RecruitmentApi} from '../api';
+import {useDispatch, useSelector} from 'react-redux';
+import {actions} from '../app-redux';
 
-const ENTRIES1 = [
-  {
-    title: 'Nhân viên sản xuất',
-    salary: '8 - 10tr',
-    quantity: 10,
-    expiry: '01-01-2020',
-    timeLeft: 20,
-    company: 'Công ty TNHH Samsung Bắc Ninh',
-    address: 'Yên Phong, Yên Trung, Bắc Ninh',
-    range: '1',
-  },
-  {
-    title: 'Earlier this morning, NYC',
-    salary: '8 - 10tr',
-    quantity: 10,
-    expiry: '01-01-2020',
-    timeLeft: 20,
-    company: 'Công ty TNHH Samsung Bắc Ninh',
-    address: 'Yên Phong, Yên Trung, Bắc Ninh',
-    range: '1',
-  },
-  {
-    title: 'White Pocket Sunset',
-    salary: '8 - 10tr',
-    quantity: 10,
-    expiry: '01-01-2020',
-    timeLeft: 20,
-    company: 'Công ty TNHH Samsung Bắc Ninh',
-    address: 'Yên Phong, Yên Trung, Bắc Ninh',
-    range: '1',
-  },
-  {
-    title: 'Acrocorinth, Greece',
-    salary: '8 - 10tr',
-    quantity: 10,
-    expiry: '01-01-2020',
-    timeLeft: 20,
-    company: 'Công ty TNHH Samsung Bắc Ninh',
-    address: 'Yên Phong, Yên Trung, Bắc Ninh',
-    range: '1',
-  },
-  {
-    title: 'The lone tree, majestic landscape of New Zealand',
-    salary: '8 - 10tr',
-    quantity: 10,
-    expiry: '01-01-2020',
-    timeLeft: 20,
-    company: 'Công ty TNHH Samsung Bắc Ninh',
-    address: 'Yên Phong, Yên Trung, Bắc Ninh',
-    range: '1',
-  },
-];
 const ENTRIES2 = [
   {
     id: 1,
@@ -88,15 +39,22 @@ const ENTRIES2 = [
 ];
 
 const ListSeenJobs = ({navigation}) => {
-  const [entries, setEntries] = useState([]);
+  const dispatch = useDispatch();
   const [sortList, setSortList] = useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [listJobs, setListJobs] = useState([]);
 
   useEffect(() => {
-    console.log('didmount');
-    setEntries(ENTRIES1);
     setSortList(ENTRIES2);
   }, []);
+  useEffect(() => {
+    RecruitmentApi.getList(
+      '&include=educational_background,occupation,workplace,company&filter[seen]=true',
+    ).then((response) => {
+      setListJobs(response.data);
+      console.log(listJobs);
+    });
+  }, [dispatch, listJobs]);
   const toggleModal = (string) => {
     // setModalVisible(!isModalVisible);
     console.log(string);
@@ -111,7 +69,9 @@ const ListSeenJobs = ({navigation}) => {
     <SafeAreaView>
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.blockTitle}>
-          <Text style={styles.blockTitleText}>Tổng số: 5 công việc</Text>
+          <Text style={styles.blockTitleText}>
+            Tổng số: {listJobs?.length} công việc
+          </Text>
           <View style={styles.row}>
             <Icon
               onPress={onFilter}
@@ -128,13 +88,15 @@ const ListSeenJobs = ({navigation}) => {
           </View>
         </View>
         <View style={styles.hairLine} />
-        <View style={styles.row}>
-          <View style={styles.item}>
-            {entries.map((item, idx) => (
-              <JobItem item={item} isSeen />
-            ))}
+        {listJobs.length > 0 && (
+          <View style={styles.row}>
+            <View style={styles.item}>
+              {listJobs.map((item, idx) => (
+                <JobItem item={item} isSeen />
+              ))}
+            </View>
           </View>
-        </View>
+        )}
         <Sortable
           toggleModal={toggleModal}
           isModalVisible={isModalVisible}

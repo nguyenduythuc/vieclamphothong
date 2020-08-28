@@ -32,7 +32,9 @@ const HomeScreen = ({navigation}) => {
     if (listJobs.length > 0) {
       return;
     }
-    RecruitmentApi.getList('').then((response) => {
+    RecruitmentApi.getList(
+      'filter[location]=21.312542,105.704714,10&include=educational_background,occupation,workplace,company',
+    ).then((response) => {
       dispatch(actions.recruitment.saveListJobs(response.data));
       // console.log(response);
       console.log(listJobs);
