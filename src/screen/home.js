@@ -102,11 +102,7 @@ const HomeScreen = ({navigation}) => {
           provider={PROVIDER_GOOGLE} // remove if not using Google Maps
           style={styles.map}
           region={currentPosition}>
-<<<<<<< HEAD
-          {listJobs?.map(({location, title, description}) => (
-=======
           {listJobs?.map(({company, id, title, description}) => (
->>>>>>> 1a4d7b6bbde65f6a4b906f3564c04a11e47b165b
             <Marker
               onPress={() => onItemSelected(id)}
               coordinate={{
