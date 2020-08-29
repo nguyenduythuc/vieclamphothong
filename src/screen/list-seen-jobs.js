@@ -88,10 +88,10 @@ const ListSeenJobs = ({navigation}) => {
           </View>
         </View>
         <View style={styles.hairLine} />
-        {listJobs.length > 0 && (
+        {listJobs?.length > 0 && (
           <View style={styles.row}>
             <View style={styles.item}>
-              {listJobs.map((item, idx) => (
+              {listJobs?.map((item, idx) => (
                 <JobItem item={item} isSeen />
               ))}
             </View>

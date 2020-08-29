@@ -1,8 +1,9 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {SafeAreaView, StyleSheet, Image, View, Text} from 'react-native';
 import {Button} from 'react-native-elements';
 import {useDispatch} from 'react-redux';
 import {actions} from '../app-redux';
+import {RecruitmentApi} from '../api';
 
 const bg = require('../assets/bg1.png');
 const logo = require('../assets/logo-transparent.png');
@@ -21,6 +22,11 @@ const WelcomeScreen = ({navigation}) => {
     () => navigateToLogin('RECRUITER', dispatch, navigation),
     [dispatch, navigation],
   );
+  useEffect(() => {
+    RecruitmentApi.getAllFilters().then((response) => {
+      dispatch(actions.recruitment.saveListFilters(response));
+    });
+  }, [dispatch]);
 
   return (
     <>

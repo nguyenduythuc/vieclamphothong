@@ -10,28 +10,26 @@
 import React, {useState, useCallback, useEffect} from 'react';
 import {SafeAreaView, ScrollView, View, Text, StyleSheet} from 'react-native';
 import {Slider, Button, CheckBox} from 'react-native-elements';
-import {RecruitmentApi} from '../api';
+import {RecruitmentApi, setToken} from '../api';
 import {useDispatch, useSelector} from 'react-redux';
 import {actions} from '../app-redux';
 
 function getKm(distance) {
   return Math.floor(distance * 100);
 }
-const Filter = () => {
+const Filter = ({navigation}) => {
   const [distance, setDistance] = useState(0);
   const dispatch = useDispatch();
   const listFilters = useSelector((state) => state.recruitment.listFilters);
   useEffect(() => {
     console.log('didmount');
-    RecruitmentApi.getAllFilters().then((response) => {
-      dispatch(actions.recruitment.saveListFilters(response));
-    });
-  }, [dispatch]);
+    // setToken('response.token');
+  }, []);
 
   //checkbox group
   const [checkBoxPlace, setCheckBoxPlace] = useState(false);
   const [checkBoxPlaceList, setCheckBoxPlaceList] = useState([]);
-  const listIdsPlace = listFilters?.workplace.map((item) => item.id);
+  const listIdsPlace = listFilters?.workplace?.map((item) => item.id);
   const onCheckAllPlace = useCallback(() => {
     !checkBoxPlace
       ? setCheckBoxPlaceList(listIdsPlace)
@@ -151,16 +149,20 @@ const Filter = () => {
       'include=educational_background,occupation,workplace,company' +
       generateQueryString('workplace_id', checkBoxPlaceList) +
       generateQueryString('occupation_id', checkBoxWorkList) +
-      generateQueryString('gender', [checkBoxGender]) +
-      generateQueryString('salaryRange', checkBoxSalaryList) +
-      generateQueryString('ageRange', [checkBoxAge]) +
-      generateQueryString('experienceRange', [checkBoxExperience]) +
-      generateQueryString('educationBackground_id', [
-        checkBoxEducationBackground,
-      ]);
+      generateQueryString('gender', checkBoxGender ? [checkBoxGender] : []) +
+      generateQueryString('salary_id_in', checkBoxSalaryList) +
+      generateQueryString('age_id_in', checkBoxAge ? [checkBoxAge] : []) +
+      generateQueryString(
+        'experience_id_in',
+        checkBoxExperience ? [checkBoxExperience] : [],
+      ) +
+      generateQueryString(
+        'education_background_id',
+        checkBoxEducationBackground ? [checkBoxEducationBackground] : [],
+      );
     RecruitmentApi.getList(queryResult).then((response) => {
       dispatch(actions.recruitment.saveListJobs(response.data));
-      console.log(response.data);
+      navigation.navigate('ListJobs');
     });
   }, [
     checkBoxPlaceList,
@@ -171,6 +173,7 @@ const Filter = () => {
     checkBoxExperience,
     checkBoxEducationBackground,
     dispatch,
+    navigation,
   ]);
 
   const generateQueryString = (key, arrayValue) => {

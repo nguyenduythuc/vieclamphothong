@@ -29,7 +29,7 @@ const HomeScreen = ({navigation}) => {
   const carouselRef = useRef(null);
   const listJobs = useSelector((state) => state.recruitment.listJobs);
   useEffect(() => {
-    if (listJobs.length > 0) {
+    if (listJobs?.length > 0) {
       return;
     }
     RecruitmentApi.getList(
@@ -85,7 +85,7 @@ const HomeScreen = ({navigation}) => {
           provider={PROVIDER_GOOGLE} // remove if not using Google Maps
           style={styles.map}
           region={currentPosition}>
-          {listJobs.map(({location, title, description}) => (
+          {listJobs?.map(({location, title, description}) => (
             <Marker
               coordinate={{
                 longitude: location.coordinates[0],

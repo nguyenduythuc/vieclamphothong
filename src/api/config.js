@@ -1,6 +1,11 @@
 import qs from 'querystringify';
+// import {actions} from '../app-redux';
+import {actions, configStore} from '../app-redux';
+
+const {store} = configStore();
 
 const baseUrl = 'https://s-job.vn';
+// const navigation = useNavigation();
 
 let HEADERS = {
   Accept: 'application/json',
@@ -11,8 +16,9 @@ let HEADERS = {
 
 const onResponse = async (request, result) => {
   try {
-    console.log('request :', request);
     const body = await result.text();
+    console.log('result :', result.status);
+    console.log('request :', request);
     const newBody = JSON.parse(body);
     // Response is json but not a successful response
     if (result.status !== 200) {
@@ -20,6 +26,11 @@ const onResponse = async (request, result) => {
         exception: newBody,
         type: 'object',
       };
+      if (result.status === 401) {
+        console.log('store', store);
+        // setToken('');
+        store.dispatch(actions.user.saveUser({}));
+      }
       throw exception;
     }
 
@@ -34,6 +45,9 @@ const onResponse = async (request, result) => {
     if (result.status === 200) {
       return result;
     }
+    // if (result.status === 401) {
+    //   return result;
+    // }
     // // FAILED: Throw unknown exceptions
     const exception = {
       exception: result,

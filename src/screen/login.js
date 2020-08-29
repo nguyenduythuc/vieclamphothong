@@ -5,7 +5,7 @@ import {Card, Input, Button} from 'react-native-elements';
 import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
 import DeviceInfo from 'react-native-device-info';
 import {useDispatch} from 'react-redux';
-import {AuthApi} from '../api';
+import {AuthApi, setToken} from '../api';
 import {actions} from '../app-redux';
 
 const bg = require('../assets/bg1.png');
@@ -25,6 +25,7 @@ const LoginScreen = ({navigation}) => {
       const deviceName = await DeviceInfo.getDeviceName();
       const response = await AuthApi.login(phoneNumber, password, deviceName);
       dispatch(actions.user.saveUser(response));
+      setToken(response.token);
       navigation.navigate('Home');
     } catch (error) {
       alert(JSON.stringify(error));

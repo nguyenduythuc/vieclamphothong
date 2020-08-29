@@ -17,9 +17,12 @@ const App = ({navigation}) => {
       if (user?.user?.token) {
         setToken(user.user.token);
         navigationRef.current?.navigate('Home');
+      } else {
+        // navigationRef.current?.navigate('Login');
       }
     }, 0);
-  }, [user, navigation]);
+    console.log('user', user);
+  }, [user.user, navigation, user]);
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
