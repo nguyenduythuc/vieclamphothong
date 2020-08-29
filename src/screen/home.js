@@ -21,15 +21,17 @@ const HomeScreen = ({navigation}) => {
   const dispatch = useDispatch();
   const [search, setSearch] = useState('');
   const [currentPosition, setCurentPosition] = useState({
-    latitude: 21.036419,
-    longitude: 105.80353,
-    latitudeDelta: 0.015,
-    longitudeDelta: 0.0121,
+    latitude: 21.312542,
+    longitude: 105.704714,
+    latitudeDelta: 0.1,
+    longitudeDelta: 0.1,
   });
   const carouselRef = useRef(null);
+  const mapRef = useRef(null);
   const listJobs = useSelector((state) => state.recruitment.listJobs);
+  console.log(listJobs);
   useEffect(() => {
-    if (listJobs.length > 0) {
+    if (listJobs?.length > 0) {
       return;
     }
     RecruitmentApi.getList(
@@ -37,7 +39,6 @@ const HomeScreen = ({navigation}) => {
     ).then((response) => {
       dispatch(actions.recruitment.saveListJobs(response.data));
       // console.log(response);
-      console.log(listJobs);
     });
     // Geolocation.getCurrentPosition((info) => {
     //   const newPosition = {...currentPosition};
@@ -63,6 +64,21 @@ const HomeScreen = ({navigation}) => {
     );
   }, []);
 
+  const onSwipeToItem = (index) => {
+    setCurentPosition({
+      latitude: listJobs[index]?.company.latitude,
+      longitude: listJobs[index]?.company.longitude,
+      latitudeDelta: 0.1,
+      longitudeDelta: 0.1,
+    });
+    mapRef.current?.animateCamera({center: currentPosition, pitch: 45});
+  };
+
+  function onItemSelected(itemId) {
+    const index = listJobs.findIndex((item) => item.id === itemId);
+    carouselRef.current.snapToItem(index !== -1 ? index : 0);
+  }
+
   return (
     <>
       <SafeAreaView>
@@ -82,18 +98,19 @@ const HomeScreen = ({navigation}) => {
           />
         </View>
         <MapView
+          ref={mapRef}
           provider={PROVIDER_GOOGLE} // remove if not using Google Maps
           style={styles.map}
           region={currentPosition}>
-          {listJobs.map(({location, title, description}) => (
+          {listJobs?.map(({company, id, title, description}) => (
             <Marker
+              onPress={() => onItemSelected(id)}
               coordinate={{
-                longitude: location.coordinates[0],
-                latitude: location.coordinates[1],
+                latitude: company.latitude,
+                longitude: company.longitude,
               }}
-              centerOffset={{ x: -18, y: -60 }}
-              title={title}
-              description={description}
+              anchor={{x: 0.84, y: 1}}
+              centerOffset={{x: -18, y: -60}}
             />
           ))}
         </MapView>
@@ -103,6 +120,7 @@ const HomeScreen = ({navigation}) => {
           sliderHeight={height * 0.09}
           itemWidth={width - 80}
           data={listJobs}
+          onSnapToItem={onSwipeToItem}
           renderItem={renderItem}
         />
       </SafeAreaView>
