@@ -12,11 +12,14 @@ import {Card, Divider, Button, Icon} from 'react-native-elements';
 import {formatCurrencyToSring} from '../utils/common';
 import moment from 'moment';
 
-const JobItem = ({item, isList, isSeen, isSaved, isApplied}) => {
+const JobItem = ({item, isList, isSeen, isSaved, isApplied, navigation}) => {
   return (
     <Card containerStyle={styles.cardContainer}>
       <View style={styles.cardHeader}>
         <Text
+          onPress={() => {
+            navigation.navigate('EmployerInfo', {id: item.id});
+          }}
           style={isSeen ? styles.titleSeen : styles.title}
           numberOfLines={2}>
           {item.title}

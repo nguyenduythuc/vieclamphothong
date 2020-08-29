@@ -20,6 +20,7 @@ import {
 import {Card, Divider, Button} from 'react-native-elements';
 import {TabView, SceneMap} from 'react-native-tab-view';
 import {JobDetail, Comment, About} from '../components';
+import {RecruitmentApi} from '../api';
 
 const bg = require('../assets/samsung.jpg');
 const JobRoute = () => (
@@ -42,10 +43,13 @@ const AboutRoute = () => (
 
 const initialLayout = {width: Dimensions.get('window').width};
 
-const EmployerInfo = ({navigation}) => {
+const EmployerInfo = ({navigation, route}) => {
+  const {id} = route.params;
   useEffect(() => {
-    console.log('didmount');
-  }, []);
+    RecruitmentApi.getDetailRecruitment(id).then((response) => {
+      console.log('detail', response);
+    });
+  }, [id]);
 
   const [index, setIndex] = useState(0);
   const [routes] = useState([

@@ -146,7 +146,7 @@ const Filter = ({navigation}) => {
 
   const onPressViewResult = useCallback(() => {
     const queryResult =
-      'include=educational_background,occupation,workplace,company' +
+      'include=educational_background,occupation,workplace,company&filter[location]=21.312542,105.704714,10' +
       generateQueryString('workplace_id', checkBoxPlaceList) +
       generateQueryString('occupation_id', checkBoxWorkList) +
       generateQueryString('gender', checkBoxGender ? [checkBoxGender] : []) +
