@@ -35,7 +35,7 @@ const JobItem = ({item, isList, isSeen, isSaved, isApplied, navigation}) => {
       </View>
       <View style={styles.row}>
         <View style={styles.colText}>
-          <Text>Lương: </Text>
+          <Text style={styles.greyText}>Lương: </Text>
           <Text style={styles.redText}>{`${formatCurrencyToSring(
             item.min_salary,
           )}tr-${formatCurrencyToSring(item.max_salary)}tr`}</Text>
@@ -99,6 +99,7 @@ const styles = StyleSheet.create({
   cardContainer: {
     backgroundColor: 'white',
     borderRadius: 8,
+    borderColor: 'white',
   },
   title: {
     marginBottom: 10,
@@ -159,6 +160,9 @@ const styles = StyleSheet.create({
   },
   redText: {
     color: 'red',
+  },
+  greyText: {
+    color: 'grey',
   },
 });
 
