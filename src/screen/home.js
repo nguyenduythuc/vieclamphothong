@@ -30,7 +30,7 @@ const HomeScreen = ({navigation}) => {
   const carouselRef = useRef(null);
   const mapRef = useRef(null);
   const listJobs = useSelector((state) => state.recruitment.listJobs);
-  console.log(listJobs);
+
   useEffect(() => {
     if (listJobs?.length > 0) {
       return;
