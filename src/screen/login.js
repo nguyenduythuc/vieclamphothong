@@ -1,7 +1,7 @@
 import React, {useCallback, useState} from 'react';
 import {SafeAreaView, StyleSheet, Image, View, Text} from 'react-native';
 import {useSelector} from 'react-redux';
-import {Card, Input, Button} from 'react-native-elements';
+import {Card, Input, Button, Overlay} from 'react-native-elements';
 import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
 import DeviceInfo from 'react-native-device-info';
 import {useDispatch} from 'react-redux';
@@ -13,6 +13,11 @@ const logo = require('../assets/logo-transparent.png');
 const LoginScreen = ({navigation}) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
+  const [overlayVisible, setOverlayVisible] = useState(false);
+  const [forgotPasswordPhoneNumber, setForgotPasswordPhoneNumber] = useState(
+    '',
+  );
+
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
@@ -31,10 +36,29 @@ const LoginScreen = ({navigation}) => {
       alert(JSON.stringify(error));
     }
   }, [phoneNumber, password, navigation, dispatch]);
+
   const onRegister = useCallback(
     () => navigation.navigate('Register', {phoneNumber, password}),
     [phoneNumber, password, navigation],
   );
+
+  const onForgotPasswordTypingPhone = useCallback((text) => {
+    setForgotPasswordPhoneNumber(text);
+  }, []);
+
+  const onForgotPasswordSubmit = useCallback(() => {
+    setOverlayVisible(false);
+    navigation.navigate('OTP', {
+      phoneNumber: forgotPasswordPhoneNumber,
+      forgotPassword: true,
+    });
+  }, [navigation, forgotPasswordPhoneNumber]);
+
+  const onForgotPassword = () => setOverlayVisible(true);
+
+  const toggleOverlay = useCallback(() => {
+    setOverlayVisible(!overlayVisible);
+  }, [overlayVisible]);
 
   return (
     <>
@@ -95,6 +119,7 @@ const LoginScreen = ({navigation}) => {
           />
           <View style={styles.otpAndPasswordButton}>
             <Button
+              onPress={onForgotPassword}
               title="Quên mật khẩu?"
               titleStyle={styles.sendOTP}
               type="clear"
@@ -111,6 +136,26 @@ const LoginScreen = ({navigation}) => {
           />
         </View>
       </SafeAreaView>
+      <Overlay
+        overlayStyle={styles.overlayStyle}
+        isVisible={overlayVisible}
+        onBackdropPress={toggleOverlay}>
+        <Text style={styles.overlayTitle}>Quên mật khẩu</Text>
+        <Input
+          inputStyle={styles.overlayInputStyle}
+          inputContainerStyle={styles.overlayInputContainerStyle}
+          onChangeText={onForgotPasswordTypingPhone}
+          placeholderTextColor="black"
+          placeholder="Số điện thoại"
+        />
+        <Button
+          titleStyle={styles.overlayButtonTitleStyle}
+          buttonStyle={styles.overlayButtonStyle}
+          onPress={onForgotPasswordSubmit}
+          title="Xác nhận"
+          type="clear"
+        />
+      </Overlay>
     </>
   );
 };
@@ -176,12 +221,24 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   registerWrapper: {
-    // position: 'absolute',
     bottom: 30,
     flexDirection: 'row',
     alignItems: 'center',
   },
   registerText: {color: 'white', fontSize: 20, fontWeight: '500'},
+  // Overlay
+  overlayStyle: {
+    width: '90%',
+    height: 200,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  overlayTitle: {fontSize: 22},
+  overlayInputStyle: {color: 'black'},
+  overlayInputContainerStyle: {borderColor: 'black'},
+  overlayButtonTitleStyle: {color: 'white'},
+  overlayButtonStyle: {backgroundColor: '#377bf5', width: '100%'},
 });
 
 export default LoginScreen;

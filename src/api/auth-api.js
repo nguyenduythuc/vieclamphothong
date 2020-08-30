@@ -15,6 +15,9 @@ const AuthApi = {
       full_name: fullName,
       device_name: deviceName,
     }),
+
+  forgotPassword: (idToken, password) =>
+    config.put('/capi/forgot-password', {id_token: idToken, password}),
 };
 
 export default AuthApi;
