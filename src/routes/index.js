@@ -3,6 +3,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import WelcomeScreen from '../screen/welcome';
 import LoginScreen from '../screen/login';
 import RegisterScreen from '../screen/register';
+import ForgotPasswordScreen from '../screen/forgot-password';
 import OTPScreen from '../screen/otp';
 import TOSScreen from '../screen/tos';
 import FilterScreen from '../screen/filter';
@@ -34,6 +35,11 @@ export default function Route() {
         name="Register"
         component={RegisterScreen}
         options={{title: 'Đăng ký'}}
+      />
+      <Stack.Screen
+        name="ForgotPassword"
+        component={ForgotPasswordScreen}
+        options={{title: 'Quên mật khẩu'}}
       />
       <Stack.Screen
         name="Home"

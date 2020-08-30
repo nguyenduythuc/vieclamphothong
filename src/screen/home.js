@@ -8,7 +8,7 @@
 
 import React, {useEffect, useCallback, useRef, useState} from 'react';
 import {SafeAreaView, StyleSheet, View, Text, Dimensions} from 'react-native';
-import {Card, SearchBar, Icon, Divider} from 'react-native-elements';
+import {Card, SearchBar, Icon} from 'react-native-elements';
 import {JobItem} from '../components';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
@@ -26,10 +26,11 @@ const HomeScreen = ({navigation}) => {
     latitudeDelta: 0.1,
     longitudeDelta: 0.1,
   });
+
   const carouselRef = useRef(null);
   const mapRef = useRef(null);
   const listJobs = useSelector((state) => state.recruitment.listJobs);
-  console.log(listJobs);
+
   useEffect(() => {
     if (listJobs?.length > 0) {
       return;
