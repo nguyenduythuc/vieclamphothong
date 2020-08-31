@@ -6,6 +6,12 @@ const RecruitmentApi = {
   getAllFilters: () => config.get('/api/filters'),
 
   getDetailRecruitment: (id) => config.get(`/capi/recruitment/${id}`),
+
+  makeRecuitmentSeen: (id) =>
+    config.post('/capi/recruitment-seen', {recruitment_id: id}),
+
+  makeRecuitmentApplied: (id) =>
+    config.post('/capi/applies', {recruitment_id: id}),
 };
 
 export default RecruitmentApi;

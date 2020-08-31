@@ -21,6 +21,8 @@ import {Card, Divider, Button} from 'react-native-elements';
 import {TabView, SceneMap} from 'react-native-tab-view';
 import {JobDetail, Comment, About} from '../components';
 import {RecruitmentApi} from '../api';
+import {useDispatch, useSelector} from 'react-redux';
+import {actions} from '../app-redux';
 
 const bg = require('../assets/samsung.jpg');
 const JobRoute = () => (
@@ -44,12 +46,14 @@ const AboutRoute = () => (
 const initialLayout = {width: Dimensions.get('window').width};
 
 const EmployerInfo = ({navigation, route}) => {
+  const dispatch = useDispatch();
   const {id} = route.params;
   useEffect(() => {
     RecruitmentApi.getDetailRecruitment(id).then((response) => {
-      console.log('detail', response);
+      dispatch(actions.recruitment.saveDetailRecruitment(response.data));
+      RecruitmentApi.makeRecuitmentSeen(id);
     });
-  }, [id]);
+  }, [dispatch, id]);
 
   const [index, setIndex] = useState(0);
   const [routes] = useState([

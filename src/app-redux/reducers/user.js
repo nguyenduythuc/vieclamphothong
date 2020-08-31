@@ -3,6 +3,7 @@ import types from '../types';
 const INITIAL_STATE = {
   user: null,
   userType: null,
+  userLocation: {},
 };
 
 export const user = (state = INITIAL_STATE, action) => {
@@ -18,6 +19,12 @@ export const user = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         userType: action.data,
+      };
+    case types.SAVE_CURRENT_LOCATION:
+      delete action.type;
+      return {
+        ...state,
+        userLocation: action.data,
       };
     default:
       return state;

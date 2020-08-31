@@ -32,22 +32,19 @@ const HomeScreen = ({navigation}) => {
   const listJobs = useSelector((state) => state.recruitment.listJobs);
 
   useEffect(() => {
-    if (listJobs?.length > 0) {
-      return;
-    }
-    RecruitmentApi.getList(
-      'filter[location]=21.312542,105.704714,10&include=educational_background,occupation,workplace,company',
-    ).then((response) => {
-      dispatch(actions.recruitment.saveListJobs(response.data));
-      // console.log(response);
+    Geolocation.getCurrentPosition((info) => {
+      const newPosition = {...currentPosition};
+      // newPosition.latitude = info.coords.latitude;
+      // newPosition.longitude = info.coords.longitude;
+      setCurentPosition(newPosition);
+      dispatch(actions.user.saveCurrentLocation(newPosition));
+      RecruitmentApi.getList(
+        `filter[location]=${newPosition.latitude},${newPosition.longitude},10&include=educational_background,occupation,workplace,company`,
+      ).then((response) => {
+        dispatch(actions.recruitment.saveListJobs(response.data));
+      });
     });
-    // Geolocation.getCurrentPosition((info) => {
-    //   const newPosition = {...currentPosition};
-    //   newPosition.latitude = info.coords.latitude;
-    //   newPosition.longitude = info.coords.longitude;
-    //   setCurentPosition(newPosition);
-    // });
-  }, [dispatch, listJobs]);
+  }, []);
 
   const onSearch = useCallback((text) => {
     setSearch(text);
@@ -146,7 +143,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   map: {
-    height: height * 0.6,
+    height: height * 0.55,
     width,
     justifyContent: 'flex-end',
     alignItems: 'center',
