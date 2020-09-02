@@ -6,54 +6,78 @@
  * @flow
  */
 
-import React from 'react';
+import React, {useCallback} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import {Card, Divider, Button, Icon, Rating} from 'react-native-elements';
+import {Card, Divider, Icon, Rating, Button} from 'react-native-elements';
 import {formatCurrencyToSring} from '../utils/common';
 import moment from 'moment';
 
-const JobItem = ({item, isList, isSeen, isSaved, isApplied, navigation}) => {
+const JobAppliedItem = ({item, navigation, isApplied, isSaved, deleteItem}) => {
+  const calculatorDate = useCallback(() => {
+    const start = moment(item.recruitment.created_at, 'YYYY-MM-DD');
+    const end = moment(new Date(), 'YYYY-MM-DD');
+    return end.diff(start, 'days');
+  }, [item.recruitment.created_at]);
+  const onPressDeleteItem = () => {
+    deleteItem(item.id);
+  };
   return (
     <Card containerStyle={styles.cardContainer}>
       <View style={styles.cardHeader}>
-        <Text
-          onPress={() => {
-            navigation.navigate('EmployerInfo', {id: item.id});
-          }}
-          style={isSeen ? styles.titleSeen : styles.title}
-          numberOfLines={2}>
-          {item.position}
-        </Text>
+        <View style={styles.col90}>
+          <Text
+            onPress={() => {
+              navigation.navigate('EmployerInfo', {id: item.recruitment.id});
+            }}
+            style={styles.title}
+            numberOfLines={2}>
+            {item.recruitment.position}
+          </Text>
+        </View>
+        <View style={styles.col10}>
+          <Icon
+            onPress={onPressDeleteItem}
+            name="delete-forever-outline"
+            type="material-community"
+            color="red"
+            style={styles.iconDelete}
+          />
+        </View>
       </View>
       <View style={styles.row}>
         <View style={styles.colText}>
           <Text style={styles.greyText}>Lương: </Text>
           <Text style={styles.redText}>{`${formatCurrencyToSring(
-            item.min_salary,
-          )}tr-${formatCurrencyToSring(item.max_salary)}tr`}</Text>
+            item.recruitment.min_salary,
+          )}tr-${formatCurrencyToSring(item.recruitment.max_salary)}tr`}</Text>
         </View>
-        <Text>{`Số lượng: ${item.quantity}`}</Text>
+        <Text>{`Số lượng: ${item.recruitment.quantity}`}</Text>
       </View>
       <View style={styles.row}>
-        <Text>{`Hạn nộp: ${moment(item.expired_at).format(
+        <Text>{`Hạn nộp: ${moment(item.recruitment.expired_at).format(
           'DD/MM/YYYY',
         )}`}</Text>
         <Text
-          style={styles.redText}>{`Còn ${item.expired_in_number} ngày`}</Text>
+          style={
+            styles.redText
+          }>{`Còn ${item.recruitment.expired_in_number} ngày`}</Text>
       </View>
       <Divider style={styles.divider} />
       <Text style={styles.title2} numberOfLines={1}>
-        {item.company.name}
+        {item.recruitment.company.name}
       </Text>
       <View style={styles.row}>
-        <Rating imageSize={14} startingValue={item.company.rating_point} />
+        <Rating
+          imageSize={14}
+          startingValue={item.recruitment.company.rating_point}
+        />
         <View style={styles.comments}>
           <Icon name="comments" type="fontisto" color="red" size={15} />
           <Text style={styles.commentsText}>Xem nhận xét</Text>
         </View>
       </View>
       <Text style={styles.marginBottom} numberOfLines={2}>
-        {item.company.address}
+        {item.recruitment.company.address}
       </Text>
       <View style={styles.colText}>
         <Text>Cách bạn: </Text>
@@ -63,30 +87,22 @@ const JobItem = ({item, isList, isSeen, isSaved, isApplied, navigation}) => {
         <View>
           <Divider style={styles.divider} />
           <Text style={styles.status} numberOfLines={2}>
-            {`Tình trạng: ${item.status}`}
+            {`Tình trạng: ${item?.status_readable.label}`}
           </Text>
-          <Text style={styles.time}>{`Đã nộp: ${item.time} ngày trước`}</Text>
+          <Text
+            style={
+              styles.time
+            }>{`Đã nộp: ${calculatorDate()} ngày trước`}</Text>
         </View>
       )}
       <View style={styles.btnFooter}>
-        {(isSaved || isList || isSeen) && (
+        {isSaved && (
           <View style={styles.col}>
             <Button
               title="Ứng tuyển"
               buttonStyle={styles.btnDeleteOptions}
               type="outline"
               titleStyle={{color: '#4a5568'}}
-              onPress={() => {}}
-            />
-          </View>
-        )}
-        {(isSeen || isList) && (
-          <View style={styles.col}>
-            <Button
-              title="Lưu"
-              buttonStyle={styles.btnViewResult}
-              type="outline"
-              titleStyle={{color: 'white'}}
               onPress={() => {}}
             />
           </View>
@@ -106,13 +122,24 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     color: '#3182ce',
     fontSize: 20,
-    // width: '90%',
+  },
+  iconDelete: {
+    color: 'red',
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    width: '100%',
+  },
+  col90: {
+    width: '90%',
+  },
+  col10: {
+    width: '10%',
   },
   titleSeen: {
     marginBottom: 10,
     color: 'grey',
     fontSize: 20,
-    // width: '90%',
   },
   title2: {
     marginBottom: 10,
@@ -148,14 +175,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#48bb78',
     paddingHorizontal: 30,
   },
-  cardHeader: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  iconDelete: {
-    color: 'red',
-  },
   status: {
     color: 'purple',
   },
@@ -174,4 +193,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default JobItem;
+export default JobAppliedItem;

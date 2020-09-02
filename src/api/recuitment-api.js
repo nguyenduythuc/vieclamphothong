@@ -12,6 +12,17 @@ const RecruitmentApi = {
 
   makeRecuitmentApplied: (id) =>
     config.post('/capi/applies', {recruitment_id: id}),
+
+  getListApplied: (location) =>
+    config.get(
+      `/capi/applies?include=user,recruitment,recruitment.company,recruitment.educationalBackground,recruitment.occupation,recruitment.workplace&${location}`,
+    ),
+  getListSaved: (location) =>
+    config.get(
+      `/capi/recruitment-save?include=user,recruitment,recruitment.company,recruitment.educationalBackground,recruitment.occupation,recruitment.workplace&${location}`,
+    ),
+
+  deleteSavedRecruitment: (id) => config.delete(`/capi/recruitment-save/${id}`),
 };
 
 export default RecruitmentApi;

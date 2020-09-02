@@ -7,91 +7,53 @@
  * @flow
  */
 
-import React, {useState, useCallback, useEffect} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  View,
-  Text,
-  StyleSheet,
-  Button,
-} from 'react-native';
-import Modal from 'react-native-modal';
-import {Icon} from 'react-native-elements';
-import {JobItem} from '../components';
-
-const ENTRIES1 = [
-  {
-    title: 'Nhân viên sản xuất',
-    salary: '8 - 10tr',
-    quantity: 10,
-    expiry: '01-01-2020',
-    timeLeft: 20,
-    company: 'Công ty TNHH Samsung Bắc Ninh',
-    address: 'Yên Phong, Yên Trung, Bắc Ninh',
-    range: '1',
-  },
-  {
-    title: 'Earlier this morning, NYC',
-    salary: '8 - 10tr',
-    quantity: 10,
-    expiry: '01-01-2020',
-    timeLeft: 20,
-    company: 'Công ty TNHH Samsung Bắc Ninh',
-    address: 'Yên Phong, Yên Trung, Bắc Ninh',
-    range: '1',
-  },
-  {
-    title: 'White Pocket Sunset',
-    salary: '8 - 10tr',
-    quantity: 10,
-    expiry: '01-01-2020',
-    timeLeft: 20,
-    company: 'Công ty TNHH Samsung Bắc Ninh',
-    address: 'Yên Phong, Yên Trung, Bắc Ninh',
-    range: '1',
-  },
-  {
-    title: 'Acrocorinth, Greece',
-    salary: '8 - 10tr',
-    quantity: 10,
-    expiry: '01-01-2020',
-    timeLeft: 20,
-    company: 'Công ty TNHH Samsung Bắc Ninh',
-    address: 'Yên Phong, Yên Trung, Bắc Ninh',
-    range: '1',
-  },
-  {
-    title: 'The lone tree, majestic landscape of New Zealand',
-    salary: '8 - 10tr',
-    quantity: 10,
-    expiry: '01-01-2020',
-    timeLeft: 20,
-    company: 'Công ty TNHH Samsung Bắc Ninh',
-    address: 'Yên Phong, Yên Trung, Bắc Ninh',
-    range: '1',
-  },
-];
+import React, {useState, useEffect, useCallback} from 'react';
+import {SafeAreaView, ScrollView, View, Text, StyleSheet} from 'react-native';
+import {JobAppliedItem} from '../components';
+import {RecruitmentApi} from '../api';
+import {useSelector} from 'react-redux';
 
 const ListSavedJobs = ({navigation}) => {
-  const [entries, setEntries] = useState([]);
+  const [listSavedJobs, setListSavedJobs] = useState([]);
+  const userLocation = useSelector((state) => state.user.userLocation);
 
   useEffect(() => {
-    console.log('didmount');
-    setEntries(ENTRIES1);
+    getListData();
   }, []);
+  const getListData = () => {
+    RecruitmentApi.getListSaved(
+      `location=${userLocation.latitude},${userLocation.longitude}`,
+    ).then((response) => {
+      setListSavedJobs(response.data);
+    });
+  };
+  const onPressDeleteItem = (string) => {
+    console.log(string);
+    // RecruitmentApi.deleteSavedRecruitment(
+    //   `location=${userLocation.latitude},${userLocation.longitude}`,
+    // ).then((response) => {
+    //   setListSavedJobs(response.data);
+    // });
+  };
 
   return (
     <SafeAreaView>
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.blockTitle}>
-          <Text style={styles.blockTitleText}>Tổng số: 5 công việc</Text>
+          <Text style={styles.blockTitleText}>
+            Tổng số: {listSavedJobs.length} công việc
+          </Text>
         </View>
         <View style={styles.hairLine} />
         <View style={styles.row}>
           <View style={styles.item}>
-            {entries.map((item, idx) => (
-              <JobItem item={item} isSaved />
+            {listSavedJobs.map((item, idx) => (
+              <JobAppliedItem
+                item={item}
+                isSaved
+                deleteItem={onPressDeleteItem}
+                navigation={navigation}
+              />
             ))}
           </View>
         </View>

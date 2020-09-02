@@ -18,70 +18,10 @@ import {
 } from 'react-native';
 import Modal from 'react-native-modal';
 import {Icon} from 'react-native-elements';
-import {JobItem, Sortable} from '../components';
+import {JobAppliedItem, Sortable} from '../components';
+import {RecruitmentApi} from '../api';
+import {useDispatch, useSelector} from 'react-redux';
 
-const ENTRIES1 = [
-  {
-    title: 'Nhân viên sản xuất',
-    salary: '8 - 10tr',
-    quantity: 10,
-    expiry: '01-01-2020',
-    timeLeft: 20,
-    company: 'Công ty TNHH Samsung Bắc Ninh',
-    address: 'Yên Phong, Yên Trung, Bắc Ninh',
-    range: '1',
-    status: 'Đang đợi doanh nghiệp trả lời',
-    time: 3,
-  },
-  {
-    title: 'Earlier this morning, NYC',
-    salary: '8 - 10tr',
-    quantity: 10,
-    expiry: '01-01-2020',
-    timeLeft: 20,
-    company: 'Công ty TNHH Samsung Bắc Ninh',
-    address: 'Yên Phong, Yên Trung, Bắc Ninh',
-    range: '1',
-    status: 'Đang đợi doanh nghiệp trả lời',
-    time: 3,
-  },
-  {
-    title: 'White Pocket Sunset',
-    salary: '8 - 10tr',
-    quantity: 10,
-    expiry: '01-01-2020',
-    timeLeft: 20,
-    company: 'Công ty TNHH Samsung Bắc Ninh',
-    address: 'Yên Phong, Yên Trung, Bắc Ninh',
-    range: '1',
-    status: 'Đang đợi doanh nghiệp trả lời',
-    time: 3,
-  },
-  {
-    title: 'Acrocorinth, Greece',
-    salary: '8 - 10tr',
-    quantity: 10,
-    expiry: '01-01-2020',
-    timeLeft: 20,
-    company: 'Công ty TNHH Samsung Bắc Ninh',
-    address: 'Yên Phong, Yên Trung, Bắc Ninh',
-    range: '1',
-    status: 'Đang đợi doanh nghiệp trả lời',
-    time: 3,
-  },
-  {
-    title: 'The lone tree, majestic landscape of New Zealand',
-    salary: '8 - 10tr',
-    quantity: 10,
-    expiry: '01-01-2020',
-    timeLeft: 20,
-    company: 'Công ty TNHH Samsung Bắc Ninh',
-    address: 'Yên Phong, Yên Trung, Bắc Ninh',
-    range: '1',
-    status: 'Đang đợi doanh nghiệp trả lời',
-    time: 3,
-  },
-];
 const ENTRIES2 = [
   {
     id: 1,
@@ -106,13 +46,18 @@ const ENTRIES2 = [
 ];
 
 const ListSavedJobs = ({navigation}) => {
-  const [entries, setEntries] = useState([]);
+  const [listAppliedJobs, setListAppliedJobs] = useState([]);
   const [sortList, setSortList] = useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
+  const userLocation = useSelector((state) => state.user.userLocation);
 
   useEffect(() => {
-    console.log('didmount');
-    setEntries(ENTRIES1);
+    RecruitmentApi.getListApplied(
+      `location=${userLocation.latitude},${userLocation.longitude}`,
+    ).then((response) => {
+      setListAppliedJobs(response.data);
+      console.log(listAppliedJobs);
+    });
     setSortList(ENTRIES2);
   }, []);
 
@@ -125,7 +70,9 @@ const ListSavedJobs = ({navigation}) => {
     <SafeAreaView>
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.blockTitle}>
-          <Text style={styles.blockTitleText}>Tổng số: 5 công việc</Text>
+          <Text style={styles.blockTitleText}>
+            Tổng số: {listAppliedJobs.length} công việc
+          </Text>
           <View style={styles.row}>
             <Icon
               name="sort-descending"
@@ -138,8 +85,8 @@ const ListSavedJobs = ({navigation}) => {
         <View style={styles.hairLine} />
         <View style={styles.row}>
           <View style={styles.item}>
-            {entries.map((item, idx) => (
-              <JobItem item={item} isApplied />
+            {listAppliedJobs.map((item, idx) => (
+              <JobAppliedItem item={item} isApplied navigation={navigation} />
             ))}
           </View>
         </View>

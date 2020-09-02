@@ -52,12 +52,9 @@ const ListSeenJobs = ({navigation}) => {
       '&include=educational_background,occupation,workplace,company&filter[seen]=true',
     ).then((response) => {
       setListJobs(response.data);
-      console.log(listJobs);
     });
-  }, [dispatch, listJobs]);
+  }, []);
   const toggleModal = (string) => {
-    // setModalVisible(!isModalVisible);
-    console.log(string);
     setModalVisible(!isModalVisible);
   };
 

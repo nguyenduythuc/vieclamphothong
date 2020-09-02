@@ -47,7 +47,6 @@ const WelcomeScreen = ({navigation}) => {
           <Button
             title="Bạn là nhà tuyển dụng"
             titleStyle={styles.buttonText}
-            style={styles.buttonWrapper}
             buttonStyle={styles.buttonStyle}
             onPress={onRecruiter}
             type="outline"
@@ -94,7 +93,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   buttonWrapper: {
-    marginVertical: 30,
+    marginBottom: 30,
   },
   buttonStyle: {
     borderColor: 'white',
@@ -102,6 +101,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
     paddingVertical: 10,
     borderRadius: 25,
+    marginBottom: 30,
   },
   bottomText: {
     color: 'white',
