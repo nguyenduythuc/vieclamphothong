@@ -8,7 +8,7 @@
 
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import {Card, Divider, Button, Icon} from 'react-native-elements';
+import {Card, Divider, Button, Icon, Rating} from 'react-native-elements';
 import {formatCurrencyToSring} from '../utils/common';
 import moment from 'moment';
 
@@ -22,7 +22,7 @@ const JobItem = ({item, isList, isSeen, isSaved, isApplied, navigation}) => {
           }}
           style={isSeen ? styles.titleSeen : styles.title}
           numberOfLines={2}>
-          {item.title}
+          {item.position}
         </Text>
         {(isApplied || isSaved) && (
           <Icon
@@ -35,7 +35,7 @@ const JobItem = ({item, isList, isSeen, isSaved, isApplied, navigation}) => {
       </View>
       <View style={styles.row}>
         <View style={styles.colText}>
-          <Text>Lương: </Text>
+          <Text style={styles.greyText}>Lương: </Text>
           <Text style={styles.redText}>{`${formatCurrencyToSring(
             item.min_salary,
           )}tr-${formatCurrencyToSring(item.max_salary)}tr`}</Text>
@@ -50,10 +50,19 @@ const JobItem = ({item, isList, isSeen, isSaved, isApplied, navigation}) => {
           style={styles.redText}>{`Còn ${item.expired_in_number} ngày`}</Text>
       </View>
       <Divider style={styles.divider} />
-      <Text style={styles.title2} numberOfLines={2}>
+      <Text style={styles.title2} numberOfLines={1}>
         {item.company.name}
       </Text>
-      <Text style={styles.marginBottom}>{item.workplace.name}</Text>
+      <View style={styles.row}>
+        <Rating imageSize={14} startingValue={item.company.rating_point} />
+        <View style={styles.comments}>
+          <Icon name="comments" type="fontisto" color="red" size={15} />
+          <Text style={styles.commentsText}>Xem nhận xét</Text>
+        </View>
+      </View>
+      <Text style={styles.marginBottom} numberOfLines={2}>
+        {item.company.address}
+      </Text>
       <View style={styles.colText}>
         <Text>Cách bạn: </Text>
         <Text style={styles.redText}>{item.distance} km</Text>
@@ -99,6 +108,7 @@ const styles = StyleSheet.create({
   cardContainer: {
     backgroundColor: 'white',
     borderRadius: 8,
+    borderColor: 'white',
   },
   title: {
     marginBottom: 10,
@@ -120,6 +130,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 10,
+  },
+  comments: {
+    flexDirection: 'row',
+  },
+  commentsText: {
+    fontStyle: 'italic',
+    color: 'gray',
   },
   divider: {backgroundColor: 'grey', marginBottom: 10},
   marginBottom: {marginBottom: 10},
@@ -159,6 +176,9 @@ const styles = StyleSheet.create({
   },
   redText: {
     color: 'red',
+  },
+  greyText: {
+    color: 'grey',
   },
 });
 

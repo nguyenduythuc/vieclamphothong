@@ -18,7 +18,7 @@ export default function HomeTabNavigator() {
         key="Home"
         name="Home"
         component={HomeScreen}
-        options={{title: 'Ứng tuyển'}}
+        options={{title: 'Việc làm'}}
       />
       <Tab.Screen
         key="LegalConsultant"

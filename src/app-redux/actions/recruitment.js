@@ -14,9 +14,17 @@ function saveListFilters(data) {
   };
 }
 
+function saveDetailRecruitment(data) {
+  return {
+    type: types.SAVE_DETAIL_RECUITMENT,
+    data: data,
+  };
+}
+
 const recruitment = {
   saveListJobs,
   saveListFilters,
+  saveDetailRecruitment,
 };
 
 export default recruitment;

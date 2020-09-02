@@ -6,46 +6,69 @@
  * @flow
  */
 
-import React from 'react';
+import React, {useCallback} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {Card, Divider, Button} from 'react-native-elements';
+import {useSelector} from 'react-redux';
+import {RecruitmentApi} from '../../api';
+import {formatCurrencyToSring} from '../../utils/common';
+import moment from 'moment';
 
 const JobDetail = ({item, isList, isSeen, isSaved, isApplied}) => {
+  const detailRecruitment = useSelector(
+    (state) => state.recruitment.detailRecruitment,
+  );
+  const onPressApply = useCallback(() => {
+    RecruitmentApi.makeRecuitmentApplied(
+      detailRecruitment.id,
+    ).then((response) => {});
+  }, [detailRecruitment.id]);
   return (
     <View>
       <Card containerStyle={styles.cardContainer}>
         <Text style={styles.title} numberOfLines={2}>
-          Vị trí: Nhân viên sản xuất
+          {detailRecruitment.title}
         </Text>
         <Divider style={styles.divider} />
         <View style={styles.row}>
           <View style={styles.col50}>
             <Text>Lương: </Text>
-            <Text style={styles.salary}>8-10tr</Text>
+            <Text style={styles.salary}>{`${formatCurrencyToSring(
+              detailRecruitment.min_salary,
+            )}tr-${formatCurrencyToSring(
+              detailRecruitment.max_salary,
+            )}tr`}</Text>
           </View>
           <View style={styles.col50}>
             <Text>Trình độ: </Text>
-            <Text>THPT</Text>
+            <Text>{detailRecruitment.educational_background.name}</Text>
           </View>
         </View>
         <View style={styles.row}>
           <View style={styles.col50}>
             <Text>Hạn nộp: </Text>
-            <Text style={styles.salary}>10-01-2020</Text>
+            <Text style={styles.salary}>
+              {moment(detailRecruitment.expired_at).format('DD/MM/YYYY')}
+            </Text>
           </View>
           <View style={styles.col50}>
             <Text>Giới tính: </Text>
-            <Text>Nam</Text>
+            <Text>{detailRecruitment.gender === 'male' ? 'Nam' : 'Nữ'}</Text>
           </View>
         </View>
         <View style={styles.row}>
           <View style={styles.col50}>
             <Text>Ghi chú: </Text>
-            <Text style={styles.salary}>Còn 20 ngày</Text>
+            <Text
+              style={
+                styles.salary
+              }>{`Còn ${detailRecruitment.expired_in_number} ngày`}</Text>
           </View>
           <View style={styles.col50}>
             <Text>Tuổi: </Text>
-            <Text>18-30</Text>
+            <Text>
+              {detailRecruitment.min_age}-{detailRecruitment.max_age}{' '}
+            </Text>
           </View>
         </View>
       </Card>
@@ -55,17 +78,7 @@ const JobDetail = ({item, isList, isSeen, isSaved, isApplied}) => {
         </Text>
         <Divider style={styles.divider} />
         <View style={styles.row}>
-          <Text>
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book. It has survived not
-            only five centuries, but also the leap into electronic typesetting,
-            remaining essentially unchanged. It was popularised in the 1960s
-            with the release of Letraset sheets containing Lorem Ipsum passages,
-            and more recently with desktop publishing software like Aldus
-            PageMaker including versions of Lorem Ipsum.
-          </Text>
+          <Text>{detailRecruitment.benefit}</Text>
         </View>
       </Card>
       <Card containerStyle={styles.cardContainer}>
@@ -74,17 +87,7 @@ const JobDetail = ({item, isList, isSeen, isSaved, isApplied}) => {
         </Text>
         <Divider style={styles.divider} />
         <View style={styles.row}>
-          <Text>
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book. It has survived not
-            only five centuries, but also the leap into electronic typesetting,
-            remaining essentially unchanged. It was popularised in the 1960s
-            with the release of Letraset sheets containing Lorem Ipsum passages,
-            and more recently with desktop publishing software like Aldus
-            PageMaker including versions of Lorem Ipsum.
-          </Text>
+          <Text>{detailRecruitment.expect}</Text>
         </View>
       </Card>
       <Card containerStyle={styles.cardContainer}>
@@ -92,18 +95,13 @@ const JobDetail = ({item, isList, isSeen, isSaved, isApplied}) => {
           Liên hệ
         </Text>
         <Divider style={styles.divider} />
-        <View style={styles.row}>
+        <View style={styles.contact}>
           <Text>
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book. It has survived not
-            only five centuries, but also the leap into electronic typesetting,
-            remaining essentially unchanged. It was popularised in the 1960s
-            with the release of Letraset sheets containing Lorem Ipsum passages,
-            and more recently with desktop publishing software like Aldus
-            PageMaker including versions of Lorem Ipsum.
+            Ông/Bà: {detailRecruitment.company.contact_person_name} -{' '}
+            {detailRecruitment.company.contact_person_phone}
           </Text>
+          <Text>Email: {detailRecruitment.company.contact_person_email}</Text>
+          <Text>Địa chỉ: {detailRecruitment.company.address}</Text>
         </View>
       </Card>
       <View style={styles.btnFooter}>
@@ -111,7 +109,7 @@ const JobDetail = ({item, isList, isSeen, isSaved, isApplied}) => {
           <Button
             title="Ứng tuyển công việc này"
             titleStyle={{color: 'white'}}
-            onPress={() => {}}
+            onPress={() => onPressApply()}
           />
         </View>
         <View style={styles.btnItem}>
@@ -164,6 +162,10 @@ const styles = StyleSheet.create({
   btnItem: {
     width: 300,
     marginBottom: 20,
+  },
+  contact: {
+    display: 'flex',
+    flexDirection: 'column',
   },
 });
 

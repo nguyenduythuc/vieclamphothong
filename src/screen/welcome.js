@@ -34,9 +34,7 @@ const WelcomeScreen = ({navigation}) => {
       <SafeAreaView style={styles.container}>
         <View style={styles.logo}>
           <Image source={logo} style={styles.logoImage} />
-          <Text style={styles.welcome}>
-            {'S.Job bản đồ tìm việc làm\nXin chào!'}
-          </Text>
+          <Text style={styles.welcome}>{'S.JOB Xin chào!'}</Text>
         </View>
         <View style={styles.buttons}>
           <Button
@@ -56,7 +54,7 @@ const WelcomeScreen = ({navigation}) => {
           />
         </View>
         <Text style={styles.bottomText}>
-          Sản phẩm được phát triển bởi công ty cổ phần tập doàn công nghệ
+          Sản phẩm được phát triển bởi công ty cổ phần tập đoàn công nghệ
           Seralead Việt Nam
         </Text>
       </SafeAreaView>
@@ -82,8 +80,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   welcome: {
+    marginTop: 12,
     textAlign: 'center',
-    fontSize: 25,
+    fontSize: 30,
     color: 'white',
   },
   buttons: {
