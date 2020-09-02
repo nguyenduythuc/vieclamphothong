@@ -136,6 +136,9 @@ android {
         multiDexEnabled true
         versionCode 1
         versionName "1.0"
+        ndk {
+            abiFilters "armeabi-v7a", "x86"
+        }
     }
     splits {
         abi {
@@ -151,6 +154,12 @@ android {
             storePassword 'android'
             keyAlias 'androiddebugkey'
             keyPassword 'android'
+        }
+        release {
+            storeFile file('sjob-release.keystore')
+            storePassword '123456'
+            keyAlias 'sjob'
+            keyPassword '123456'
         }
     }
     buildTypes {
@@ -194,7 +203,7 @@ dependencies {
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
-    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'com.android.support:multidex:2.0.1'
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 

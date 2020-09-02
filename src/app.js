@@ -4,6 +4,7 @@ import React, {useEffect, useRef} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {PersistGate} from 'redux-persist/integration/react';
 import {Provider, useSelector} from 'react-redux';
+import SplashScreen from 'react-native-splash-screen';
 import {configStore} from './app-redux';
 import Route from './routes';
 import {setToken} from './api';
@@ -20,7 +21,8 @@ const App = ({navigation}) => {
       } else {
         // navigationRef.current?.navigate('Login');
       }
-    }, 0);
+      SplashScreen.hide();
+    }, 200);
     console.log('user', user);
   }, [user.user, navigation, user]);
   return (
