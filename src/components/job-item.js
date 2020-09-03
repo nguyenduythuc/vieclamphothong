@@ -9,10 +9,40 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {Card, Divider, Button, Icon, Rating} from 'react-native-elements';
+import Toast from 'react-native-toast-message';
 import {formatCurrencyToSring} from '../utils/common';
+import {RecruitmentApi} from '../api';
 import moment from 'moment';
 
 const JobItem = ({item, isList, isSeen, isSaved, isApplied, navigation}) => {
+  const onPressApply = (id) => {
+    RecruitmentApi.makeRecuitmentApplied(id).then((response) => {
+      Toast.show({
+        type: 'success',
+        position: 'top',
+        text1: 'Thành công!',
+        text2:
+          'Đã ứng tuyển thành công bạn có thể kiểm tra ở danh sách công việc đã ứng tuyển.',
+        visibilityTime: 2000,
+        autoHide: true,
+        topOffset: 70,
+      });
+    });
+  };
+  const onPressSave = (id) => {
+    RecruitmentApi.makeRecuitmentSaved(id).then((response) => {
+      Toast.show({
+        type: 'success',
+        position: 'top',
+        text1: 'Thành công!',
+        text2:
+          'Đã lưu thành công bạn có thể kiểm tra ở danh sách công việc đã lưu.',
+        visibilityTime: 2000,
+        autoHide: true,
+        topOffset: 70,
+      });
+    });
+  };
   return (
     <Card containerStyle={styles.cardContainer}>
       <View style={styles.cardHeader}>
@@ -76,7 +106,7 @@ const JobItem = ({item, isList, isSeen, isSaved, isApplied, navigation}) => {
               buttonStyle={styles.btnDeleteOptions}
               type="outline"
               titleStyle={{color: '#4a5568'}}
-              onPress={() => {}}
+              onPress={() => onPressApply(item.id)}
             />
           </View>
         )}
@@ -87,7 +117,7 @@ const JobItem = ({item, isList, isSeen, isSaved, isApplied, navigation}) => {
               buttonStyle={styles.btnViewResult}
               type="outline"
               titleStyle={{color: 'white'}}
-              onPress={() => {}}
+              onPress={() => onPressSave(item.id)}
             />
           </View>
         )}

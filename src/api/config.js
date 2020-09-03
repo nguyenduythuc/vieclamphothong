@@ -17,11 +17,9 @@ let HEADERS = {
 const onResponse = async (request, result) => {
   try {
     const body = await result.text();
-    console.log('result :', result.status);
-    console.log('request :', request);
     const newBody = JSON.parse(body);
     // Response is json but not a successful response
-    if (result.status !== 200) {
+    if (result.status < 200 || result.status > 299) {
       const exception = {
         exception: newBody,
         type: 'object',
@@ -42,7 +40,7 @@ const onResponse = async (request, result) => {
     }
     // console.log(result.status, result._bodyText); // uncomment this line if unexpected error occured
     // SUCCESS: when response is {} and status 200 but parsing JSON failed. Still is success response
-    if (result.status === 200) {
+    if (result.status > 199 && result.status < 300) {
       return result;
     }
     // if (result.status === 401) {

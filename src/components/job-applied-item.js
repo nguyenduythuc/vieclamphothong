@@ -10,6 +10,8 @@ import React, {useCallback} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {Card, Divider, Icon, Rating, Button} from 'react-native-elements';
 import {formatCurrencyToSring} from '../utils/common';
+import Toast from 'react-native-toast-message';
+import {RecruitmentApi} from '../api';
 import moment from 'moment';
 
 const JobAppliedItem = ({item, navigation, isApplied, isSaved, deleteItem}) => {
@@ -20,6 +22,20 @@ const JobAppliedItem = ({item, navigation, isApplied, isSaved, deleteItem}) => {
   }, [item.recruitment.created_at]);
   const onPressDeleteItem = () => {
     deleteItem(item.id);
+  };
+  const onPressApply = (id) => {
+    RecruitmentApi.makeRecuitmentApplied(id).then((response) => {
+      Toast.show({
+        type: 'success',
+        position: 'top',
+        text1: 'Thành công!',
+        text2:
+          'Đã ứng tuyển thành công bạn có thể kiểm tra ở danh sách công việc đã ứng tuyển.',
+        visibilityTime: 2000,
+        autoHide: true,
+        topOffset: 70,
+      });
+    });
   };
   return (
     <Card containerStyle={styles.cardContainer}>
@@ -103,7 +119,7 @@ const JobAppliedItem = ({item, navigation, isApplied, isSaved, deleteItem}) => {
               buttonStyle={styles.btnDeleteOptions}
               type="outline"
               titleStyle={{color: '#4a5568'}}
-              onPress={() => {}}
+              onPress={() => onPressApply(item.recruitment_id)}
             />
           </View>
         )}
