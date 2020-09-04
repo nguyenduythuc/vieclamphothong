@@ -110,7 +110,7 @@ const LoginScreen = ({navigation}) => {
             /> */}
           </View>
           <Button
-            style={styles.buttonLoginWrapper}
+            containerStyle={styles.buttonLoginWrapper}
             buttonStyle={styles.buttLoginStyle}
             titleStyle={styles.buttonLoginColor}
             onPress={onLogin}
@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
   overlayTitle: {fontSize: 22},
   overlayInputStyle: {color: 'black'},
   overlayInputContainerStyle: {borderColor: 'black'},
-  overlayButtonTitleStyle: {color: 'white'},
+  overlayButtonTitleStyle: {color: 'white', width: '100%'},
   overlayButtonStyle: {backgroundColor: '#377bf5', width: '100%'},
 });
 

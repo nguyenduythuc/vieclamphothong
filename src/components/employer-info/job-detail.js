@@ -20,7 +20,7 @@ const JobDetail = ({item, isList, isSeen, isSaved, isApplied}) => {
     (state) => state.recruitment.detailRecruitment,
   );
   const onPressApply = useCallback(() => {
-    RecruitmentApi.makeRecuitmentApplied(detailRecruitment.id).then(
+    RecruitmentApi.makeRecuitmentApplied(detailRecruitment?.id).then(
       (response) => {
         Toast.show({
           type: 'success',
@@ -34,9 +34,9 @@ const JobDetail = ({item, isList, isSeen, isSaved, isApplied}) => {
         });
       },
     );
-  }, [detailRecruitment.id]);
+  }, [detailRecruitment]);
   const onPressSave = useCallback(() => {
-    RecruitmentApi.makeRecuitmentSaved(detailRecruitment.id).then(
+    RecruitmentApi.makeRecuitmentSaved(detailRecruitment?.id).then(
       (response) => {
         Toast.show({
           type: 'success',
@@ -50,38 +50,38 @@ const JobDetail = ({item, isList, isSeen, isSaved, isApplied}) => {
         });
       },
     );
-  }, [detailRecruitment.id]);
+  }, [detailRecruitment]);
   return (
     <View>
       <Card containerStyle={styles.cardContainer}>
         <Text style={styles.title} numberOfLines={2}>
-          {detailRecruitment.title}
+          {detailRecruitment?.title}
         </Text>
         <Divider style={styles.divider} />
         <View style={styles.row}>
           <View style={styles.col50}>
             <Text>Lương: </Text>
             <Text style={styles.salary}>{`${formatCurrencyToSring(
-              detailRecruitment.min_salary,
+              detailRecruitment?.min_salary,
             )}tr-${formatCurrencyToSring(
-              detailRecruitment.max_salary,
+              detailRecruitment?.max_salary,
             )}tr`}</Text>
           </View>
           <View style={styles.col50}>
             <Text>Trình độ: </Text>
-            <Text>{detailRecruitment.educational_background.name}</Text>
+            <Text>{detailRecruitment?.educational_background?.name}</Text>
           </View>
         </View>
         <View style={styles.row}>
           <View style={styles.col50}>
             <Text>Hạn nộp: </Text>
             <Text style={styles.salary}>
-              {moment(detailRecruitment.expired_at).format('DD/MM/YYYY')}
+              {moment(detailRecruitment?.expired_at).format('DD/MM/YYYY')}
             </Text>
           </View>
           <View style={styles.col50}>
             <Text>Giới tính: </Text>
-            <Text>{detailRecruitment.gender === 'male' ? 'Nam' : 'Nữ'}</Text>
+            <Text>{detailRecruitment?.gender === 'male' ? 'Nam' : 'Nữ'}</Text>
           </View>
         </View>
         <View style={styles.row}>
@@ -90,12 +90,12 @@ const JobDetail = ({item, isList, isSeen, isSaved, isApplied}) => {
             <Text
               style={
                 styles.salary
-              }>{`Còn ${detailRecruitment.expired_in_number} ngày`}</Text>
+              }>{`Còn ${detailRecruitment?.expired_in_number} ngày`}</Text>
           </View>
           <View style={styles.col50}>
             <Text>Tuổi: </Text>
             <Text>
-              {detailRecruitment.min_age}-{detailRecruitment.max_age}{' '}
+              {detailRecruitment?.min_age}-{detailRecruitment?.max_age}{' '}
             </Text>
           </View>
         </View>
@@ -106,7 +106,7 @@ const JobDetail = ({item, isList, isSeen, isSaved, isApplied}) => {
         </Text>
         <Divider style={styles.divider} />
         <View style={styles.row}>
-          <Text>{detailRecruitment.benefit}</Text>
+          <Text>{detailRecruitment?.benefit}</Text>
         </View>
       </Card>
       <Card containerStyle={styles.cardContainer}>
@@ -115,7 +115,7 @@ const JobDetail = ({item, isList, isSeen, isSaved, isApplied}) => {
         </Text>
         <Divider style={styles.divider} />
         <View style={styles.row}>
-          <Text>{detailRecruitment.expect}</Text>
+          <Text>{detailRecruitment?.expect}</Text>
         </View>
       </Card>
       <Card containerStyle={styles.cardContainer}>
@@ -125,11 +125,11 @@ const JobDetail = ({item, isList, isSeen, isSaved, isApplied}) => {
         <Divider style={styles.divider} />
         <View style={styles.contact}>
           <Text>
-            Ông/Bà: {detailRecruitment.company.contact_person_name} -{' '}
-            {detailRecruitment.company.contact_person_phone}
+            Ông/Bà: {detailRecruitment?.company?.contact_person_name} -{' '}
+            {detailRecruitment?.company?.contact_person_phone}
           </Text>
-          <Text>Email: {detailRecruitment.company.contact_person_email}</Text>
-          <Text>Địa chỉ: {detailRecruitment.company.address}</Text>
+          <Text>Email: {detailRecruitment?.company?.contact_person_email}</Text>
+          <Text>Địa chỉ: {detailRecruitment?.company?.address}</Text>
         </View>
       </Card>
       <View style={styles.btnFooter}>

@@ -22,7 +22,7 @@ const App = ({navigation}) => {
         setToken(user.user.token);
         navigationRef.current?.navigate('Home');
       } else {
-        // navigationRef.current?.navigate('Login');
+        navigationRef.current?.navigate('Login');
       }
       SplashScreen.hide();
     }, 200);
