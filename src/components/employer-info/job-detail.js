@@ -9,6 +9,7 @@
 import React, {useCallback} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {Card, Divider, Button} from 'react-native-elements';
+import Toast from 'react-native-toast-message';
 import {useSelector} from 'react-redux';
 import {RecruitmentApi} from '../../api';
 import {formatCurrencyToSring} from '../../utils/common';
@@ -19,9 +20,36 @@ const JobDetail = ({item, isList, isSeen, isSaved, isApplied}) => {
     (state) => state.recruitment.detailRecruitment,
   );
   const onPressApply = useCallback(() => {
-    RecruitmentApi.makeRecuitmentApplied(
-      detailRecruitment.id,
-    ).then((response) => {});
+    RecruitmentApi.makeRecuitmentApplied(detailRecruitment.id).then(
+      (response) => {
+        Toast.show({
+          type: 'success',
+          position: 'top',
+          text1: 'Thành công!',
+          text2:
+            'Đã ứng tuyển thành công, bạn có thể kiểm tra ở danh sách công việc đã ứng tuyển.',
+          visibilityTime: 2000,
+          autoHide: true,
+          topOffset: 70,
+        });
+      },
+    );
+  }, [detailRecruitment.id]);
+  const onPressSave = useCallback(() => {
+    RecruitmentApi.makeRecuitmentSaved(detailRecruitment.id).then(
+      (response) => {
+        Toast.show({
+          type: 'success',
+          position: 'top',
+          text1: 'Thành công!',
+          text2:
+            'Đã lưu thành công, bạn có thể kiểm tra ở danh sách công việc đã lưu.',
+          visibilityTime: 2000,
+          autoHide: true,
+          topOffset: 70,
+        });
+      },
+    );
   }, [detailRecruitment.id]);
   return (
     <View>
@@ -116,7 +144,7 @@ const JobDetail = ({item, isList, isSeen, isSaved, isApplied}) => {
           <Button
             title="Lưu công việc này"
             titleStyle={{color: 'white'}}
-            onPress={() => {}}
+            onPress={() => onPressSave()}
           />
         </View>
       </View>

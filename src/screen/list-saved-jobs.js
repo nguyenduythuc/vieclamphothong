@@ -9,6 +9,7 @@
 
 import React, {useState, useEffect, useCallback} from 'react';
 import {SafeAreaView, ScrollView, View, Text, StyleSheet} from 'react-native';
+import Toast from 'react-native-toast-message';
 import {JobAppliedItem} from '../components';
 import {RecruitmentApi} from '../api';
 import {useSelector} from 'react-redux';
@@ -27,13 +28,20 @@ const ListSavedJobs = ({navigation}) => {
       setListSavedJobs(response.data);
     });
   };
-  const onPressDeleteItem = (string) => {
-    console.log(string);
-    // RecruitmentApi.deleteSavedRecruitment(
-    //   `location=${userLocation.latitude},${userLocation.longitude}`,
-    // ).then((response) => {
-    //   setListSavedJobs(response.data);
-    // });
+  const onPressDeleteItem = (idRecuitment) => {
+    console.log(idRecuitment);
+    RecruitmentApi.deleteSavedRecruitment(idRecuitment).then((response) => {
+      getListData();
+      Toast.show({
+        type: 'success',
+        position: 'top',
+        text1: 'Thành công!',
+        text2: 'Đã xóa công việc đã lưu thành công.',
+        visibilityTime: 2000,
+        autoHide: true,
+        topOffset: 70,
+      });
+    });
   };
 
   return (

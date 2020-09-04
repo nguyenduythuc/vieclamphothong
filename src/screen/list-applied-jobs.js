@@ -8,16 +8,9 @@
  */
 
 import React, {useState, useCallback, useEffect} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  View,
-  Text,
-  StyleSheet,
-  Button,
-} from 'react-native';
-import Modal from 'react-native-modal';
+import {SafeAreaView, ScrollView, View, Text, StyleSheet} from 'react-native';
 import {Icon} from 'react-native-elements';
+import Toast from 'react-native-toast-message';
 import {JobAppliedItem, Sortable} from '../components';
 import {RecruitmentApi} from '../api';
 import {useDispatch, useSelector} from 'react-redux';
@@ -52,14 +45,31 @@ const ListSavedJobs = ({navigation}) => {
   const userLocation = useSelector((state) => state.user.userLocation);
 
   useEffect(() => {
+    getListData();
+    setSortList(ENTRIES2);
+  }, []);
+  const getListData = () => {
     RecruitmentApi.getListApplied(
       `location=${userLocation.latitude},${userLocation.longitude}`,
     ).then((response) => {
       setListAppliedJobs(response.data);
-      console.log(listAppliedJobs);
     });
-    setSortList(ENTRIES2);
-  }, []);
+  };
+  const onPressDeleteItem = (idRecuitment) => {
+    console.log(idRecuitment);
+    RecruitmentApi.deleteAppliedRecruitment(idRecuitment).then((response) => {
+      getListData();
+      Toast.show({
+        type: 'success',
+        position: 'top',
+        text1: 'Thành công!',
+        text2: 'Đã xóa công việc đã ứng tuyển thành công.',
+        visibilityTime: 2000,
+        autoHide: true,
+        topOffset: 70,
+      });
+    });
+  };
 
   const toggleModal = (string) => {
     console.log(string);
@@ -86,7 +96,12 @@ const ListSavedJobs = ({navigation}) => {
         <View style={styles.row}>
           <View style={styles.item}>
             {listAppliedJobs.map((item, idx) => (
-              <JobAppliedItem item={item} isApplied navigation={navigation} />
+              <JobAppliedItem
+                item={item}
+                isApplied
+                navigation={navigation}
+                deleteItem={onPressDeleteItem}
+              />
             ))}
           </View>
         </View>
