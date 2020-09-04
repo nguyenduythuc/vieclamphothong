@@ -29,7 +29,6 @@ const ListSavedJobs = ({navigation}) => {
     });
   };
   const onPressDeleteItem = (idRecuitment) => {
-    console.log(idRecuitment);
     RecruitmentApi.deleteSavedRecruitment(idRecuitment).then((response) => {
       getListData();
       Toast.show({

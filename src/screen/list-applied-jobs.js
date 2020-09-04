@@ -9,52 +9,40 @@
 
 import React, {useState, useCallback, useEffect} from 'react';
 import {SafeAreaView, ScrollView, View, Text, StyleSheet} from 'react-native';
-import {Icon} from 'react-native-elements';
 import Toast from 'react-native-toast-message';
-import {JobAppliedItem, Sortable} from '../components';
+import {JobAppliedItem, TagSort} from '../components';
 import {RecruitmentApi} from '../api';
 import {useDispatch, useSelector} from 'react-redux';
 
-const ENTRIES2 = [
-  {
-    id: 1,
-    text: 'Đang đợi doanh nghiệp trả lời',
-  },
-  {
-    id: 2,
-    text: 'Được mời phỏng vấn',
-  },
-  {
-    id: 3,
-    text: 'Đã đồng ý phỏng vấn',
-  },
-  {
-    id: 4,
-    text: 'Đã từ chối phỏng vấn',
-  },
-  {
-    id: 5,
-    text: 'Doanh nghiệp đã từ chối',
-  },
-];
-
 const ListSavedJobs = ({navigation}) => {
   const [listAppliedJobs, setListAppliedJobs] = useState([]);
+  const [sortId, setSortId] = useState('ALL');
+  const [paramStatus, setParamStatus] = useState('');
   const [sortList, setSortList] = useState([]);
-  const [isModalVisible, setModalVisible] = useState(false);
   const userLocation = useSelector((state) => state.user.userLocation);
+  const listStatusApplied = useSelector(
+    (state) => state.recruitment.listStatusApplied,
+  );
 
   useEffect(() => {
     getListData();
-    setSortList(ENTRIES2);
+    setSortList([{label: 'Tất cả', value: 'ALL'}, ...listStatusApplied]);
   }, []);
-  const getListData = () => {
-    RecruitmentApi.getListApplied(
-      `location=${userLocation.latitude},${userLocation.longitude}`,
-    ).then((response) => {
-      setListAppliedJobs(response.data);
-    });
-  };
+  useEffect(() => {
+    getListData();
+  }, [paramStatus]);
+  const getListData = useCallback(
+    (param) => {
+      console.log(paramStatus);
+      RecruitmentApi.getListApplied(
+        `location=${userLocation.latitude},${userLocation.longitude}`,
+        paramStatus,
+      ).then((response) => {
+        setListAppliedJobs(response.data);
+      });
+    },
+    [paramStatus, userLocation.latitude, userLocation.longitude],
+  );
   const onPressDeleteItem = (idRecuitment) => {
     console.log(idRecuitment);
     RecruitmentApi.deleteAppliedRecruitment(idRecuitment).then((response) => {
@@ -70,10 +58,11 @@ const ListSavedJobs = ({navigation}) => {
       });
     });
   };
-
-  const toggleModal = (string) => {
-    console.log(string);
-    setModalVisible(!isModalVisible);
+  const onPressTag = (value) => {
+    console.log(value);
+    setSortId(value);
+    let param = value === 'ALL' ? '' : `&filter[status]=${value}`;
+    setParamStatus(param);
   };
 
   return (
@@ -83,16 +72,12 @@ const ListSavedJobs = ({navigation}) => {
           <Text style={styles.blockTitleText}>
             Tổng số: {listAppliedJobs.length} công việc
           </Text>
-          <View style={styles.row}>
-            <Icon
-              name="sort-descending"
-              type="material-community"
-              color="#517fa4"
-              onPress={toggleModal}
-            />
-          </View>
         </View>
-        <View style={styles.hairLine} />
+        <View style={styles.sidebarCustom}>
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+            <TagSort data={sortList} activeId={sortId} onClick={onPressTag} />
+          </ScrollView>
+        </View>
         <View style={styles.row}>
           <View style={styles.item}>
             {listAppliedJobs.map((item, idx) => (
@@ -105,12 +90,6 @@ const ListSavedJobs = ({navigation}) => {
             ))}
           </View>
         </View>
-        <Sortable
-          toggleModal={toggleModal}
-          isModalVisible={isModalVisible}
-          sortList={sortList}
-          title="LỌC TRẠNG THÁI"
-        />
       </ScrollView>
     </SafeAreaView>
   );
@@ -144,6 +123,10 @@ const styles = StyleSheet.create({
   },
   view: {
     backgroundColor: 'white',
+  },
+  sidebarCustom: {
+    flexDirection: 'row',
+    paddingHorizontal: 10,
   },
 });
 

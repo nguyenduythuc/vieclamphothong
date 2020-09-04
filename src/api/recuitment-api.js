@@ -5,6 +5,8 @@ const RecruitmentApi = {
 
   getAllFilters: () => config.get('/api/filters'),
 
+  getAllStatusApplied: () => config.get('/api/apply-status'),
+
   getDetailRecruitment: (id) => config.get(`/capi/recruitment/${id}`),
 
   makeRecuitmentSeen: (id) =>
@@ -16,9 +18,9 @@ const RecruitmentApi = {
   makeRecuitmentSaved: (id) =>
     config.post('/capi/recruitment-save', {recruitment_id: id}),
 
-  getListApplied: (location) =>
+  getListApplied: (location, param) =>
     config.get(
-      `/capi/applies?include=user,recruitment,recruitment.company,recruitment.educationalBackground,recruitment.occupation,recruitment.workplace&${location}`,
+      `/capi/applies?include=user,recruitment,recruitment.company,recruitment.educationalBackground,recruitment.occupation,recruitment.workplace&${location}${param}`,
     ),
   getListSaved: (location) =>
     config.get(
