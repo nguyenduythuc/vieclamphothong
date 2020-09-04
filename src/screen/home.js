@@ -17,17 +17,14 @@ import Carousel from 'react-native-snap-carousel';
 import {RecruitmentApi} from '../api';
 import {useDispatch, useSelector} from 'react-redux';
 import {actions} from '../app-redux';
+import {formatCurrencyToSring} from '../utils/common';
 
-const defaultPosition = {
-  latitude: 21.312542,
-  longitude: 105.704714,
-  latitudeDelta: 0.1,
-  longitudeDelta: 0.1,
-};
 const HomeScreen = ({navigation}) => {
   const dispatch = useDispatch();
+  const listJobs = useSelector((state) => state.recruitment.listJobs);
+  const userLocation = useSelector((state) => state.app.location);
   const [search, setSearch] = useState('');
-  const [currentPosition, setCurentPosition] = useState(defaultPosition);
+  const [currentPosition, setCurentPosition] = useState(userLocation);
   const [positionChanged, setPositionChanged] = useState(false);
   const [isShowButtonPositionChange, setIsShowButtonPositionChange] = useState(
     false,
@@ -35,20 +32,12 @@ const HomeScreen = ({navigation}) => {
 
   const carouselRef = useRef(null);
   const mapRef = useRef(null);
-  const listJobs = useSelector((state) => state.recruitment.listJobs);
-
+  const markerRef = useRef([]);
   useEffect(() => {
-    Geolocation.getCurrentPosition((info) => {
-      const newPosition = {...currentPosition};
-      newPosition.latitude = info.coords.latitude;
-      newPosition.longitude = info.coords.longitude;
-      setCurentPosition(newPosition);
-      RecruitmentApi.getList(
-        `filter[location]=${newPosition.latitude},${newPosition.longitude},10&include=educational_background,occupation,workplace,company`,
-      ).then((response) => {
-        dispatch(actions.recruitment.saveListJobs(response.data));
-      });
-      setIsShowButtonPositionChange(false);
+    RecruitmentApi.getList(
+      `filter[location]=${currentPosition.latitude},${currentPosition.longitude},10&include=educational_background,occupation,workplace,company`,
+    ).then((response) => {
+      dispatch(actions.recruitment.saveListJobs(response.data));
     });
   }, []);
 
@@ -88,6 +77,7 @@ const HomeScreen = ({navigation}) => {
     newPosition.longitude = parseFloat(listJobs[index]?.company.longitude);
     setCurentPosition(newPosition);
     mapRef.current?.animateCamera({center: newPosition, pitch: 45});
+    markerRef.current[index].showCallout();
   };
 
   function onItemSelected(itemId) {
@@ -127,18 +117,28 @@ const HomeScreen = ({navigation}) => {
         style={styles.map}
         region={currentPosition}
         onRegionChangeComplete={onRegionChange}>
-        {listJobs?.map(({company, id, title, description}) => (
-          <Marker
-            key={id}
-            onPress={() => onItemSelected(id)}
-            coordinate={{
-              latitude: parseFloat(company.latitude),
-              longitude: parseFloat(company.longitude),
-            }}
-            anchor={{x: 0.84, y: 1}}
-            centerOffset={{x: -18, y: -60}}
-          />
-        ))}
+        {listJobs?.map(
+          (
+            {company, id, title, description, distance, min_salary, max_salary},
+            index,
+          ) => (
+            <Marker
+              key={id}
+              ref={(el) => (markerRef.current[index] = el)}
+              onPress={() => onItemSelected(id)}
+              coordinate={{
+                latitude: parseFloat(company.latitude),
+                longitude: parseFloat(company.longitude),
+              }}
+              title={`Cách bạn: ${distance}km`}
+              description={`Lương: ${formatCurrencyToSring(
+                min_salary,
+              )}tr - ${formatCurrencyToSring(max_salary)}tr`}
+              anchor={{x: 0.84, y: 1}}
+              centerOffset={{x: -18, y: -60}}
+            />
+          ),
+        )}
       </MapView>
       <Carousel
         ref={carouselRef}

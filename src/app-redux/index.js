@@ -10,7 +10,7 @@ const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
   whitelist: ['user', 'recruitment'],
-  blacklist: [''],
+  blacklist: ['app'],
 };
 
 const persistedReducer = persistCombineReducers(persistConfig, rootReducer);
