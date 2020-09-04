@@ -2,6 +2,7 @@ import React, {useCallback, useState} from 'react';
 import {SafeAreaView, StyleSheet, View, Image, Text} from 'react-native';
 import {Input, Button} from 'react-native-elements';
 import DeviceInfo from 'react-native-device-info';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const bg = require('../assets/bg1.png');
 const RegisterScreen = ({route, navigation}) => {
@@ -47,67 +48,72 @@ const RegisterScreen = ({route, navigation}) => {
   return (
     <>
       <Image source={bg} style={styles.bgImage} />
-      <SafeAreaView style={styles.container}>
-        <Image source={logo} style={styles.logoImage} />
-        <View style={styles.loginForm}>
-          <Input
-            inputStyle={styles.inputStyle}
-            inputContainerStyle={styles.inputContainerStyle}
-            onChangeText={onTypingFullname}
-            placeholder="Họ và tên"
-            placeholderTextColor="white"
-          />
-          <Input
-            inputStyle={styles.inputStyle}
-            inputContainerStyle={styles.inputContainerStyle}
-            onChangeText={onTypingPassword}
-            placeholder="Mật khẩu (6 số)"
-            placeholderTextColor="white"
-            secureTextEntry
-          />
-          <Input
-            inputStyle={styles.inputStyle}
-            inputContainerStyle={styles.inputContainerStyle}
-            onChangeText={onTypingRePassword}
-            placeholder="Nhập lại mật khẩu"
-            placeholderTextColor="white"
-            errorMessage={
-              !passwordValidated && password.length > 0 && 'Mật khẩu không khớp'
-            }
-            secureTextEntry
-          />
-          <Input
-            inputStyle={styles.inputStyle}
-            inputContainerStyle={styles.inputContainerStyle}
-            onChangeText={onTypingPhoneNumber}
-            placeholder="Số điện thoại"
-            placeholderTextColor="white"
-          />
+      <ScrollView>
+        <SafeAreaView style={styles.container}>
+          <Image source={logo} style={styles.logoImage} />
+          <View style={styles.loginForm}>
+            <Input
+              inputStyle={styles.inputStyle}
+              inputContainerStyle={styles.inputContainerStyle}
+              onChangeText={onTypingFullname}
+              placeholder="Họ và tên"
+              placeholderTextColor="white"
+            />
+            <Input
+              inputStyle={styles.inputStyle}
+              inputContainerStyle={styles.inputContainerStyle}
+              onChangeText={onTypingPassword}
+              placeholder="Mật khẩu (6 số)"
+              placeholderTextColor="white"
+              secureTextEntry
+            />
+            <Input
+              inputStyle={styles.inputStyle}
+              inputContainerStyle={styles.inputContainerStyle}
+              onChangeText={onTypingRePassword}
+              placeholder="Nhập lại mật khẩu"
+              placeholderTextColor="white"
+              errorMessage={
+                !passwordValidated &&
+                password.length > 0 &&
+                'Mật khẩu không khớp'
+              }
+              secureTextEntry
+            />
+            <Input
+              inputStyle={styles.inputStyle}
+              inputContainerStyle={styles.inputContainerStyle}
+              onChangeText={onTypingPhoneNumber}
+              placeholder="Số điện thoại"
+              placeholderTextColor="white"
+            />
+            <Button
+              onPress={onTOSPressed}
+              containerStyle={{marginVertical: 10}}
+              type="clear"
+              titleStyle={styles.tos}
+              title="Tôi đồng ý với điều khoản sử dụng và chính sách bảo mật"
+            />
+          </View>
           <Button
-            onPress={onTOSPressed}
-            type="clear"
-            titleStyle={styles.tos}
-            title="Tôi đồng ý với điều khoản sử dụng và chính sách bảo mật"
+            containerStyle={styles.buttonLoginWrapper}
+            buttonStyle={styles.buttLoginStyle}
+            titleStyle={styles.buttonLoginColor}
+            onPress={onRegister}
+            title="Đăng ký"
+            type="outline"
           />
-        </View>
-        <Button
-          style={styles.buttonLoginWrapper}
-          buttonStyle={styles.buttLoginStyle}
-          titleStyle={styles.buttonLoginColor}
-          onPress={onRegister}
-          title="Đăng ký"
-          type="outline"
-        />
-        <View style={styles.registerWrapper}>
-          <Text style={styles.registerText}>Đã có tài khoản?</Text>
-          <Button
-            titleStyle={styles.register}
-            onPress={onLogin}
-            title="Đăng nhập"
-            type="clear"
-          />
-        </View>
-      </SafeAreaView>
+          <View style={styles.registerWrapper}>
+            <Text style={styles.registerText}>Đã có tài khoản?</Text>
+            <Button
+              titleStyle={styles.register}
+              onPress={onLogin}
+              title="Đăng nhập"
+              type="clear"
+            />
+          </View>
+        </SafeAreaView>
+      </ScrollView>
     </>
   );
 };
@@ -143,8 +149,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   registerWrapper: {
-    position: 'absolute',
-    bottom: 30,
+    marginTop: 30,
     flexDirection: 'row',
     alignItems: 'center',
   },
