@@ -30,6 +30,7 @@ const onResponse = async (request, result) => {
         console.log('store', store);
         // setToken('');
         store.dispatch(actions.user.saveUser({}));
+        setToken('');
       }
       throw exception;
     }

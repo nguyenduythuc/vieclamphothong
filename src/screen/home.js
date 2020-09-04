@@ -43,20 +43,14 @@ const HomeScreen = ({navigation}) => {
       newPosition.latitude = info.coords.latitude;
       newPosition.longitude = info.coords.longitude;
       setCurentPosition(newPosition);
-    });
-  }, []);
-
-  useEffect(() => {
-    if (!positionChanged) {
-      return;
-    }
-    RecruitmentApi.getList(
-      `filter[location]=${currentPosition.latitude},${currentPosition.longitude},10&include=educational_background,occupation,workplace,company`,
-    ).then((response) => {
-      dispatch(actions.recruitment.saveListJobs(response.data));
+      RecruitmentApi.getList(
+        `filter[location]=${newPosition.latitude},${newPosition.longitude},10&include=educational_background,occupation,workplace,company`,
+      ).then((response) => {
+        dispatch(actions.recruitment.saveListJobs(response.data));
+      });
       setIsShowButtonPositionChange(false);
     });
-  }, [currentPosition, positionChanged]);
+  }, []);
 
   const onSearch = useCallback((text) => {
     setSearch(text);
@@ -72,8 +66,13 @@ const HomeScreen = ({navigation}) => {
   }, []);
 
   const onChangePostionButton = useCallback(() => {
-    setPositionChanged(true);
-  }, []);
+    RecruitmentApi.getList(
+      `filter[location]=${currentPosition.latitude},${currentPosition.longitude},10&include=educational_background,occupation,workplace,company`,
+    ).then((response) => {
+      dispatch(actions.recruitment.saveListJobs(response.data));
+    });
+    setIsShowButtonPositionChange(false);
+  }, [currentPosition]);
 
   const renderItem = useCallback(({item, index}, parallaxProps) => {
     return (
@@ -97,62 +96,60 @@ const HomeScreen = ({navigation}) => {
   }
 
   return (
-    <>
-      <SafeAreaView>
-        <View style={styles.header}>
-          <SearchBar
-            onChangeText={onSearch}
-            containerStyle={styles.searchBar}
-            placeholder="Bạn đang tìm kiếm công việc gì?"
-            value={search}
-            lightTheme
-          />
-          <Icon
-            onPress={onFilter}
-            name="filter"
-            type="antdesign"
-            color="#517fa4"
-          />
-        </View>
-        {isShowButtonPositionChange && (
-          <Button
-            title="Tìm tại đây"
-            containerStyle={styles.changePositionButtonStyle}
-            buttonStyle={styles.changePositionButtonBackgroundStyle}
-            onPress={onChangePostionButton}
-            type="clear"
-          />
-        )}
-        <MapView
-          ref={mapRef}
-          provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-          style={styles.map}
-          region={currentPosition}
-          onRegionChangeComplete={onRegionChange}>
-          {listJobs?.map(({company, id, title, description}) => (
-            <Marker
-              key={id}
-              onPress={() => onItemSelected(id)}
-              coordinate={{
-                latitude: parseFloat(company.latitude),
-                longitude: parseFloat(company.longitude),
-              }}
-              anchor={{x: 0.84, y: 1}}
-              centerOffset={{x: -18, y: -60}}
-            />
-          ))}
-        </MapView>
-        <Carousel
-          ref={carouselRef}
-          sliderWidth={width}
-          sliderHeight={height * 0.09}
-          itemWidth={width - 80}
-          data={listJobs}
-          onSnapToItem={onSwipeToItem}
-          renderItem={renderItem}
+    <SafeAreaView>
+      <View style={styles.header}>
+        <SearchBar
+          onChangeText={onSearch}
+          containerStyle={styles.searchBar}
+          placeholder="Bạn đang tìm kiếm công việc gì?"
+          value={search}
+          lightTheme
         />
-      </SafeAreaView>
-    </>
+        <Icon
+          onPress={onFilter}
+          name="filter"
+          type="antdesign"
+          color="#517fa4"
+        />
+      </View>
+      {isShowButtonPositionChange && (
+        <Button
+          title="Tìm tại đây"
+          containerStyle={styles.changePositionButtonStyle}
+          buttonStyle={styles.changePositionButtonBackgroundStyle}
+          onPress={onChangePostionButton}
+          type="clear"
+        />
+      )}
+      <MapView
+        ref={mapRef}
+        provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+        style={styles.map}
+        region={currentPosition}
+        onRegionChangeComplete={onRegionChange}>
+        {listJobs?.map(({company, id, title, description}) => (
+          <Marker
+            key={id}
+            onPress={() => onItemSelected(id)}
+            coordinate={{
+              latitude: parseFloat(company.latitude),
+              longitude: parseFloat(company.longitude),
+            }}
+            anchor={{x: 0.84, y: 1}}
+            centerOffset={{x: -18, y: -60}}
+          />
+        ))}
+      </MapView>
+      <Carousel
+        ref={carouselRef}
+        sliderWidth={width}
+        sliderHeight={height * 0.09}
+        itemWidth={width - 80}
+        data={listJobs}
+        onSnapToItem={onSwipeToItem}
+        renderItem={renderItem}
+      />
+    </SafeAreaView>
   );
 };
 
@@ -164,9 +161,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 10,
-    position: 'absolute',
-    top: 10,
-    zIndex: 10,
+    marginBottom: 10,
   },
   searchBar: {
     flex: 1,
@@ -185,11 +180,8 @@ const styles = StyleSheet.create({
   changePositionButtonStyle: {
     position: 'absolute',
     zIndex: 10,
-    top: 100,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    alignItems: 'center',
+    top: 120,
+    left: width / 2 - 50,
   },
   changePositionButtonBackgroundStyle: {backgroundColor: 'white'},
 });

@@ -1,5 +1,5 @@
 import React, {useCallback, useState, useEffect} from 'react';
-import {SafeAreaView, StyleSheet, Image} from 'react-native';
+import {SafeAreaView, StyleSheet, Image, Text} from 'react-native';
 import {Input, Button} from 'react-native-elements';
 import auth from '@react-native-firebase/auth';
 import {useDispatch} from 'react-redux';
@@ -61,6 +61,11 @@ const OTPScreen = ({navigation, route}) => {
     <>
       <Image source={bg} style={styles.bgImage} />
       <SafeAreaView style={styles.container}>
+        {confirm && (
+          <Text style={styles.tips}>
+            Mã xác thực đã được gửi về điện thoại của bạn!
+          </Text>
+        )}
         <Input
           inputStyle={styles.inputStyle}
           inputContainerStyle={styles.inputContainerStyle}
@@ -107,6 +112,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   buttonLoginColor: {color: 'rgb(38,76,193)', fontSize: 20},
+  tips: {color: 'white', fontSize: 15, marginBottom: 20},
 });
 
 export default OTPScreen;
