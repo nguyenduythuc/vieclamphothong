@@ -26,6 +26,9 @@ const WelcomeScreen = ({navigation}) => {
     RecruitmentApi.getAllFilters().then((response) => {
       dispatch(actions.recruitment.saveListFilters(response));
     });
+    RecruitmentApi.getAllStatusApplied().then((response) => {
+      dispatch(actions.recruitment.saveListStatusApplied(response.data));
+    });
   }, [dispatch]);
 
   return (

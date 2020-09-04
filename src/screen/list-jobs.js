@@ -10,7 +10,7 @@
 import React, {useState, useCallback, useEffect} from 'react';
 import {SafeAreaView, ScrollView, View, Text, StyleSheet} from 'react-native';
 import {Icon, Button} from 'react-native-elements';
-import {JobItem, Sortable, TagSort} from '../components';
+import {JobItem, TagSort} from '../components';
 import {RecruitmentApi} from '../api';
 import {useDispatch, useSelector} from 'react-redux';
 import {actions} from '../app-redux';
@@ -18,23 +18,23 @@ import {actions} from '../app-redux';
 const ENTRIES2 = [
   {
     value: 'ALL',
-    text: 'Tất cả',
+    label: 'Tất cả',
   },
   {
     value: 'salary',
-    text: 'Lương tăng dần',
+    label: 'Lương tăng dần',
   },
   {
     value: '-salary',
-    text: 'Lương giảm dần',
+    label: 'Lương giảm dần',
   },
   {
     value: 'distance',
-    text: 'Khoảng cách lớn dần',
+    label: 'Khoảng cách lớn dần',
   },
   {
     value: '-distance',
-    text: 'Khoảng cách nhỏ dần',
+    label: 'Khoảng cách nhỏ dần',
   },
 ];
 

@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   map: {
-    height: height * 0.55,
+    height: height * 0.42,
     width,
     justifyContent: 'flex-end',
     alignItems: 'center',

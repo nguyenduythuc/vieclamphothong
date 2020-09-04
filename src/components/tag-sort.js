@@ -7,7 +7,7 @@ const TagsSort = ({data, activeId, onClick}) =>
     return (
       <Button
         key={Math.random()}
-        title={item.text}
+        title={item.label}
         onPress={() => onClick(item.value)}
         titleStyle={[{color: activeId === item.value ? 'white' : 'black'}]}
         buttonStyle={[
