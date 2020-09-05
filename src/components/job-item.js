@@ -14,9 +14,10 @@ import {formatCurrencyToSring} from '../utils/common';
 import {RecruitmentApi} from '../api';
 import moment from 'moment';
 
-const JobItem = ({item, isList, isSeen, isSaved, isApplied, navigation}) => {
+const JobItem = ({item, navigation, getListData, param}) => {
   const onPressApply = (id) => {
     RecruitmentApi.makeRecuitmentApplied(id).then((response) => {
+      getListData(param);
       Toast.show({
         type: 'success',
         position: 'top',
@@ -31,6 +32,7 @@ const JobItem = ({item, isList, isSeen, isSaved, isApplied, navigation}) => {
   };
   const onPressSave = (id) => {
     RecruitmentApi.makeRecuitmentSaved(id).then((response) => {
+      getListData(param);
       Toast.show({
         type: 'success',
         position: 'top',
@@ -50,7 +52,7 @@ const JobItem = ({item, isList, isSeen, isSaved, isApplied, navigation}) => {
           onPress={() => {
             navigation.navigate('EmployerInfo', {id: item.id});
           }}
-          style={isSeen ? styles.titleSeen : styles.title}
+          style={item.has_seen ? styles.titleSeen : styles.title}
           numberOfLines={2}>
           {item.position}
         </Text>
@@ -89,34 +91,25 @@ const JobItem = ({item, isList, isSeen, isSaved, isApplied, navigation}) => {
         <Text>Cách bạn: </Text>
         <Text style={styles.redText}>{item.distance} km</Text>
       </View>
-      {isApplied && (
-        <View>
-          <Divider style={styles.divider} />
-          <Text style={styles.status} numberOfLines={2}>
-            {`Tình trạng: ${item.status}`}
-          </Text>
-          <Text style={styles.time}>{`Đã nộp: ${item.time} ngày trước`}</Text>
-        </View>
-      )}
       <View style={styles.btnFooter}>
-        {(isSaved || isList || isSeen) && (
+        {!item.has_apply && (
           <View style={styles.col}>
             <Button
               title="Ứng tuyển"
               buttonStyle={styles.btnDeleteOptions}
               type="outline"
-              titleStyle={{color: '#4a5568'}}
+              titleStyle={{color: 'white'}}
               onPress={() => onPressApply(item.id)}
             />
           </View>
         )}
-        {(isSeen || isList) && (
+        {!item.has_save && (
           <View style={styles.col}>
             <Button
               title="Lưu"
               buttonStyle={styles.btnViewResult}
               type="outline"
-              titleStyle={{color: 'white'}}
+              titleStyle={{color: '#4a5568'}}
               onPress={() => onPressSave(item.id)}
             />
           </View>
@@ -171,12 +164,13 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   btnDeleteOptions: {
-    backgroundColor: '#fed7d7',
+    backgroundColor: '#3182ce',
     paddingHorizontal: 30,
   },
   btnViewResult: {
-    backgroundColor: '#48bb78',
+    backgroundColor: '#fed7d7',
     paddingHorizontal: 30,
+    borderColor: '#fed7d7',
   },
   cardHeader: {
     display: 'flex',

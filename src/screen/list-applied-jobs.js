@@ -44,7 +44,6 @@ const ListSavedJobs = ({navigation}) => {
     [paramStatus, userLocation.latitude, userLocation.longitude],
   );
   const onPressDeleteItem = (idRecuitment) => {
-    console.log(idRecuitment);
     RecruitmentApi.deleteAppliedRecruitment(idRecuitment).then((response) => {
       getListData();
       Toast.show({
@@ -96,6 +95,9 @@ const ListSavedJobs = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#f7fafc',
+  },
   item: {
     width: '100%',
     height: '50%',
@@ -125,6 +127,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   sidebarCustom: {
+    paddingTop: 10,
     flexDirection: 'row',
     paddingHorizontal: 10,
   },

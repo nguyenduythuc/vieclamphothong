@@ -70,6 +70,9 @@ const ListSavedJobs = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#f7fafc',
+  },
   item: {
     width: '100%',
     height: '50%',

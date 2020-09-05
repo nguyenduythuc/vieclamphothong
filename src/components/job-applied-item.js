@@ -118,7 +118,7 @@ const JobAppliedItem = ({item, navigation, isApplied, isSaved, deleteItem}) => {
               title="Ứng tuyển"
               buttonStyle={styles.btnDeleteOptions}
               type="outline"
-              titleStyle={{color: '#4a5568'}}
+              titleStyle={{color: 'white'}}
               onPress={() => onPressApply(item.recruitment_id)}
             />
           </View>
@@ -184,11 +184,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   btnDeleteOptions: {
-    backgroundColor: '#fed7d7',
-    paddingHorizontal: 30,
-  },
-  btnViewResult: {
-    backgroundColor: '#48bb78',
+    backgroundColor: '#3182ce',
     paddingHorizontal: 30,
   },
   status: {

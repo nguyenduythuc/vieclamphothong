@@ -9,58 +9,63 @@
 
 import React, {useState, useCallback, useEffect} from 'react';
 import {SafeAreaView, ScrollView, View, Text, StyleSheet} from 'react-native';
-import {Icon} from 'react-native-elements';
-import {JobItem, Sortable} from '../components';
+import {JobItem, TagSort} from '../components';
 import {RecruitmentApi} from '../api';
-import {useDispatch, useSelector} from 'react-redux';
-import {actions} from '../app-redux';
+import {useSelector} from 'react-redux';
 
 const ENTRIES2 = [
   {
-    id: 1,
-    text: 'Luơng tăng dần',
+    value: 'ALL',
+    label: 'Tất cả',
   },
   {
-    id: 2,
-    text: 'Lương giảm dần',
+    value: 'salary',
+    label: 'Lương tăng dần',
   },
   {
-    id: 3,
-    text: 'Khoảng cách xa dần',
+    value: '-salary',
+    label: 'Lương giảm dần',
   },
   {
-    id: 4,
-    text: 'Sao đánh giá',
+    value: 'distance',
+    label: 'Khoảng cách lớn dần',
   },
   {
-    id: 5,
-    text: 'Công việc đã xem',
+    value: '-distance',
+    label: 'Khoảng cách nhỏ dần',
   },
 ];
 
 const ListSeenJobs = ({navigation}) => {
-  const dispatch = useDispatch();
-  const [sortList, setSortList] = useState([]);
-  const [isModalVisible, setModalVisible] = useState(false);
   const [listJobs, setListJobs] = useState([]);
+  const [sortId, setSortId] = useState('ALL');
+  const [sortList, setSortList] = useState([]);
+  const [paramSend, setParamSend] = useState('');
+  const userLocation = useSelector((state) => state.user.userLocation);
 
   useEffect(() => {
     setSortList(ENTRIES2);
-  }, []);
-  useEffect(() => {
-    RecruitmentApi.getList(
-      '&include=educational_background,occupation,workplace,company&filter[seen]=true',
-    ).then((response) => {
-      setListJobs(response.data);
-    });
-  }, []);
-  const toggleModal = (string) => {
-    setModalVisible(!isModalVisible);
+    getListData(paramSend);
+  }, [getListData, paramSend]);
+
+  const onPressTag = (value) => {
+    console.log(value);
+    setSortId(value);
+    let param = value === 'ALL' ? '' : `&sort=${value}`;
+    setParamSend(param);
+    getListData(param);
   };
 
-  const onFilter = useCallback(() => {
-    navigation.navigate('Filter');
-  }, [navigation]);
+  const getListData = useCallback(
+    (param) => {
+      RecruitmentApi.getList(
+        `filter[location]=${userLocation.latitude},${userLocation.longitude},100&include=educational_background,occupation,workplace,company&filter[seen]=true${param}`,
+      ).then((response) => {
+        setListJobs(response.data);
+      });
+    },
+    [userLocation.latitude, userLocation.longitude],
+  );
 
   return (
     <SafeAreaView>
@@ -69,43 +74,35 @@ const ListSeenJobs = ({navigation}) => {
           <Text style={styles.blockTitleText}>
             Tổng số: {listJobs?.length} công việc
           </Text>
-          <View style={styles.row}>
-            <Icon
-              onPress={onFilter}
-              name="filter"
-              type="antdesign"
-              color="#517fa4"
-            />
-            <Icon
-              name="sort-descending"
-              type="material-community"
-              color="#517fa4"
-              onPress={toggleModal}
-            />
-          </View>
         </View>
-        <View style={styles.hairLine} />
+        <View style={styles.sidebarCustom}>
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+            <TagSort data={sortList} activeId={sortId} onClick={onPressTag} />
+          </ScrollView>
+        </View>
         {listJobs?.length > 0 && (
           <View style={styles.row}>
             <View style={styles.item}>
               {listJobs?.map((item, idx) => (
-                <JobItem item={item} isSeen />
+                <JobItem
+                  item={item}
+                  navigation={navigation}
+                  getListData={getListData}
+                  param={paramSend}
+                />
               ))}
             </View>
           </View>
         )}
-        <Sortable
-          toggleModal={toggleModal}
-          isModalVisible={isModalVisible}
-          sortList={sortList}
-          title="LỌC KẾT QUẢ"
-        />
       </ScrollView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#f7fafc',
+  },
   item: {
     width: '100%',
     height: '50%',
@@ -126,6 +123,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     marginBottom: 10,
+  },
+  sidebarCustom: {
+    paddingTop: 10,
+    flexDirection: 'row',
+    paddingHorizontal: 10,
   },
 });
 

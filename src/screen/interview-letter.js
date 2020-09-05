@@ -30,7 +30,7 @@ const InterviewLetter = ({navigation}) => {
 
   return (
     <SafeAreaView>
-      <ScrollView>
+      <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.header}>
           <Text style={styles.headerText}>{interviewLater.name}</Text>
           <Text style={styles.headerText}>Mời bạn tham gia phỏng vấn</Text>
@@ -96,6 +96,9 @@ const InterviewLetter = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#f7fafc',
+  },
   header: {
     alignItems: 'center',
     marginTop: 10,
@@ -107,7 +110,9 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     backgroundColor: 'white',
+    borderColor: 'white',
     borderRadius: 8,
+    borderWidth: 0,
   },
   item: {
     width: '100%',
@@ -123,7 +128,6 @@ const styles = StyleSheet.create({
   },
   commitmentHeader: {
     textDecorationLine: 'underline',
-    fontStyle: 'italic',
     marginBottom: 15,
     color: 'red',
   },
@@ -137,9 +141,12 @@ const styles = StyleSheet.create({
   },
   btnRefuse: {
     backgroundColor: '#fed7d7',
+    paddingHorizontal: 30,
+    borderWidth: 0,
   },
   btnAccess: {
-    backgroundColor: '#48bb78',
+    backgroundColor: '#3182ce',
+    paddingHorizontal: 30,
   },
 });
 

@@ -199,7 +199,6 @@ const Filter = ({navigation}) => {
         <View style={styles.blockTitle}>
           <Text style={styles.blockTitleText}>Khoảng cách</Text>
         </View>
-        <View style={styles.hairLine} />
         <View style={styles.row}>
           <Slider
             style={{width: '86%'}}

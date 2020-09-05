@@ -42,6 +42,7 @@ const ListJobs = ({navigation}) => {
   const dispatch = useDispatch();
   const [sortList, setSortList] = useState([]);
   const [sortId, setSortId] = useState('ALL');
+  const [paramSend, setParamSend] = useState('');
   const listJobs = useSelector((state) => state.recruitment.listJobs);
   const userLocation = useSelector((state) => state.user.userLocation);
 
@@ -58,16 +59,16 @@ const ListJobs = ({navigation}) => {
     console.log(value);
     setSortId(value);
     let param = value === 'ALL' ? '' : `&sort=${value}`;
-    getListJob(param);
+    setParamSend(param);
+    getListData(param);
   };
 
-  const getListJob = useCallback(
+  const getListData = useCallback(
     (param) => {
       RecruitmentApi.getList(
         `filter[location]=${userLocation.latitude},${userLocation.longitude},100&include=educational_background,occupation,workplace,company${param}`,
       ).then((response) => {
         dispatch(actions.recruitment.saveListJobs(response.data));
-        console.log(response);
       });
     },
     [dispatch, userLocation.latitude, userLocation.longitude],
@@ -107,7 +108,12 @@ const ListJobs = ({navigation}) => {
           <View style={styles.row}>
             <View style={styles.item}>
               {listJobs?.map((item, idx) => (
-                <JobItem item={item} isList />
+                <JobItem
+                  item={item}
+                  navigation={navigation}
+                  getListData={getListData}
+                  param={paramSend}
+                />
               ))}
             </View>
           </View>
@@ -118,6 +124,9 @@ const ListJobs = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#f7fafc',
+  },
   item: {
     width: '100%',
     height: '50%',
@@ -140,6 +149,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   sidebarCustom: {
+    paddingTop: 10,
     flexDirection: 'row',
     paddingHorizontal: 10,
   },

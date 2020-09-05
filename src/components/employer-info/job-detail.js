@@ -15,7 +15,7 @@ import {RecruitmentApi} from '../../api';
 import {formatCurrencyToSring} from '../../utils/common';
 import moment from 'moment';
 
-const JobDetail = ({item, isList, isSeen, isSaved, isApplied}) => {
+const JobDetail = () => {
   const detailRecruitment = useSelector(
     (state) => state.recruitment.detailRecruitment,
   );
@@ -133,20 +133,24 @@ const JobDetail = ({item, isList, isSeen, isSaved, isApplied}) => {
         </View>
       </Card>
       <View style={styles.btnFooter}>
-        <View style={styles.btnItem}>
-          <Button
-            title="Ứng tuyển công việc này"
-            titleStyle={{color: 'white'}}
-            onPress={() => onPressApply()}
-          />
-        </View>
-        <View style={styles.btnItem}>
-          <Button
-            title="Lưu công việc này"
-            titleStyle={{color: 'white'}}
-            onPress={() => onPressSave()}
-          />
-        </View>
+        {!detailRecruitment?.has_apply && (
+          <View style={styles.btnItem}>
+            <Button
+              title="Ứng tuyển công việc này"
+              titleStyle={{color: 'white'}}
+              onPress={() => onPressApply()}
+            />
+          </View>
+        )}
+        {!detailRecruitment?.has_save && (
+          <View style={styles.btnItem}>
+            <Button
+              title="Lưu công việc này"
+              titleStyle={{color: 'white'}}
+              onPress={() => onPressSave()}
+            />
+          </View>
+        )}
       </View>
     </View>
   );
