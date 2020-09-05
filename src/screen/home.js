@@ -66,7 +66,7 @@ const HomeScreen = ({navigation}) => {
   const renderItem = useCallback(({item, index}, parallaxProps) => {
     return (
       <View style={styles.item}>
-        <JobItem item={item} navigation={navigation} />
+        <JobItem item={item} navigation={navigation} isHome />
       </View>
     );
   }, []);

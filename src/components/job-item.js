@@ -14,7 +14,7 @@ import {formatCurrencyToSring} from '../utils/common';
 import {RecruitmentApi} from '../api';
 import moment from 'moment';
 
-const JobItem = ({item, navigation, getListData, param}) => {
+const JobItem = ({item, navigation, getListData, param, isHome}) => {
   const onPressApply = (id) => {
     RecruitmentApi.makeRecuitmentApplied(id).then((response) => {
       getListData(param);
@@ -92,7 +92,7 @@ const JobItem = ({item, navigation, getListData, param}) => {
         <Text style={styles.redText}>{item.distance} km</Text>
       </View>
       <View style={styles.btnFooter}>
-        {!item.has_apply && (
+        {!item.has_apply && !isHome && (
           <View style={styles.col}>
             <Button
               title="Ứng tuyển"
@@ -103,7 +103,7 @@ const JobItem = ({item, navigation, getListData, param}) => {
             />
           </View>
         )}
-        {!item.has_save && (
+        {!item.has_save && !isHome && (
           <View style={styles.col}>
             <Button
               title="Lưu"
