@@ -7,7 +7,8 @@ import {PersistGate} from 'redux-persist/integration/react';
 import Toast from 'react-native-toast-message';
 import {Provider, useSelector} from 'react-redux';
 import SplashScreen from 'react-native-splash-screen';
-import {configStore} from './app-redux';
+import Geolocation from '@react-native-community/geolocation';
+import {configStore, actions} from './app-redux';
 import Route from './routes';
 import {setToken} from './api';
 
@@ -16,6 +17,18 @@ const {store, persistor} = configStore();
 const App = ({navigation}) => {
   const navigationRef = useRef(null);
   const {user} = store.getState();
+  const onBeforeLift = () => {
+    Geolocation.getCurrentPosition((info) => {
+      store.dispatch(
+        actions.app.saveLocation({
+          latitude: info.coords.latitude,
+          longitude: info.coords.longitude,
+          latitudeDelta: 0.1,
+          longitudeDelta: 0.1,
+        }),
+      );
+    });
+  };
   useEffect(() => {
     setTimeout(() => {
       if (user?.user?.token) {
@@ -30,7 +43,10 @@ const App = ({navigation}) => {
   }, [user.user, navigation, user]);
   return (
     <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
+      <PersistGate
+        loading={null}
+        persistor={persistor}
+        onBeforeLift={onBeforeLift}>
         <NavigationContainer ref={navigationRef}>
           <Route />
           <Toast
