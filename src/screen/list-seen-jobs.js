@@ -41,6 +41,7 @@ const ListSeenJobs = ({navigation}) => {
   const [sortId, setSortId] = useState('ALL');
   const [sortList, setSortList] = useState([]);
   const [paramSend, setParamSend] = useState('');
+  const [totalQuantity, setTotalQuantity] = useState(0);
   const userLocation = useSelector((state) => state.user.userLocation);
 
   useEffect(() => {
@@ -61,6 +62,7 @@ const ListSeenJobs = ({navigation}) => {
       RecruitmentApi.getList(
         `filter[location]=${userLocation.latitude},${userLocation.longitude},100&include=educational_background,occupation,workplace,company&filter[seen]=true${param}`,
       ).then((response) => {
+        setTotalQuantity(response.meta.total);
         setListJobs(response.data);
       });
     },
@@ -72,7 +74,7 @@ const ListSeenJobs = ({navigation}) => {
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.blockTitle}>
           <Text style={styles.blockTitleText}>
-            Tổng số: {listJobs?.length} công việc
+            Tổng số: {totalQuantity} công việc
           </Text>
         </View>
         <View style={styles.sidebarCustom}>

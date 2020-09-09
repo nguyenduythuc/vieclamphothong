@@ -10,18 +10,21 @@ import React, {useCallback} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {Card, Divider, Button} from 'react-native-elements';
 import Toast from 'react-native-toast-message';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {actions} from '../../app-redux';
 import {RecruitmentApi} from '../../api';
 import {formatCurrencyToSring} from '../../utils/common';
 import moment from 'moment';
 
 const JobDetail = () => {
+  const dispatch = useDispatch();
   const detailRecruitment = useSelector(
     (state) => state.recruitment.detailRecruitment,
   );
   const onPressApply = useCallback(() => {
     RecruitmentApi.makeRecuitmentApplied(detailRecruitment?.id).then(
       (response) => {
+        getDetail();
         Toast.show({
           type: 'success',
           position: 'top',
@@ -34,10 +37,19 @@ const JobDetail = () => {
         });
       },
     );
-  }, [detailRecruitment]);
+  }, [detailRecruitment, getDetail]);
+  const getDetail = useCallback(() => {
+    RecruitmentApi.getDetailRecruitment(detailRecruitment.id).then(
+      (response) => {
+        dispatch(actions.recruitment.saveDetailRecruitment(response.data));
+        RecruitmentApi.makeRecuitmentSeen(detailRecruitment.id);
+      },
+    );
+  }, [detailRecruitment.id, dispatch]);
   const onPressSave = useCallback(() => {
     RecruitmentApi.makeRecuitmentSaved(detailRecruitment?.id).then(
       (response) => {
+        getDetail();
         Toast.show({
           type: 'success',
           position: 'top',
@@ -50,7 +62,7 @@ const JobDetail = () => {
         });
       },
     );
-  }, [detailRecruitment]);
+  }, [detailRecruitment, getDetail]);
   return (
     <View>
       <Card containerStyle={styles.cardContainer}>

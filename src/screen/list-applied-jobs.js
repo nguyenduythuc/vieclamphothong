@@ -19,6 +19,7 @@ const ListSavedJobs = ({navigation}) => {
   const [sortId, setSortId] = useState('ALL');
   const [paramStatus, setParamStatus] = useState('');
   const [sortList, setSortList] = useState([]);
+  const [totalQuantity, setTotalQuantity] = useState(0);
   const userLocation = useSelector((state) => state.user.userLocation);
   const listStatusApplied = useSelector(
     (state) => state.recruitment.listStatusApplied,
@@ -30,7 +31,7 @@ const ListSavedJobs = ({navigation}) => {
   }, []);
   useEffect(() => {
     getListData();
-  }, [paramStatus]);
+  }, [getListData]);
   const getListData = useCallback(
     (param) => {
       console.log(paramStatus);
@@ -38,6 +39,7 @@ const ListSavedJobs = ({navigation}) => {
         `location=${userLocation.latitude},${userLocation.longitude}`,
         paramStatus,
       ).then((response) => {
+        setTotalQuantity(response.meta.total);
         setListAppliedJobs(response.data);
       });
     },
@@ -69,7 +71,7 @@ const ListSavedJobs = ({navigation}) => {
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.blockTitle}>
           <Text style={styles.blockTitleText}>
-            Tổng số: {listAppliedJobs.length} công việc
+            Tổng số: {totalQuantity} công việc
           </Text>
         </View>
         <View style={styles.sidebarCustom}>

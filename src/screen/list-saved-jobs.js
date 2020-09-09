@@ -16,6 +16,7 @@ import {useSelector} from 'react-redux';
 
 const ListSavedJobs = ({navigation}) => {
   const [listSavedJobs, setListSavedJobs] = useState([]);
+  const [totalQuantity, setTotalQuantity] = useState(0);
   const userLocation = useSelector((state) => state.user.userLocation);
 
   useEffect(() => {
@@ -25,6 +26,7 @@ const ListSavedJobs = ({navigation}) => {
     RecruitmentApi.getListSaved(
       `location=${userLocation.latitude},${userLocation.longitude}`,
     ).then((response) => {
+      setTotalQuantity(response.meta.total);
       setListSavedJobs(response.data);
     });
   };
@@ -48,7 +50,7 @@ const ListSavedJobs = ({navigation}) => {
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.blockTitle}>
           <Text style={styles.blockTitleText}>
-            Tổng số: {listSavedJobs.length} công việc
+            Tổng số: {totalQuantity} công việc
           </Text>
         </View>
         <View style={styles.hairLine} />
