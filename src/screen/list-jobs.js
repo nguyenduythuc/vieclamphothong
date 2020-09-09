@@ -51,19 +51,24 @@ const ListJobs = ({navigation}) => {
   const [sortList, setSortList] = useState([]);
   const [sortId, setSortId] = useState('ALL');
   const [paramSend, setParamSend] = useState('');
-  const [totalQuantity, setTotalQuantity] = useState(0);
+  const [listJobs, setListJobs] = useState([]);
+  const [metaResponse, setMetaResponse] = useState({});
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const listJobs = useSelector((state) => state.recruitment.listJobs);
   const userLocation = useSelector((state) => state.user.userLocation);
 
+  // useEffect(() => {
+  //   setSortList(ENTRIES2);
+  //   getListData(paramSend);
+  //   setIsLoading(true);
+  // }, [getListData, paramSend]);
   useEffect(() => {
-    setSortList(ENTRIES2);
+    if (metaResponse.current_page === page) return;
+    console.log('page', page)
+    console.log('page', metaResponse);
+    // if (isLoading) return;
     getListData(paramSend);
-  }, [getListData, paramSend]);
-  useEffect(() => {
-    getListData(paramSend);
-  }, [page]);
+  }, [page, isLoading, metaResponse.current_page, getListData, paramSend, metaResponse]);
 
   const onFilter = useCallback(() => {
     navigation.navigate('Filter');
@@ -78,19 +83,23 @@ const ListJobs = ({navigation}) => {
 
   const getListData = useCallback(
     (param) => {
-      console.log(page);
+      // console.log('page', page);
       RecruitmentApi.getList(
         `filter[location]=${userLocation.latitude},${userLocation.longitude},100&include=educational_background,occupation,workplace,company${param}`,
-      ).then((response) => {
-        setTotalQuantity(response.meta.total);
-        dispatch(actions.recruitment.saveListJobs(response.data));
-      });
+      )
+        .then((response) => {
+          setListJobs(response.data);
+          setMetaResponse(response.meta);
+          let pageF = page + 1;
+          setPage(pageF);
+          setIsLoading(false);
+        })
+        .finally(() => setIsLoading(false));
     },
-    [dispatch, page, userLocation.latitude, userLocation.longitude],
+    [page, userLocation.latitude, userLocation.longitude],
   );
   const loadMore = () => {
-    let pageF = page + 1;
-    setPage(pageF);
+    setIsLoading(true);
   };
 
   const renderRow = ({item}) => {
@@ -104,18 +113,18 @@ const ListJobs = ({navigation}) => {
     );
   };
   const renderFooter = () => {
-    return (
+    return isLoading ? (
       <View style={styles.footerLoading}>
         <ActivityIndicator size="large" />
       </View>
-    );
+    ) : null;
   };
 
   return (
     <SafeAreaView>
       <View style={styles.blockTitle}>
         <Text style={styles.blockTitleText}>
-          Tổng số: {totalQuantity} công việc
+          Tổng số: {metaResponse.total_quantity} công việc
         </Text>
         <View style={styles.row}>
           <Button
