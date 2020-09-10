@@ -21,10 +21,18 @@ function saveCurrentLocation(data) {
   };
 }
 
+function saveProfile(data) {
+  return {
+    type: types.SAVE_PROFILE,
+    data: data,
+  };
+}
+
 const user = {
   saveUser,
   saveUserType,
   saveCurrentLocation,
+  saveProfile,
 };
 
 export default user;

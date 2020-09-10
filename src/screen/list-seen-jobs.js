@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 /**
  * Product Management: Up product, Buy premium, modify
  * https://github.com/facebook/react-native

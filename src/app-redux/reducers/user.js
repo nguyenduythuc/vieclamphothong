@@ -4,6 +4,7 @@ const INITIAL_STATE = {
   user: null,
   userType: null,
   userLocation: {},
+  userProfile: {},
 };
 
 export const user = (state = INITIAL_STATE, action) => {
@@ -25,6 +26,12 @@ export const user = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         userLocation: action.data,
+      };
+    case types.SAVE_PROFILE:
+      delete action.type;
+      return {
+        ...state,
+        userProfile: action.data,
       };
     default:
       return state;

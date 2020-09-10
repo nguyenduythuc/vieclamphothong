@@ -16,102 +16,105 @@ import {
   StyleSheet,
   Image,
 } from 'react-native';
-import {Card, Divider, Button} from 'react-native-elements';
-const profile = {
-  name: 'Nguyễn Văn Tuấn',
-  birthDay: '12/12/1992',
-  gender: 'Nam',
-  currentAddress: 'Phú Cường - Sóc Sơn - HN',
-  phone: '0987654321',
-  email: 'tuannguyen@gmail.com',
-  level: 'THPT',
-  school: 'THPT Sóc Sơn',
-  experienceYears: 5,
-  jod: 'Nhân viên lắp ráp.',
-  genitive: 'Hòa đồng',
-  jobWish: 'Cái gì cũng được',
-};
+import {Card, Icon} from 'react-native-elements';
+import {useDispatch, useSelector} from 'react-redux';
+import {actions} from '../app-redux';
+import {UserApi} from '../api';
+import moment from 'moment';
+
 const bg = require('../assets/bg1.png');
 const Profile = ({navigation}) => {
+  const dispatch = useDispatch();
+  const userProfile = useSelector((state) => state.user.userProfile);
   useEffect(() => {
-    console.log('didmount');
+    UserApi.getProfile().then((response) => {
+      dispatch(actions.user.saveProfile(response.data));
+    });
   }, []);
 
   return (
     <SafeAreaView>
       <ScrollView>
         <View style={styles.header}>
-          <Image source={bg} style={styles.imageProfile} />
-          <View style={styles.btnHeader}>
-            <View style={styles.col}>
-              <Button
-                title="Sửa"
-                buttonStyle={styles.btnEdit}
-                type="outline"
-                titleStyle={{color: 'white'}}
-                onPress={() => {}}
-              />
-            </View>
-            <View style={styles.col}>
-              <Button
-                title="Lưu"
-                buttonStyle={styles.btnSave}
-                type="outline"
-                titleStyle={{color: '#4a5568'}}
-                onPress={() => {}}
-              />
+          <View style={styles.header}>
+            <Image source={bg} style={styles.imageProfile} />
+            <View>
+              <Text style={styles.headerText}>Thanh Tran</Text>
+              <Text style={styles.headerText}>0987654321</Text>
             </View>
           </View>
+          <Icon
+            name="form"
+            type="antdesign"
+            color="#517fa4"
+            size={28}
+            onPress={() => {
+              navigation.navigate('ProfileEdit');
+            }}
+          />
         </View>
-        <Card containerStyle={styles.cardContainer}>
-          <View>
-            <Text style={styles.noteHeader}>Tiểu sử:</Text>
-          </View>
-          <View>
-            <Text>{`Họ và tên: ${profile.name}`}</Text>
-            <Text>{`Ngày sinh: ${profile.birthDay}`}</Text>
-            <Text>{`Giới tính: ${profile.gender}`}</Text>
-            <Text>{`Địa chỉ đang cư trú: ${profile.currentAddress}`}</Text>
-          </View>
-          <Divider style={styles.divider} />
-          <View>
-            <Text style={styles.noteHeader}>Liên hệ:</Text>
-          </View>
-          <View>
-            <Text>{`Điện thoại: ${profile.phone}`}</Text>
-            <Text>{`Email: ${profile.email}`}</Text>
-          </View>
-          <Divider style={styles.divider} />
-          <View>
-            <Text style={styles.noteHeader}>Học tập:</Text>
-          </View>
-          <View>
-            <Text>{`Trình độ: ${profile.level}`}</Text>
-            <Text>{`Trường: ${profile.school}`}</Text>
-          </View>
-          <Divider style={styles.divider} />
-          <View>
-            <Text style={styles.noteHeader}>Kinh nghiệm:</Text>
-          </View>
-          <View>
-            <Text>{`Số năm: ${profile.experienceYears}`}</Text>
-            <Text>{`Công việc: ${profile.jod}`}</Text>
-          </View>
-          <Divider style={styles.divider} />
-          <View>
-            <Text style={styles.noteHeader}>Giới thiệu bản thân:</Text>
-          </View>
-          <View>
-            <Text>{profile.genitive}</Text>
-          </View>
-          <Divider style={styles.divider} />
-          <View>
-            <Text style={styles.noteHeader}>Công việc mong muốn:</Text>
-          </View>
-          <View>
-            <Text>{profile.jobWish}</Text>
-          </View>
-        </Card>
+        <View>
+          <Card containerStyle={styles.cardContainer}>
+            <View>
+              <Text style={styles.noteHeader}>Tiểu sử:</Text>
+            </View>
+            <View>
+              <Text>{`Họ và tên: ${userProfile?.full_name}`}</Text>
+              <Text>{`Ngày sinh: ${moment(userProfile?.dob).format(
+                'DD/MM/YYYY',
+              )}`}</Text>
+              <Text>{`Giới tính: ${
+                userProfile.gender === 'male' ? 'Nam' : 'Nữ'
+              }`}</Text>
+              <Text>{`Địa chỉ đang cư trú: ${userProfile?.address}`}</Text>
+            </View>
+          </Card>
+          <Card containerStyle={styles.cardContainer}>
+            <View>
+              <Text style={styles.noteHeader}>Liên hệ:</Text>
+            </View>
+            <View>
+              <Text>{`Điện thoại: ${userProfile?.phone_number}`}</Text>
+              <Text>{`Email: ${userProfile?.email}`}</Text>
+            </View>
+          </Card>
+          <Card containerStyle={styles.cardContainer}>
+            <View>
+              <Text style={styles.noteHeader}>Học tập:</Text>
+            </View>
+            <View>
+              <Text>{`Trình độ: ${userProfile?.resume?.educational_background_id}`}</Text>
+              <Text>{`Trường: ${userProfile?.resume?.education_description}`}</Text>
+            </View>
+          </Card>
+          <Card containerStyle={styles.cardContainer}>
+            <View>
+              <Text style={styles.noteHeader}>Kinh nghiệm:</Text>
+            </View>
+            <View>
+              <Text>{`Số năm: ${userProfile?.resume?.experience}`}</Text>
+              <Text>{`Công việc: ${userProfile?.resume?.experience_description}`}</Text>
+            </View>
+          </Card>
+          <Card containerStyle={styles.cardContainer}>
+            <View>
+              <Text style={styles.noteHeader}>Giới thiệu bản thân:</Text>
+            </View>
+            <View>
+              <Text>{userProfile?.introduce}</Text>
+            </View>
+          </Card>
+          <Card containerStyle={styles.cardContainer}>
+            <View>
+              <Text style={styles.noteHeader}>Công việc mong muốn:</Text>
+            </View>
+            <View>
+              {userProfile?.resume?.occupations.map((item, idx) => (
+                <Text>- {item?.name}</Text>
+              ))}
+            </View>
+          </Card>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -121,11 +124,12 @@ const styles = StyleSheet.create({
   header: {
     alignItems: 'center',
     marginTop: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
   },
   headerText: {
     fontSize: 20,
-    color: 'blue',
-    fontWeight: '500',
+    lineHeight: 25,
   },
   cardContainer: {
     backgroundColor: 'white',
@@ -143,7 +147,8 @@ const styles = StyleSheet.create({
   imageProfile: {
     height: 120,
     width: 120,
-    borderRadius: 12,
+    borderRadius: 60,
+    marginRight: 20,
   },
   btnHeader: {
     marginTop: 15,

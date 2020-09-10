@@ -13,6 +13,7 @@ import ListSavedJobs from '../screen/list-saved-jobs';
 import ListAppliedJobs from '../screen/list-applied-jobs';
 import InterviewLetter from '../screen/interview-letter';
 import Profile from '../screen/profile';
+import ProfileEdit from '../screen/profile-edit';
 import EmployerInfo from '../screen/employer-info';
 import HomeTabNavigator from './home-tab-navigator';
 
@@ -89,7 +90,12 @@ export default function Route() {
       <Stack.Screen
         name="Profile"
         component={Profile}
-        options={{title: 'Hồ sơ'}}
+        options={{title: 'Hồ sơ xin việc'}}
+      />
+      <Stack.Screen
+        name="ProfileEdit"
+        component={ProfileEdit}
+        options={{title: 'Sửa hồ sơ'}}
       />
       <Stack.Screen
         name="EmployerInfo"
