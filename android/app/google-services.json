@@ -15,11 +15,19 @@
       },
       "oauth_client": [
         {
-          "client_id": "891366340844-nd03forg6l0felkoqkn418nidrv7upk6.apps.googleusercontent.com",
+          "client_id": "891366340844-nlb6cnqalf7dc88qcfj561rjno1nrdok.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.vieclam.phothong",
-            "certificate_hash": "ef689e7e5864cb254d70f37e9fae9edff5a3eb15"
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "891366340844-q5or3dmphct6a8vqbqimdrt8jkgsha83.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vieclam.phothong",
+            "certificate_hash": "c4e480500d434be70664d9b7acf413f2c7b07d7e"
           }
         },
         {

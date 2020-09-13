@@ -29,9 +29,9 @@ const LoginScreen = ({navigation}) => {
     try {
       const deviceName = await DeviceInfo.getDeviceName();
       const response = await AuthApi.login(phoneNumber, password, deviceName);
-      dispatch(actions.user.saveUser(response));
       setToken(response.token);
-      navigation.navigate('Home');
+      dispatch(actions.user.saveUser(response));
+      setTimeout(() => navigation.navigate('Home'), 200);
     } catch (error) {
       alert(JSON.stringify(error));
     }

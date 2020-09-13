@@ -1,10 +1,10 @@
 import qs from 'querystringify';
-// import {actions} from '../app-redux';
+import {navigationNative} from '../app';
 import {actions, configStore} from '../app-redux';
 
 const {store} = configStore();
 
-const baseUrl = 'https://s-job.vn';
+const baseUrl = 'https://app.s-job.vn';
 // const navigation = useNavigation();
 
 let HEADERS = {
@@ -15,6 +15,7 @@ let HEADERS = {
 };
 
 const onResponse = async (request, result) => {
+  // console.log(request, result.text())
   try {
     const body = await result.text();
     const newBody = JSON.parse(body);
@@ -25,10 +26,9 @@ const onResponse = async (request, result) => {
         type: 'object',
       };
       if (result.status === 401) {
-        console.log('store', store);
-        // setToken('');
         store.dispatch(actions.user.saveUser({}));
         setToken('');
+        navigationNative.current.navigate('Login');
       }
       throw exception;
     }
