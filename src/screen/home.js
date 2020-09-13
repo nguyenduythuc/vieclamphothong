@@ -22,7 +22,7 @@ import {formatCurrencyToSring} from '../utils/common';
 const HomeScreen = ({navigation}) => {
   const dispatch = useDispatch();
   const listJobs = useSelector((state) => state.recruitment.listJobs);
-  const userLocation = useSelector((state) => state.app.location);
+  const userLocation = useSelector((state) => state.user.userLocation);
   const [search, setSearch] = useState('');
   const [currentPosition, setCurentPosition] = useState(userLocation);
   const [positionChanged, setPositionChanged] = useState(false);

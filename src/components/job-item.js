@@ -50,67 +50,67 @@ const JobItem = ({item, navigation, getListData, param, isHome}) => {
       <View style={styles.cardHeader}>
         <Text
           onPress={() => {
-            navigation.navigate('EmployerInfo', {id: item.id});
+            navigation.navigate('EmployerInfo', {id: item?.id});
           }}
-          style={item.has_seen ? styles.titleSeen : styles.title}
+          style={item?.has_seen ? styles.titleSeen : styles.title}
           numberOfLines={2}>
-          {item.position}
+          {item?.position}
         </Text>
       </View>
       <View style={styles.row}>
         <View style={styles.colText}>
           <Text style={styles.greyText}>Lương: </Text>
           <Text style={styles.redText}>{`${formatCurrencyToSring(
-            item.min_salary,
-          )}tr-${formatCurrencyToSring(item.max_salary)}tr`}</Text>
+            item?.min_salary,
+          )}tr-${formatCurrencyToSring(item?.max_salary)}tr`}</Text>
         </View>
-        <Text>{`Số lượng: ${item.quantity}`}</Text>
+        <Text>{`Số lượng: ${item?.quantity}`}</Text>
       </View>
       <View style={styles.row}>
-        <Text>{`Hạn nộp: ${moment(item.expired_at).format(
+        <Text>{`Hạn nộp: ${moment(item?.expired_at).format(
           'DD/MM/YYYY',
         )}`}</Text>
         <Text
-          style={styles.redText}>{`Còn ${item.expired_in_number} ngày`}</Text>
+          style={styles.redText}>{`Còn ${item?.expired_in_number} ngày`}</Text>
       </View>
       <Divider style={styles.divider} />
       <Text style={styles.title2} numberOfLines={1}>
-        {item.company.name}
+        {item?.company?.name}
       </Text>
       <View style={styles.row}>
-        <Rating imageSize={14} startingValue={item.company.rating_point} />
+        <Rating imageSize={14} startingValue={item?.company?.rating_point} />
         <View style={styles.comments}>
           <Icon name="comments" type="fontisto" color="red" size={15} />
           <Text style={styles.commentsText}>Xem nhận xét</Text>
         </View>
       </View>
       <Text style={styles.marginBottom} numberOfLines={2}>
-        {item.company.address}
+        {item?.company?.address}
       </Text>
       <View style={styles.colText}>
         <Text>Cách bạn: </Text>
-        <Text style={styles.redText}>{item.distance} km</Text>
+        <Text style={styles.redText}>{item?.distance} km</Text>
       </View>
       <View style={styles.btnFooter}>
-        {!item.has_apply && !isHome && (
+        {!item?.has_apply && !isHome && (
           <View style={styles.col}>
             <Button
               title="Ứng tuyển"
               buttonStyle={styles.btnDeleteOptions}
               type="outline"
               titleStyle={{color: 'white'}}
-              onPress={() => onPressApply(item.id)}
+              onPress={() => onPressApply(item?.id)}
             />
           </View>
         )}
-        {!item.has_save && !isHome && (
+        {!item?.has_save && !isHome && (
           <View style={styles.col}>
             <Button
               title="Lưu"
               buttonStyle={styles.btnViewResult}
               type="outline"
               titleStyle={{color: '#4a5568'}}
-              onPress={() => onPressSave(item.id)}
+              onPress={() => onPressSave(item?.id)}
             />
           </View>
         )}

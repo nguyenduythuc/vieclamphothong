@@ -1,4 +1,4 @@
-/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable react-hooks/exhaustive-deps */
 /**
  * Product Management: Up product, Buy premium, modify
  * https://github.com/facebook/react-native
@@ -7,7 +7,7 @@
  * @flow
  */
 
-import React, {useState, useCallback, useEffect} from 'react';
+import React, {useState, useCallback, useEffect, memo} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -20,41 +20,15 @@ import {
 import {Icon, Button} from 'react-native-elements';
 import {JobItem, TagSort} from '../components';
 import {RecruitmentApi} from '../api';
-import {useDispatch, useSelector} from 'react-redux';
-import {actions} from '../app-redux';
-
-const ENTRIES2 = [
-  {
-    value: 'ALL',
-    label: 'Tất cả',
-  },
-  {
-    value: 'salary',
-    label: 'Lương tăng dần',
-  },
-  {
-    value: '-salary',
-    label: 'Lương giảm dần',
-  },
-  {
-    value: 'distance',
-    label: 'Khoảng cách lớn dần',
-  },
-  {
-    value: '-distance',
-    label: 'Khoảng cách nhỏ dần',
-  },
-];
+import {useSelector} from 'react-redux';
 
 const ListJobs = ({navigation}) => {
-  const dispatch = useDispatch();
   const [sortList, setSortList] = useState([]);
   const [sortId, setSortId] = useState('ALL');
   const [paramSend, setParamSend] = useState('');
   const [listJobs, setListJobs] = useState([]);
   const [metaResponse, setMetaResponse] = useState({});
-  const [page, setPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const userLocation = useSelector((state) => state.user.userLocation);
 
   // useEffect(() => {
@@ -63,12 +37,11 @@ const ListJobs = ({navigation}) => {
   //   setIsLoading(true);
   // }, [getListData, paramSend]);
   useEffect(() => {
-    if (metaResponse.current_page === page) return;
-    console.log('page', page)
-    console.log('page', metaResponse);
-    // if (isLoading) return;
-    getListData(paramSend);
-  }, [page, isLoading, metaResponse.current_page, getListData, paramSend, metaResponse]);
+    if (!isLoading) {
+      return;
+    }
+    getListData();
+  }, [isLoading]);
 
   const onFilter = useCallback(() => {
     navigation.navigate('Filter');
@@ -83,20 +56,25 @@ const ListJobs = ({navigation}) => {
 
   const getListData = useCallback(
     (param) => {
-      // console.log('page', page);
+      console.log('a');
       RecruitmentApi.getList(
-        `filter[location]=${userLocation.latitude},${userLocation.longitude},100&include=educational_background,occupation,workplace,company${param}`,
+        `page=${metaResponse.current_page + 1 || 1}&filter[location]=${
+          userLocation.latitude
+        },${
+          userLocation.longitude
+        },100&include=educational_background,occupation,workplace,company${
+          param || paramSend
+        }`,
       )
         .then((response) => {
-          setListJobs(response.data);
+          const newListJob = [...listJobs, ...response.data];
+          setListJobs(newListJob);
           setMetaResponse(response.meta);
-          let pageF = page + 1;
-          setPage(pageF);
           setIsLoading(false);
         })
         .finally(() => setIsLoading(false));
     },
-    [page, userLocation.latitude, userLocation.longitude],
+    [userLocation, paramSend, metaResponse, listJobs],
   );
   const loadMore = () => {
     setIsLoading(true);
@@ -203,4 +181,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ListJobs;
+export default memo(ListJobs);

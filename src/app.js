@@ -1,26 +1,35 @@
 // In App.js in a new project
 
-import React, {useEffect, useRef} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import React, {useRef} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {PersistGate} from 'redux-persist/integration/react';
 import Toast from 'react-native-toast-message';
-import {Provider, useSelector} from 'react-redux';
+import {Provider} from 'react-redux';
 import SplashScreen from 'react-native-splash-screen';
-import Geolocation from '@react-native-community/geolocation';
+import Geolocation from 'react-native-geolocation-service';
 import {configStore, actions} from './app-redux';
 import Route from './routes';
 import {setToken} from './api';
 
 const {store, persistor} = configStore();
-
+let navigationNative;
 const App = ({navigation}) => {
   const navigationRef = useRef(null);
-  const {user} = store.getState();
   const onBeforeLift = () => {
+    const {user} = store.getState();
+    setTimeout(() => {
+      if (user?.user?.token) {
+        setToken(user.user.token);
+        navigationRef.current?.navigate('Home');
+      } else if (user?.userType) {
+        navigationRef.current?.navigate('Login');
+      }
+      navigationNative = navigationRef;
+    }, 500);
+    setTimeout(() => SplashScreen.hide(), 800);
     Geolocation.getCurrentPosition((info) => {
       store.dispatch(
-        actions.app.saveLocation({
+        actions.user.saveCurrentLocation({
           latitude: info.coords.latitude,
           longitude: info.coords.longitude,
           latitudeDelta: 0.1,
@@ -29,18 +38,7 @@ const App = ({navigation}) => {
       );
     });
   };
-  useEffect(() => {
-    setTimeout(() => {
-      if (user?.user?.token) {
-        setToken(user.user.token);
-        navigationRef.current?.navigate('Home');
-      } else {
-        navigationRef.current?.navigate('Login');
-      }
-      SplashScreen.hide();
-    }, 200);
-    console.log('user', user);
-  }, [user.user, navigation, user]);
+
   return (
     <Provider store={store}>
       <PersistGate
@@ -59,4 +57,5 @@ const App = ({navigation}) => {
   );
 };
 
+export {navigationNative};
 export default App;
