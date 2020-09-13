@@ -14,6 +14,7 @@ import ListAppliedJobs from '../screen/list-applied-jobs';
 import InterviewLetter from '../screen/interview-letter';
 import Profile from '../screen/profile';
 import ProfileEdit from '../screen/profile-edit';
+import SelectMultiple from '../screen/select-multiple';
 import EmployerInfo from '../screen/employer-info';
 import HomeTabNavigator from './home-tab-navigator';
 
@@ -101,6 +102,11 @@ export default function Route() {
         name="EmployerInfo"
         component={EmployerInfo}
         options={{title: 'Công ty TNHH Samsung'}}
+      />
+      <Stack.Screen
+        name="SelectMultiple"
+        component={SelectMultiple}
+        options={{title: 'Lựa chọn'}}
       />
     </Stack.Navigator>
   );

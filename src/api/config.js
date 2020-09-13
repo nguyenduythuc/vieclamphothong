@@ -4,7 +4,7 @@ import {actions, configStore} from '../app-redux';
 
 const {store} = configStore();
 
-const baseUrl = 'https://s-job.vn';
+const baseUrl = 'https://app.s-job.vn';
 // const navigation = useNavigation();
 
 let HEADERS = {
