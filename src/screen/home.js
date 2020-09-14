@@ -34,7 +34,6 @@ const HomeScreen = ({navigation}) => {
   const mapRef = useRef(null);
   const markerRef = useRef([]);
   useEffect(() => {
-    console.log(currentPosition);
     RecruitmentApi.getList(
       `filter[location]=${currentPosition.latitude},${currentPosition.longitude},10&include=educational_background,occupation,workplace,company`,
     ).then((response) => {
@@ -96,12 +95,12 @@ const HomeScreen = ({navigation}) => {
           value={search}
           lightTheme
         />
-        <Icon
+        {/* <Icon
           onPress={onFilter}
           name="filter"
           type="antdesign"
           color="#517fa4"
-        />
+        /> */}
       </View>
       {isShowButtonPositionChange && (
         <Button

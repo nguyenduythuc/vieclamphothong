@@ -17,11 +17,12 @@ import {actions} from '../app-redux';
 function getKm(distance) {
   return Math.floor(distance * 100);
 }
-const Filter = ({navigation}) => {
+const Filter = ({navigation, route}) => {
   const [distance, setDistance] = useState(0.1);
   const dispatch = useDispatch();
   const listFilters = useSelector((state) => state.recruitment.listFilters);
   const userLocation = useSelector((state) => state.user.userLocation);
+  const {onFilterResult} = route.params;
   useEffect(() => {
     console.log('didmount');
     // setToken('response.token');
@@ -146,10 +147,8 @@ const Filter = ({navigation}) => {
   }, [distance]);
 
   const onPressViewResult = useCallback(() => {
-    const queryResult =
-      `include=educational_background,occupation,workplace,company&filter[location]=${
-        userLocation.latitude
-      },${userLocation.longitude},${getDistance()}` +
+    const queryResultFilter =
+      getDistance() +
       generateQueryString('workplace_id', checkBoxPlaceList) +
       generateQueryString('occupation_id', checkBoxWorkList) +
       generateQueryString('gender', checkBoxGender ? [checkBoxGender] : []) +
@@ -160,17 +159,13 @@ const Filter = ({navigation}) => {
         checkBoxExperience ? [checkBoxExperience] : [],
       ) +
       generateQueryString(
-        'education_background_id',
+        'educational_background_id',
         checkBoxEducationBackground ? [checkBoxEducationBackground] : [],
       );
-    console.log(getDistance());
-    RecruitmentApi.getList(queryResult).then((response) => {
-      dispatch(actions.recruitment.saveListJobs(response.data));
-      navigation.navigate('ListJobs');
-    });
+    onFilterResult(queryResultFilter);
+    navigation.goBack();
   }, [
-    userLocation.latitude,
-    userLocation.longitude,
+    onFilterResult,
     getDistance,
     checkBoxPlaceList,
     checkBoxWorkList,
@@ -179,7 +174,6 @@ const Filter = ({navigation}) => {
     checkBoxAge,
     checkBoxExperience,
     checkBoxEducationBackground,
-    dispatch,
     navigation,
   ]);
   const onDeleteOptions = () => {

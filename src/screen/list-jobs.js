@@ -48,6 +48,7 @@ const ListJobs = ({navigation}) => {
   const [sortList, setSortList] = useState(ENTRIES2);
   const [sortId, setSortId] = useState('ALL');
   const [paramSend, setParamSend] = useState('');
+  const [paramFilter, setParamFilter] = useState('');
   const [listJobs, setListJobs] = useState([]);
   const [metaResponse, setMetaResponse] = useState({});
   const [isLoading, setIsLoading] = useState(true);
@@ -61,21 +62,50 @@ const ListJobs = ({navigation}) => {
   }, [isLoading]);
 
   const onFilter = useCallback(() => {
-    navigation.navigate('Filter');
+    navigation.navigate('Filter', {onFilterResult: onFilterResult});
   }, [navigation]);
 
+  const onFilterResult = (param) => {
+    console.log(param);
+    setParamFilter(param);
+    getListData(paramSend, param);
+  };
+
+  const callBackFromItem = (paramSendLocal, param, id, action) => {
+    const newListJobs = listJobs.map((item) => {
+      if (item.id === id && action === 'SAVE') {
+        const newItem = {...item, has_save: true};
+        return newItem;
+      }
+      if (item.id === id && action === 'APPLY') {
+        const newItem = {...item, has_apply: true};
+        return newItem;
+      }
+      return item;
+    });
+    setListJobs(newListJobs);
+  };
+
   const getListData = useCallback(
-    (param) => {
-      RecruitmentApi.getList(
-        `page=${metaResponse.current_page + 1 || 1}&filter[location]=${
+    (paramSortLocal, paramFilterLocal) => {
+      const distanceDefault = paramFilterLocal || paramFilter ? '' : '100';
+      const pageDefault = metaResponse.current_page + 1 || 1;
+      console.log(
+        `page=${pageDefault}&include=educational_background,occupation,workplace,company&filter[location]=${
           userLocation.latitude
-        },${
-          userLocation.longitude
-        },100&include=educational_background,occupation,workplace,company${
-          param || paramSend
-        }`,
+        },${userLocation.longitude},${distanceDefault}${
+          paramFilterLocal || paramFilter
+        }${paramSortLocal || paramSend}`,
+      );
+      RecruitmentApi.getList(
+        `page=${pageDefault}&include=educational_background,occupation,workplace,company&filter[location]=${
+          userLocation.latitude
+        },${userLocation.longitude},${distanceDefault}${
+          paramFilterLocal || paramFilter
+        }${paramSortLocal || paramSend}`,
       )
         .then((response) => {
+          console.log(response);
           const newListJob = [...listJobs, ...response.data];
           setListJobs(newListJob);
           setMetaResponse(response.meta);
@@ -83,7 +113,7 @@ const ListJobs = ({navigation}) => {
         })
         .finally(() => setIsLoading(false));
     },
-    [userLocation, paramSend, metaResponse, listJobs],
+    [userLocation, paramSend, paramFilter, metaResponse, listJobs],
   );
 
   const onPressTag = (value) => {
@@ -104,8 +134,9 @@ const ListJobs = ({navigation}) => {
       <JobItem
         item={item}
         navigation={navigation}
-        getListData={getListData}
+        callBackFromItem={callBackFromItem}
         param={paramSend}
+        paramFilter={paramFilter}
       />
     );
   };

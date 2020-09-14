@@ -14,10 +14,17 @@ import {formatCurrencyToSring} from '../utils/common';
 import {RecruitmentApi} from '../api';
 import moment from 'moment';
 
-const JobItem = ({item, navigation, getListData, param, isHome}) => {
+const JobItem = ({
+  item,
+  navigation,
+  callBackFromItem,
+  param,
+  paramFilter,
+  isHome,
+}) => {
   const onPressApply = (id) => {
     RecruitmentApi.makeRecuitmentApplied(id).then((response) => {
-      getListData(param);
+      callBackFromItem(param, paramFilter, id, 'APPLY');
       Toast.show({
         type: 'success',
         position: 'top',
@@ -32,7 +39,7 @@ const JobItem = ({item, navigation, getListData, param, isHome}) => {
   };
   const onPressSave = (id) => {
     RecruitmentApi.makeRecuitmentSaved(id).then((response) => {
-      getListData(param);
+      callBackFromItem(param, paramFilter, id, 'SAVE');
       Toast.show({
         type: 'success',
         position: 'top',
