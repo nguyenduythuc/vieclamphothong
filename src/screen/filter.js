@@ -169,6 +169,9 @@ const Filter = ({navigation}) => {
       navigation.navigate('ListJobs');
     });
   }, [
+    userLocation.latitude,
+    userLocation.longitude,
+    getDistance,
     checkBoxPlaceList,
     checkBoxWorkList,
     checkBoxGender,
@@ -178,8 +181,16 @@ const Filter = ({navigation}) => {
     checkBoxEducationBackground,
     dispatch,
     navigation,
-    getDistance,
   ]);
+  const onDeleteOptions = () => {
+    setCheckBoxPlaceList([]);
+    setCheckBoxWorkList([]);
+    setCheckBoxGender([]);
+    setCheckBoxSalaryList([]);
+    setCheckBoxAge([]);
+    setCheckBoxExperience([]);
+    setCheckBoxEducationBackground([]);
+  };
 
   const generateQueryString = (key, arrayValue) => {
     let query = `&filter[${key}]=`;
@@ -237,6 +248,7 @@ const Filter = ({navigation}) => {
                     color: checkBoxPlaceList.includes(item.id)
                       ? 'white'
                       : 'black',
+                    fontSize: 13,
                   }}
                   onPress={() => {
                     onCheckOnePlace(item.id);
@@ -275,6 +287,7 @@ const Filter = ({navigation}) => {
                     color: checkBoxWorkList.includes(item.id)
                       ? 'white'
                       : 'black',
+                    fontSize: 13,
                   }}
                   onPress={() => {
                     onCheckOneWork(item.id);
@@ -302,6 +315,7 @@ const Filter = ({navigation}) => {
                 titleStyle={{
                   color:
                     checkBoxEducationBackground === item.id ? 'white' : 'black',
+                  fontSize: 13,
                 }}
                 onPress={() => {
                   onCheckOneEducationBackground(item.id);
@@ -328,6 +342,7 @@ const Filter = ({navigation}) => {
                 }
                 titleStyle={{
                   color: checkBoxGender === item.key ? 'white' : 'black',
+                  fontSize: 13,
                 }}
                 onPress={() => {
                   onCheckOneGender(item.key);
@@ -354,6 +369,7 @@ const Filter = ({navigation}) => {
                 }
                 titleStyle={{
                   color: checkBoxAge === item.id ? 'white' : 'black',
+                  fontSize: 13,
                 }}
                 onPress={() => {
                   onCheckOneAge(item.id);
@@ -392,6 +408,7 @@ const Filter = ({navigation}) => {
                     color: checkBoxSalaryList.includes(item.id)
                       ? 'white'
                       : 'black',
+                    fontSize: 13,
                   }}
                   onPress={() => {
                     onCheckOneSalary(item.id);
@@ -419,6 +436,7 @@ const Filter = ({navigation}) => {
                   }
                   titleStyle={{
                     color: checkBoxExperience === item.id ? 'white' : 'black',
+                    fontSize: 13,
                   }}
                   onPress={() => {
                     onCheckOneExperience(item.id);
@@ -428,16 +446,16 @@ const Filter = ({navigation}) => {
             ))}
         </View>
         <View style={styles.btnFooter}>
-          <View style={styles.col}>
+          <View style={styles.col50}>
             <Button
               title="Xóa tùy chọn"
               buttonStyle={styles.btnDeleteOptions}
               type="clear"
               titleStyle={{color: '#4a5568'}}
-              onPress={() => {}}
+              onPress={() => onDeleteOptions()}
             />
           </View>
-          <View style={styles.col}>
+          <View style={styles.col50}>
             <Button
               title="Xem kết quả"
               buttonStyle={styles.btnViewResult}
@@ -479,10 +497,13 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     flexWrap: 'wrap',
   },
   col: {
+    width: '33%',
+  },
+  col50: {
     width: '50%',
   },
   blockTitleText: {
@@ -504,13 +525,13 @@ const styles = StyleSheet.create({
   btnActive: {
     borderWidth: 1,
     margin: 3,
-    marginHorizontal: 25,
+    marginHorizontal: 5,
     backgroundColor: '#2588dc',
   },
   btnNoneActive: {
     borderWidth: 1,
     margin: 3,
-    marginHorizontal: 25,
+    marginHorizontal: 5,
     backgroundColor: 'white',
   },
 });

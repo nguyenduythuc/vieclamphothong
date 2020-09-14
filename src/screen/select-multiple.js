@@ -41,7 +41,7 @@ const SelectMultiplePage = ({navigation, route}) => {
         key={Math.random()}
         items={occupationResult()}
         selectedItems={selectedFruits}
-        maxSelect={2}
+        maxSelect={3}
         onSelectionsChange={onSelectionsChange}
       />
     </View>

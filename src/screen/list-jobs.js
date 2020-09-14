@@ -22,8 +22,30 @@ import {JobItem, TagSort} from '../components';
 import {RecruitmentApi} from '../api';
 import {useSelector} from 'react-redux';
 
+const ENTRIES2 = [
+  {
+    value: 'ALL',
+    label: 'Tất cả',
+  },
+  {
+    value: 'salary',
+    label: 'Lương tăng dần',
+  },
+  {
+    value: '-salary',
+    label: 'Lương giảm dần',
+  },
+  {
+    value: 'distance',
+    label: 'Khoảng cách lớn dần',
+  },
+  {
+    value: '-distance',
+    label: 'Khoảng cách nhỏ dần',
+  },
+];
 const ListJobs = ({navigation}) => {
-  const [sortList, setSortList] = useState([]);
+  const [sortList, setSortList] = useState(ENTRIES2);
   const [sortId, setSortId] = useState('ALL');
   const [paramSend, setParamSend] = useState('');
   const [listJobs, setListJobs] = useState([]);
@@ -31,11 +53,6 @@ const ListJobs = ({navigation}) => {
   const [isLoading, setIsLoading] = useState(true);
   const userLocation = useSelector((state) => state.user.userLocation);
 
-  // useEffect(() => {
-  //   setSortList(ENTRIES2);
-  //   getListData(paramSend);
-  //   setIsLoading(true);
-  // }, [getListData, paramSend]);
   useEffect(() => {
     if (!isLoading) {
       return;
@@ -47,16 +64,8 @@ const ListJobs = ({navigation}) => {
     navigation.navigate('Filter');
   }, [navigation]);
 
-  const onPressTag = (value) => {
-    setSortId(value);
-    let param = value === 'ALL' ? '' : `&sort=${value}`;
-    setParamSend(param);
-    getListData(param);
-  };
-
   const getListData = useCallback(
     (param) => {
-      console.log('a');
       RecruitmentApi.getList(
         `page=${metaResponse.current_page + 1 || 1}&filter[location]=${
           userLocation.latitude
@@ -76,6 +85,16 @@ const ListJobs = ({navigation}) => {
     },
     [userLocation, paramSend, metaResponse, listJobs],
   );
+
+  const onPressTag = (value) => {
+    setSortId(value);
+    let param = value === 'ALL' ? '' : `&sort=${value}`;
+    setListJobs([]);
+    setMetaResponse({});
+    setIsLoading(true);
+    setParamSend(param);
+  };
+
   const loadMore = () => {
     setIsLoading(true);
   };
@@ -102,7 +121,7 @@ const ListJobs = ({navigation}) => {
     <SafeAreaView>
       <View style={styles.blockTitle}>
         <Text style={styles.blockTitleText}>
-          Tổng số: {metaResponse.total_quantity} công việc
+          Tổng số: {metaResponse.total} công việc
         </Text>
         <View style={styles.row}>
           <Button
