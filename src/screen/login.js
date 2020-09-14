@@ -7,6 +7,7 @@ import DeviceInfo from 'react-native-device-info';
 import {useDispatch} from 'react-redux';
 import {AuthApi, setToken} from '../api';
 import {actions} from '../app-redux';
+import {reset} from '../utils/navigation';
 
 const bg = require('../assets/bg1.png');
 const logo = require('../assets/logo-transparent.png');
@@ -31,7 +32,10 @@ const LoginScreen = ({navigation}) => {
       const response = await AuthApi.login(phoneNumber, password, deviceName);
       setToken(response.token);
       dispatch(actions.user.saveUser(response));
-      setTimeout(() => navigation.navigate('Home'), 200);
+      setTimeout(
+        () => navigation.reset({index: 0, routes: [{name: 'Home'}]}),
+        200,
+      );
     } catch (error) {
       alert(JSON.stringify(error));
     }

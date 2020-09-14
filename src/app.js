@@ -20,9 +20,9 @@ const App = ({navigation}) => {
     setTimeout(() => {
       if (user?.user?.token) {
         setToken(user.user.token);
-        navigationRef.current?.navigate('Home');
+        navigationRef.current?.reset({index: 0, routes: [{name: 'Home'}]});
       } else if (user?.userType) {
-        navigationRef.current?.navigate('Login');
+        navigationRef.current?.reset({index: 0, routes: [{name: 'Login'}]});
       }
       navigationNative = navigationRef;
     }, 500);

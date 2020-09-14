@@ -1,6 +1,7 @@
 import qs from 'querystringify';
 import {navigationNative} from '../app';
 import {actions, configStore} from '../app-redux';
+import { reset } from '../utils/navigation';
 
 const {store} = configStore();
 
@@ -28,7 +29,7 @@ const onResponse = async (request, result) => {
       if (result.status === 401) {
         store.dispatch(actions.user.saveUser({}));
         setToken('');
-        navigationNative.current.navigate('Login');
+        navigationNative.current?.reset({index: 0, routes: [{name: 'Login'}]});
       }
       throw exception;
     }

@@ -5,6 +5,7 @@ import auth from '@react-native-firebase/auth';
 import {useDispatch} from 'react-redux';
 import {AuthApi} from '../api';
 import {actions} from '../app-redux';
+import { reset } from '../utils/navigation';
 
 const bg = require('../assets/bg1.png');
 const OTPScreen = ({navigation, route}) => {
@@ -52,7 +53,7 @@ const OTPScreen = ({navigation, route}) => {
         deviceName,
       );
       dispatch(actions.user.saveUser(response));
-      navigation.navigate('Home');
+      navigation.reset({index: 0, routes: [{name: 'Home'}]});
     } catch (error) {
       alert(JSON.stringify(error));
     }

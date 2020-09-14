@@ -16,6 +16,7 @@ import Profile from '../screen/profile';
 import ProfileEdit from '../screen/profile-edit';
 import SelectMultiple from '../screen/select-multiple';
 import EmployerInfo from '../screen/employer-info';
+import InterviewCalendar from '../screen/interview-calendar';
 import HomeTabNavigator from './home-tab-navigator';
 
 const Stack = createStackNavigator();
@@ -107,6 +108,11 @@ export default function Route() {
         name="SelectMultiple"
         component={SelectMultiple}
         options={{title: 'Lựa chọn'}}
+      />
+      <Stack.Screen
+        name="InterviewCalendar"
+        component={InterviewCalendar}
+        options={{headerShown: false}}
       />
     </Stack.Navigator>
   );
