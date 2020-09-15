@@ -48,6 +48,9 @@ const HomeScreen = ({navigation}) => {
   const onFilter = useCallback(() => {
     navigation.navigate('Filter');
   }, [navigation]);
+  const onPressToList = useCallback(() => {
+    navigation.navigate('ListJobs');
+  }, [navigation]);
 
   const onRegionChange = useCallback((region) => {
     setIsShowButtonPositionChange(true);
@@ -91,7 +94,10 @@ const HomeScreen = ({navigation}) => {
         <SearchBar
           onChangeText={onSearch}
           containerStyle={styles.searchBar}
-          placeholder="Bạn đang tìm kiếm công việc gì?"
+          inputStyle={styles.searchBarInput}
+          leftIconContainerStyle={styles.leftIconContainerStyle}
+          inputContainerStyle={styles.inputContainerStyle}
+          placeholder="Nhập công việc mong muốn."
           value={search}
           lightTheme
         />
@@ -111,6 +117,22 @@ const HomeScreen = ({navigation}) => {
           type="clear"
         />
       )}
+      <Button
+        icon={
+          <Icon
+            name="list"
+            type="fsather"
+            color="#517fa4"
+            size={28}
+            style={{paddingRight: 5, paddingTop: 2}}
+          />
+        }
+        title="Danh sách"
+        containerStyle={styles.listButtonStyle}
+        buttonStyle={styles.listButtonBackgroundStyle}
+        onPress={onPressToList}
+        type="clear"
+      />
       <MapView
         ref={mapRef}
         provider={PROVIDER_GOOGLE} // remove if not using Google Maps
@@ -165,7 +187,9 @@ const styles = StyleSheet.create({
   },
   searchBar: {
     flex: 1,
-    marginRight: 10,
+    backgroundColor: '#3182ce',
+    borderRadius: 5,
+    padding: 2,
   },
   map: {
     height: height * 0.42,
@@ -184,6 +208,22 @@ const styles = StyleSheet.create({
     left: width / 2 - 50,
   },
   changePositionButtonBackgroundStyle: {backgroundColor: 'white'},
+  listButtonStyle: {
+    position: 'absolute',
+    zIndex: 10,
+    top: height / 2 - 20,
+    right: 0,
+    paddingRight: 10,
+  },
+  listButtonBackgroundStyle: {
+    backgroundColor: 'white',
+  },
+  searchBarInput: {
+    backgroundColor: 'white',
+  },
+  inputContainerStyle: {
+    backgroundColor: 'white',
+  },
 });
 
 export default HomeScreen;

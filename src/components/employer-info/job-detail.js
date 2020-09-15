@@ -123,6 +123,15 @@ const JobDetail = () => {
       </Card>
       <Card containerStyle={styles.cardContainer}>
         <Text style={styles.title} numberOfLines={2}>
+          Mô tả công việc
+        </Text>
+        <Divider style={styles.divider} />
+        <View style={styles.row}>
+          <Text>{detailRecruitment?.description}</Text>
+        </View>
+      </Card>
+      <Card containerStyle={styles.cardContainer}>
+        <Text style={styles.title} numberOfLines={2}>
           Yêu cầu
         </Text>
         <Divider style={styles.divider} />

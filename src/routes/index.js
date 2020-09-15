@@ -82,7 +82,7 @@ export default function Route() {
       <Stack.Screen
         name="ListAppliedJobs"
         component={ListAppliedJobs}
-        options={{title: 'Công việc đã ứng tuyển'}}
+        options={{title: 'Công việc đã nộp'}}
       />
       <Stack.Screen
         name="InterviewLetter"
