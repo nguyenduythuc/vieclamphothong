@@ -60,17 +60,17 @@ const Profile = ({navigation}) => {
         const photo = {
           uri: response.uri,
           type: response.type,
-          name: 'avatar',
+          name: 'avatar.jpg',
         };
         const formData = new FormData();
         console.log('formData', formData);
         formData.append('image', photo);
         formData.append('_method', 'PUT');
         console.log(formData);
-        // UserApi.updateAvatarProfile(formData).then((response) => {
-        //   console.log(response);
-        //   dispatch(actions.user.saveProfile(response.data));
-        // });
+        UserApi.updateAvatarProfile(formData).then((apiResponse) => {
+          console.log(apiResponse);
+          dispatch(actions.user.saveProfile(apiResponse.data));
+        });
         setAvatarSource(source);
       }
     });

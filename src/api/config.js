@@ -99,10 +99,10 @@ const config = {
     };
     return fetch(url, options).then((result) => onResponse(request, result));
   },
-  putImage: (endpoint: string, params: Object) => {
+  postImage: (endpoint: string, params: Object) => {
     const url = baseUrl + endpoint;
     const options = {
-      method: 'PUT',
+      method: 'POST',
       headers: {...HEADERS, 'Content-Type': 'multipart/form-data;'},
       body: params,
     };

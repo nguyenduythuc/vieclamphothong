@@ -6,7 +6,7 @@ const UserApi = {
   updateProfile: (body) => config.put('/capi/me', body),
 
   updateAvatarProfile: (body) =>
-    config.putImage('/capi/me/profile-picture', body),
+    config.postImage('/capi/me/profile-picture', body),
 };
 
 export default UserApi;
