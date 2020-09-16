@@ -7,7 +7,7 @@
  * @flow
  */
 
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -15,32 +15,90 @@ import {
   Text,
   StyleSheet,
   Image,
+  TouchableOpacity,
+  PixelRatio,
 } from 'react-native';
 import {Card, Icon} from 'react-native-elements';
 import {useDispatch, useSelector} from 'react-redux';
 import {actions} from '../app-redux';
+import ImagePicker from 'react-native-image-picker';
 import {UserApi} from '../api';
 import moment from 'moment';
 
-const bg = require('../assets/bg1.png');
+const defaultAvatar = require('../assets/default-avatar.png');
 const Profile = ({navigation}) => {
   const dispatch = useDispatch();
-  const userProfile = useSelector((state) => state.user.userProfile);
+  const userProfile = useSelector((state) => state.user?.userProfile);
   useEffect(() => {
     UserApi.getProfile().then((response) => {
       dispatch(actions.user.saveProfile(response.data));
     });
   }, []);
 
+  const [avatarSource, setAvatarSource] = useState(defaultAvatar);
+  const selectPhotoTapped = () => {
+    const options = {
+      quality: 1.0,
+      maxWidth: 500,
+      maxHeight: 500,
+      storageOptions: {
+        skipBackup: true,
+      },
+    };
+
+    ImagePicker.showImagePicker(options, (response) => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled photo picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      } else {
+        let source = {uri: response.uri};
+        const photo = {
+          uri: response.uri,
+          type: response.type,
+          name: 'avatar',
+        };
+        const formData = new FormData();
+        console.log('formData', formData);
+        formData.append('image', photo);
+        formData.append('_method', 'PUT');
+        console.log(formData);
+        // UserApi.updateAvatarProfile(formData).then((response) => {
+        //   console.log(response);
+        //   dispatch(actions.user.saveProfile(response.data));
+        // });
+        setAvatarSource(source);
+      }
+    });
+  };
+
   return (
     <SafeAreaView>
       <ScrollView>
         <View style={styles.header}>
           <View style={styles.header}>
-            <Image source={bg} style={styles.imageProfile} />
+            <TouchableOpacity onPress={selectPhotoTapped}>
+              <View
+                style={[
+                  styles.avatar,
+                  styles.avatarContainer,
+                  {marginBottom: 20},
+                ]}>
+                {avatarSource === null ? (
+                  <Text>Chọn ảnh đại diện</Text>
+                ) : (
+                  <Image style={styles.avatar} source={avatarSource} />
+                )}
+              </View>
+              <Text styles={styles.textUpload}>Chọn ảnh</Text>
+            </TouchableOpacity>
             <View>
-              <Text style={styles.headerText}>Thanh Tran</Text>
-              <Text style={styles.headerText}>0987654321</Text>
+              <Text style={styles.headerText}>{userProfile.full_name}</Text>
+              <Text style={styles.headerText}>{userProfile.phone_number}</Text>
             </View>
           </View>
           <Icon
@@ -130,6 +188,7 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 20,
     lineHeight: 25,
+    width: 150,
   },
   cardContainer: {
     backgroundColor: 'white',
@@ -163,6 +222,24 @@ const styles = StyleSheet.create({
   },
   btnEdit: {
     backgroundColor: '#48bb78',
+  },
+  avatarContainer: {
+    borderColor: '#9B9B9B',
+    borderWidth: 1 / PixelRatio.get(),
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 20,
+  },
+  avatar: {
+    height: 120,
+    width: 120,
+    borderRadius: 60,
+  },
+  textUpload: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignSelf: 'center',
+    textAlign: 'center',
   },
 });
 

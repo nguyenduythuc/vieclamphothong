@@ -99,6 +99,19 @@ const config = {
     };
     return fetch(url, options).then((result) => onResponse(request, result));
   },
+  putImage: (endpoint: string, params: Object) => {
+    const url = baseUrl + endpoint;
+    const options = {
+      method: 'PUT',
+      headers: {...HEADERS, 'Content-Type': 'multipart/form-data;'},
+      body: params,
+    };
+    const request = {
+      url,
+      options,
+    };
+    return fetch(url, options).then((result) => onResponse(request, result));
+  },
 
   delete: (endpoint: string, params: Object) => {
     const url = `${baseUrl}${endpoint}${qs.stringify(params, true)}`;

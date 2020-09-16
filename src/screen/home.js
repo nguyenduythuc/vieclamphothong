@@ -166,6 +166,7 @@ const styles = StyleSheet.create({
   searchBar: {
     flex: 1,
     marginRight: 10,
+    // backgroundColor: 'red',
   },
   map: {
     height: height * 0.42,

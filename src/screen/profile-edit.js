@@ -11,6 +11,7 @@ import {Input, Button, Icon, Badge} from 'react-native-elements';
 import {useDispatch, useSelector} from 'react-redux';
 import RNPickerSelect from 'react-native-picker-select';
 import DatePicker from 'react-native-datepicker';
+import Toast from 'react-native-toast-message';
 import {actions} from '../app-redux';
 import {UserApi} from '../api';
 import moment from 'moment';
@@ -120,13 +121,27 @@ const ProfileEdit = ({navigation}) => {
         experience: experience,
         experience_description: experienceDescription,
         occupation_ids: occupationResultSend(),
+        expect_price_max: 1000000,
+        expect_price_min: 3000000,
       };
+      console.log('payload', payload);
       UserApi.updateProfile(payload).then((response) => {
+        console.log('response', response);
+        Toast.show({
+          type: 'success',
+          position: 'top',
+          text1: 'Thành công!',
+          text2: 'Cập nhật thông tin thành công.',
+          visibilityTime: 2000,
+          autoHide: true,
+          topOffset: 70,
+        });
         dispatch(actions.user.saveProfile(response.data));
+        navigation.goBack();
       });
-      console.log(payload);
     },
     [
+      navigation,
       fullname,
       email,
       gender,
@@ -177,7 +192,7 @@ const ProfileEdit = ({navigation}) => {
               mode="date"
               placeholder="Chọn ngày sinh"
               format="DD-MM-YYYY"
-              minDate="2016-05-01"
+              minDate="01-01-1900"
               maxDate={new Date()}
               confirmBtnText="Xác nhận"
               cancelBtnText="Hủy"
