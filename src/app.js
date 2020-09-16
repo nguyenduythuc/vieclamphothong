@@ -28,24 +28,15 @@ const App = ({navigation}) => {
     }, 500);
     setTimeout(() => SplashScreen.hide(), 800);
     Geolocation.getCurrentPosition((info) => {
-      console.log(info);
-      // store.dispatch(
-      //   actions.user.saveCurrentLocation({
-      //     latitude: info.coords.latitude,
-      //     longitude: info.coords.longitude,
-      //     latitudeDelta: 0.1,
-      //     longitudeDelta: 0.1,
-      //   }),
-      // );
+      store.dispatch(
+        actions.user.saveCurrentLocation({
+          latitude: info.coords.latitude,
+          longitude: info.coords.longitude,
+          latitudeDelta: 0.1,
+          longitudeDelta: 0.1,
+        }),
+      );
     });
-    store.dispatch(
-      actions.user.saveCurrentLocation({
-        latitude: 21.008535,
-        longitude: 105.836519,
-        latitudeDelta: 0.1,
-        longitudeDelta: 0.1,
-      }),
-    );
   };
 
   return (

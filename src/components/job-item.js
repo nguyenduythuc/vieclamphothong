@@ -69,7 +69,7 @@ const JobItem = ({
           <Text style={styles.greyText}>Lương: </Text>
           <Text style={styles.redText}>{`${formatCurrencyToSring(
             item?.min_salary,
-          )}tr-${formatCurrencyToSring(item?.max_salary)}tr`}</Text>
+          )}-${formatCurrencyToSring(item?.max_salary)}tr`}</Text>
         </View>
         <Text>{`Số lượng: ${item?.quantity}`}</Text>
       </View>

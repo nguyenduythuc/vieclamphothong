@@ -39,10 +39,6 @@ const ENTRIES2 = [
     value: 'distance',
     label: 'Khoảng cách lớn dần',
   },
-  {
-    value: '-distance',
-    label: 'Khoảng cách nhỏ dần',
-  },
 ];
 const ListJobs = ({navigation}) => {
   const [sortList, setSortList] = useState(ENTRIES2);

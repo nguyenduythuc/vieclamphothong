@@ -5,7 +5,7 @@ import {ListItem, Icon} from 'react-native-elements';
 
 const list = [
   {
-    title: 'Hồ sơ',
+    title: 'Hồ sơ xin việc',
     screen: 'Profile',
   },
   {
@@ -21,7 +21,7 @@ const list = [
     screen: 'ListSavedJobs',
   },
   {
-    title: 'Công việc đã ứng tuyển',
+    title: 'Công việc đã nộp',
     screen: 'ListAppliedJobs',
   },
   // {
