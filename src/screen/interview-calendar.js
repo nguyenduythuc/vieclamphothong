@@ -6,9 +6,10 @@
  * @flow
  */
 
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {SafeAreaView, View, Text, StyleSheet} from 'react-native';
 import {LocaleConfig, Calendar} from 'react-native-calendars';
+import {RecruitmentApi} from '../api';
 
 const getCurrentDate = () => {
   var date = new Date().getDate();
@@ -52,6 +53,12 @@ LocaleConfig.locales.vi = {
 };
 LocaleConfig.defaultLocale = 'vi';
 const InterviewCalendar = () => {
+  const [selectedMonth, setMonth] = useState(1);
+  useEffect(() => {
+    RecruitmentApi.getList(
+      `filter[status]=1&filter[interview_month]=${selectedMonth}`,
+    );
+  });
   return (
     <SafeAreaView style={styles.container}>
       <Calendar

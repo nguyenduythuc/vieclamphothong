@@ -30,6 +30,10 @@ const RecruitmentApi = {
   deleteSavedRecruitment: (id) => config.delete(`/capi/recruitment-save/${id}`),
 
   deleteAppliedRecruitment: (id) => config.delete(`/capi/applies/${id}`),
+
+  getAllInvitation: (filter) => config.delete(`/capi/invitations?${filter}`),
+
+  getInvitationDetails: (id) => config.delete(`/capi/invitations/${id}`),
 };
 
 export default RecruitmentApi;
