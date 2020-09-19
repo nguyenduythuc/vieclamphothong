@@ -29,13 +29,10 @@ const defaultAvatar = require('../assets/default-avatar.png');
 const Profile = ({navigation}) => {
   const dispatch = useDispatch();
   const userProfile = useSelector((state) => state.user?.userProfile);
-  useEffect(() => {
-    UserApi.getProfile().then((response) => {
-      dispatch(actions.user.saveProfile(response.data));
-    });
-  }, []);
 
-  const [avatarSource, setAvatarSource] = useState(defaultAvatar);
+  const [avatarSource, setAvatarSource] = useState(
+    userProfile?.profile_picture,
+  );
   const selectPhotoTapped = () => {
     const options = {
       quality: 1.0,
@@ -70,8 +67,8 @@ const Profile = ({navigation}) => {
         UserApi.updateAvatarProfile(formData).then((apiResponse) => {
           console.log(apiResponse);
           dispatch(actions.user.saveProfile(apiResponse.data));
+          setAvatarSource(apiResponse.data?.profile_picture);
         });
-        setAvatarSource(source);
       }
     });
   };
@@ -81,7 +78,9 @@ const Profile = ({navigation}) => {
       <ScrollView>
         <View style={styles.header}>
           <View style={styles.header}>
-            <TouchableOpacity onPress={selectPhotoTapped}>
+            <TouchableOpacity
+              onPress={selectPhotoTapped}
+              styles={styles.uploadWrapper}>
               <View
                 style={[
                   styles.avatar,
@@ -91,10 +90,10 @@ const Profile = ({navigation}) => {
                 {avatarSource === null ? (
                   <Text>Chọn ảnh đại diện</Text>
                 ) : (
-                  <Image style={styles.avatar} source={avatarSource} />
+                  <Image style={styles.avatar} source={{uri: avatarSource}} />
                 )}
               </View>
-              <Text styles={styles.textUpload}>Chọn ảnh</Text>
+              {/* <Text styles={styles.textUpload}>Chọn ảnh</Text> */}
             </TouchableOpacity>
             <View>
               <Text style={styles.headerText}>{userProfile.full_name}</Text>
@@ -240,6 +239,13 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     alignSelf: 'center',
     textAlign: 'center',
+  },
+  uploadWrapper: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignSelf: 'center',
+    textAlign: 'center',
+    marginLeft: 100,
   },
 });
 
