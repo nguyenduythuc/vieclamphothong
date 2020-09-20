@@ -354,7 +354,7 @@ const ProfileEdit = ({navigation}) => {
               label="Mức lương mong muốn (Thấp nhất)"
               inputStyle={styles.inputStyle}
               onChangeText={onTypingMinSalary}
-              value={minSalary}
+              value={Math.floor(minSalary).toString()}
             />
           </View>
           <View>
@@ -363,7 +363,7 @@ const ProfileEdit = ({navigation}) => {
               label="Mức lương mong muốn (Cao nhất)"
               inputStyle={styles.inputStyle}
               onChangeText={onTypingMaxSalary}
-              value={maxSalary}
+              value={Math.floor(maxSalary).toString()}
             />
           </View>
           <View>
