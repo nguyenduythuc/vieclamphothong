@@ -165,8 +165,15 @@ const Profile = ({navigation}) => {
             <View>
               <Text style={styles.noteHeader}>Công việc mong muốn:</Text>
             </View>
+            <View style={styles.primary}>
+              <Text style={styles.textPrimary}>Công việc chính:</Text>
+              {userProfile?.resume?.primary_occupation && (
+                <Text>- {userProfile?.resume?.primary_occupation?.name}</Text>
+              )}
+            </View>
             <View>
-              {userProfile?.resume?.occupations.map((item, idx) => (
+              <Text style={styles.textPrimary}>Công việc phụ:</Text>
+              {userProfile?.resume?.secondary_occupations.map((item, idx) => (
                 <Text>- {item?.name}</Text>
               ))}
             </View>
@@ -178,6 +185,12 @@ const Profile = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
+  primary: {
+    marginBottom: 10,
+  },
+  textPrimary: {
+    marginBottom: 5,
+  },
   header: {
     alignItems: 'center',
     marginTop: 10,

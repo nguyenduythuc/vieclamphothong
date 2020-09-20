@@ -80,7 +80,8 @@ const styles = StyleSheet.create({
     height: '50%',
   },
   blockTitleText: {
-    fontSize: 20,
+    fontSize: 16,
+    fontWeight: '500',
   },
   blockTitle: {
     marginTop: 20,

@@ -486,6 +486,8 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     paddingHorizontal: 10,
+    paddingBottom: 20,
+    backgroundColor: 'white',
   },
   row: {
     width: '100%',
@@ -501,7 +503,8 @@ const styles = StyleSheet.create({
     width: '50%',
   },
   blockTitleText: {
-    fontSize: 20,
+    fontSize: 17,
+    fontWeight: '500',
   },
   blockTitle: {
     marginVertical: 4,

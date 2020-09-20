@@ -75,7 +75,7 @@ const JobItem = ({
       </View>
       <View style={styles.row}>
         <Text>{`Hạn nộp: ${moment(item?.expired_at).format(
-          'DD/MM/YYYY',
+          'DD-MM-YYYY',
         )}`}</Text>
         <Text
           style={styles.redText}>{`Còn ${item?.expired_in_number} ngày`}</Text>
