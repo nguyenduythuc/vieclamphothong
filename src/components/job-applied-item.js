@@ -71,7 +71,7 @@ const JobAppliedItem = ({item, navigation, isApplied, isSaved, deleteItem}) => {
       </View>
       <View style={styles.row}>
         <Text>{`Hạn nộp: ${moment(item.recruitment.expired_at).format(
-          'DD/MM/YYYY',
+          'DD-MM-YYYY',
         )}`}</Text>
         <Text
           style={

@@ -16,7 +16,7 @@ const SelectMultiplePage = ({navigation, route}) => {
   useEffect(() => {
     console.log(route.params.occupationsWishOld);
   }, []);
-  const {onPress, occupationsWishOld} = route.params;
+  const {onPress, occupationsWishOld, limit} = route.params;
   const [selectedFruits, setSelectedFruits] = useState(occupationsWishOld);
   const occupation = useSelector(
     (state) => state.recruitment?.listFilters?.occupation,
@@ -41,7 +41,7 @@ const SelectMultiplePage = ({navigation, route}) => {
         key={Math.random()}
         items={occupationResult()}
         selectedItems={selectedFruits}
-        maxSelect={3}
+        maxSelect={limit}
         onSelectionsChange={onSelectionsChange}
       />
     </View>

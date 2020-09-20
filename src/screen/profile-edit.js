@@ -12,6 +12,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import RNPickerSelect from 'react-native-picker-select';
 import DatePicker from 'react-native-datepicker';
 import Toast from 'react-native-toast-message';
+import {formatCurrency} from '../utils/common';
 import {actions} from '../app-redux';
 import {UserApi} from '../api';
 import moment from 'moment';
@@ -72,20 +73,72 @@ const ProfileEdit = ({navigation}) => {
     [],
   );
 
+  const [minSalary, setMinSalary] = useState(
+    userProfile?.resume?.expect_price_min.toString(),
+  );
+  const onTypingMinSalary = useCallback((text) => {
+    console.log(text);
+    setMinSalary(parseFloat(text));
+  }, []);
+
+  const [maxSalary, setMaxSalary] = useState(
+    userProfile?.resume?.expect_price_max.toString(),
+  );
+  const onTypingMaxSalary = useCallback((text) => setMaxSalary(text), []);
+
   const [introduce, setIntroduce] = useState(userProfile?.introduce);
   const onTypingexpIntroduce = useCallback((text) => setIntroduce(text), []);
 
-  const onPressSelectOccupation = () => {
+  //primary
+  const onPressSelectOccupationPrimary = () => {
     navigation.navigate('SelectMultiple', {
       onPress: callBackOccupation,
-      occupationsWishOld: occupationsWish,
+      occupationsWishOld: occupationsWishPrimary,
+      limit: 1,
     });
   };
   const callBackOccupation = (multi) => {
-    onTypingexpsetOccupationsWish(multi);
+    onTypingexpsetOccupationsWishPrimary(multi);
   };
-  const occupationsOld = () => {
-    return userProfile?.resume?.occupations.map((item) => {
+  const occupationsOldPrimary = () => {
+    // return userProfile?.resume?.[primary_occupation].map((item) => {
+    return [
+      {
+        label: userProfile?.resume?.primary_occupation.name,
+        value: userProfile?.resume?.primary_occupation.id,
+      },
+    ];
+    // });
+  };
+
+  const [occupationsWishPrimary, setOccupationsWishPrimary] = useState(
+    occupationsOldPrimary,
+  );
+  const onTypingexpsetOccupationsWishPrimary = useCallback(
+    (text) => setOccupationsWishPrimary(text),
+    [],
+  );
+
+  const occupationResultSendPrimary = useCallback(
+    (text) => {
+      return occupationsWishPrimary[0].value;
+    },
+    [occupationsWishPrimary],
+  );
+
+  // second
+  const onPressSelectOccupationSecond = () => {
+    navigation.navigate('SelectMultiple', {
+      onPress: callBackOccupationSecond,
+      occupationsWishOld: occupationsWishSecond,
+      limit: 2,
+    });
+  };
+  const callBackOccupationSecond = (multi) => {
+    onTypingexpsetOccupationsWishSecond(multi);
+  };
+  const occupationsOldSecond = () => {
+    return userProfile?.resume?.secondary_occupations.map((item) => {
       return {
         label: item.name,
         value: item.id,
@@ -93,19 +146,21 @@ const ProfileEdit = ({navigation}) => {
     });
   };
 
-  const [occupationsWish, setOccupationsWish] = useState(occupationsOld);
-  const onTypingexpsetOccupationsWish = useCallback(
-    (text) => setOccupationsWish(text),
+  const [occupationsWishSecond, setOccupationsWishSecond] = useState(
+    occupationsOldSecond,
+  );
+  const onTypingexpsetOccupationsWishSecond = useCallback(
+    (text) => setOccupationsWishSecond(text),
     [],
   );
 
-  const occupationResultSend = useCallback(
+  const occupationResultSendSecond = useCallback(
     (text) => {
-      return occupationsWish.map((item) => {
+      return occupationsWishSecond.map((item) => {
         return item.value;
       });
     },
-    [occupationsWish],
+    [occupationsWishSecond],
   );
   const onSubmitChange = useCallback(
     (text) => {
@@ -120,9 +175,10 @@ const ProfileEdit = ({navigation}) => {
         education_description: school,
         experience: experience,
         experience_description: experienceDescription,
-        occupation_ids: occupationResultSend(),
-        expect_price_max: 1000000,
-        expect_price_min: 3000000,
+        primary_occupation_id: occupationResultSendPrimary(),
+        secondary_occupation_ids: occupationResultSendSecond(),
+        expect_price_max: minSalary,
+        expect_price_min: maxSalary,
       };
       console.log('payload', payload);
       UserApi.updateProfile(payload).then((response) => {
@@ -152,7 +208,10 @@ const ProfileEdit = ({navigation}) => {
       school,
       experience,
       experienceDescription,
-      occupationResultSend,
+      maxSalary,
+      minSalary,
+      occupationResultSendPrimary,
+      occupationResultSendSecond,
       dispatch,
     ],
   );
@@ -273,6 +332,7 @@ const ProfileEdit = ({navigation}) => {
             <Input
               placeholder="Công việc"
               label="Công việc"
+              multiline={true}
               inputStyle={styles.inputStyle}
               onChangeText={onTypingexpErienceDescription}
               value={experienceDescription}
@@ -282,24 +342,67 @@ const ProfileEdit = ({navigation}) => {
             <Input
               placeholder="Giới thiệu bản thân"
               label="Giới thiệu bản thân"
+              multiline={true}
               inputStyle={styles.inputStyle}
               onChangeText={onTypingexpIntroduce}
               value={introduce}
             />
           </View>
           <View>
-            <Text style={styles.titleSelect}>
-              Công việc mong muốn (Lựa chọn 2)
-            </Text>
-            <TouchableWithoutFeedback onPress={onPressSelectOccupation}>
+            <Input
+              placeholder="Mức lương mong muốn (Thấp nhất)"
+              label="Mức lương mong muốn (Thấp nhất)"
+              inputStyle={styles.inputStyle}
+              onChangeText={onTypingMinSalary}
+              value={minSalary}
+            />
+          </View>
+          <View>
+            <Input
+              placeholder="Mức lương mong muốn (Cao nhất)"
+              label="Mức lương mong muốn (Cao nhất)"
+              inputStyle={styles.inputStyle}
+              onChangeText={onTypingMaxSalary}
+              value={maxSalary}
+            />
+          </View>
+          <View>
+            <Text style={styles.titleSelect}>Công việc chính (Lựa chọn 1)</Text>
+            <TouchableWithoutFeedback onPress={onPressSelectOccupationPrimary}>
               <View style={styles.buttonOccupation}>
-                {!occupationsWish && (
+                {!occupationsWishPrimary && (
                   <Text style={styles.buttonOccupationText}>
-                    Công việc mong muốn (Lựa chọn 2)
+                    Công việc chính (Lựa chọn 1)
                   </Text>
                 )}
-                {occupationsWish &&
-                  occupationsWish?.map((item, idx) => (
+                {occupationsWishPrimary &&
+                  occupationsWishPrimary?.map((item, idx) => (
+                    <View key={Math.random()}>
+                      <Badge
+                        value={item.label}
+                        status="success"
+                        textStyle={{fontSize: 17}}
+                        badgeStyle={{height: 30, paddingHorizontal: 15}}
+                      />
+                    </View>
+                  ))}
+                <Icon name="right" type="antdesign" color="#a0aec0" />
+              </View>
+            </TouchableWithoutFeedback>
+            <View style={styles.hairLine} />
+          </View>
+          {/* second */}
+          <View>
+            <Text style={styles.titleSelect}>Công việc phụ (Lựa chọn 2)</Text>
+            <TouchableWithoutFeedback onPress={onPressSelectOccupationSecond}>
+              <View style={styles.buttonOccupation}>
+                {!occupationsWishSecond && (
+                  <Text style={styles.buttonOccupationText}>
+                    Công việc phụ (Lựa chọn 2)
+                  </Text>
+                )}
+                {occupationsWishSecond &&
+                  occupationsWishSecond?.map((item, idx) => (
                     <View key={Math.random()}>
                       <Badge
                         value={item.label}
@@ -332,6 +435,7 @@ const ProfileEdit = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     marginTop: 20,
+    backgroundColor: 'white',
   },
   textLabel: {
     fontWeight: '600',
@@ -339,7 +443,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   inputStyle: {
-    height: 10,
+    height: 'auto',
   },
   btnFooter: {
     marginTop: 15,
