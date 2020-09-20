@@ -22,6 +22,7 @@ import {Card, Icon} from 'react-native-elements';
 import {useDispatch, useSelector} from 'react-redux';
 import {actions} from '../app-redux';
 import ImagePicker from 'react-native-image-picker';
+import {formatCurrency} from '../utils/common';
 import {UserApi} from '../api';
 import moment from 'moment';
 
@@ -163,6 +164,19 @@ const Profile = ({navigation}) => {
           </Card>
           <Card containerStyle={styles.cardContainer}>
             <View>
+              <Text style={styles.noteHeader}>Mức lương mong muốn:</Text>
+            </View>
+            <View>
+              <Text style={styles.textSalary}>{`Tối thiểu: ${formatCurrency(
+                userProfile?.resume?.expect_price_min,
+              )} VND`}</Text>
+              <Text style={styles.textSalary}>{`Tối đa: ${formatCurrency(
+                userProfile?.resume?.expect_price_max,
+              )} VND`}</Text>
+            </View>
+          </Card>
+          <Card containerStyle={styles.cardContainer}>
+            <View>
               <Text style={styles.noteHeader}>Công việc mong muốn:</Text>
             </View>
             <View style={styles.primary}>
@@ -185,6 +199,10 @@ const Profile = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
+  textSalary: {
+    marginBottom: 5,
+    fontWeight: '600',
+  },
   primary: {
     marginBottom: 10,
   },
