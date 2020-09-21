@@ -13,6 +13,9 @@ export default function HomeTabNavigator() {
         labelStyle: {
           fontSize: 17,
         },
+        style: {
+          paddingBottom: 10,
+        },
       }}>
       <Tab.Screen
         key="Home"
