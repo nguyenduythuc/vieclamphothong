@@ -71,10 +71,10 @@ const JobItem = ({
             item?.min_salary,
           )}-${formatCurrencyToSring(item?.max_salary)}tr`}</Text>
         </View>
-        <Text>{`Số lượng: ${item?.quantity}`}</Text>
+        <Text style={styles.quantityText}>{`Số lượng: ${item?.quantity}`}</Text>
       </View>
       <View style={styles.row}>
-        <Text>{`Hạn nộp: ${moment(item?.expired_at).format(
+        <Text style={styles.quantityText}>{`Hạn nộp: ${moment(item?.expired_at).format(
           'DD-MM-YYYY',
         )}`}</Text>
         <Text
@@ -85,9 +85,9 @@ const JobItem = ({
         {item?.company?.name}
       </Text>
       <View style={styles.row}>
-        <Rating imageSize={14} startingValue={item?.company?.rating_point} />
+        <Rating imageSize={12} startingValue={item?.company?.rating_point} />
         <View style={styles.comments}>
-          <Icon name="comments" type="fontisto" color="red" size={15} />
+          <Icon name="comments" type="fontisto" color="red" size={12} />
           <Text style={styles.commentsText}>Xem nhận xét</Text>
         </View>
       </View>
@@ -105,7 +105,7 @@ const JobItem = ({
               title="Ứng tuyển"
               buttonStyle={styles.btnDeleteOptions}
               type="outline"
-              titleStyle={{color: 'white'}}
+              titleStyle={{color: 'white', fontSize: 13}}
               onPress={() => onPressApply(item?.id)}
             />
           </View>
@@ -116,7 +116,7 @@ const JobItem = ({
               title="Lưu"
               buttonStyle={styles.btnViewResult}
               type="outline"
-              titleStyle={{color: '#4a5568'}}
+              titleStyle={{color: '#4a5568', fontSize: 13}}
               onPress={() => onPressSave(item?.id)}
             />
           </View>
@@ -131,21 +131,25 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 8,
     borderColor: 'white',
+    paddingHorizontal: 10,
+    paddingTop: 10,
+    paddingBottom: 0,
   },
   title: {
     marginBottom: 10,
     color: '#3182ce',
-    fontSize: 20,
+    fontSize: 17,
     // width: '90%',
   },
   titleSeen: {
     marginBottom: 10,
     color: 'grey',
-    fontSize: 20,
+    fontSize: 17,
     // width: '90%',
   },
   title2: {
     marginBottom: 10,
+    fontSize: 13,
   },
   row: {
     width: '100%',
@@ -159,11 +163,13 @@ const styles = StyleSheet.create({
   commentsText: {
     fontStyle: 'italic',
     color: 'gray',
+    fontSize: 12,
   },
   divider: {backgroundColor: 'grey', marginBottom: 10},
-  marginBottom: {marginBottom: 10},
+  marginBottom: {marginBottom: 3, fontSize: 12},
   btnFooter: {
-    marginTop: 15,
+    marginTop: 10,
+    marginBottom: 5,
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
@@ -199,9 +205,14 @@ const styles = StyleSheet.create({
   },
   redText: {
     color: 'red',
+    fontSize: 12,
   },
   greyText: {
     color: 'grey',
+    fontSize: 12,
+  },
+  quantityText: {
+    fontSize: 12,
   },
 });
 

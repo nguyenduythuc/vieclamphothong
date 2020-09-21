@@ -16,9 +16,11 @@ import Geolocation from '@react-native-community/geolocation';
 import Carousel from 'react-native-snap-carousel';
 import {RecruitmentApi} from '../api';
 import {useDispatch, useSelector} from 'react-redux';
+import DeviceInfo from 'react-native-device-info';
 import {actions} from '../app-redux';
 import {formatCurrencyToSring} from '../utils/common';
 
+const isNotch = DeviceInfo.hasNotch();
 const HomeScreen = ({navigation}) => {
   const dispatch = useDispatch();
   const listJobs = useSelector((state) => state.recruitment.listJobs);
@@ -191,10 +193,10 @@ const styles = StyleSheet.create({
     // backgroundColor: 'red',
     backgroundColor: '#3182ce',
     borderRadius: 5,
-    padding: 2,
+    padding: 1,
   },
   map: {
-    height: height * 0.42,
+    height: isNotch ? height * 0.43 : height * 0.37,
     width,
     justifyContent: 'flex-end',
     alignItems: 'center',
@@ -213,7 +215,7 @@ const styles = StyleSheet.create({
   listButtonStyle: {
     position: 'absolute',
     zIndex: 10,
-    top: height / 2 - 20,
+    top: isNotch ? height / 2 - 10 : height / 2 - 80,
     right: 0,
     paddingRight: 10,
   },

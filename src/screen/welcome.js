@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'white',
-    fontSize: 22,
+    fontSize: 16,
     fontWeight: '500',
   },
   buttonWrapper: {
