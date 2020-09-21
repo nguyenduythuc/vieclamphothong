@@ -74,6 +74,7 @@ const LoginScreen = ({navigation}) => {
             inputStyle={styles.inputStyle}
             inputContainerStyle={styles.inputContainerStyle}
             onChangeText={onTypingPhone}
+            selectionColor="black"
             placeholderTextColor="white"
             placeholder="Số điện thoại"
           />
@@ -176,7 +177,7 @@ const styles = StyleSheet.create({
   logoImage: {
     width: 130,
     height: 130,
-    marginTop: 30,
+    marginTop: 10,
   },
   logo: {
     paddingTop: 30,
@@ -188,6 +189,7 @@ const styles = StyleSheet.create({
   },
   inputContainerStyle: {
     borderColor: 'white',
+    height: 30,
   },
   passwordTitle: {color: 'white', fontSize: 20},
   buttonLoginWrapper: {width: '80%', backgroundColor: 'white'},

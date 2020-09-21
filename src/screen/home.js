@@ -12,11 +12,10 @@ import {SafeAreaView, StyleSheet, View, Text, Dimensions} from 'react-native';
 import {Card, SearchBar, Icon, Button} from 'react-native-elements';
 import {JobItem} from '../components';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
-import Geolocation from '@react-native-community/geolocation';
+import DeviceInfo from 'react-native-device-info';
 import Carousel from 'react-native-snap-carousel';
 import {RecruitmentApi} from '../api';
 import {useDispatch, useSelector} from 'react-redux';
-import DeviceInfo from 'react-native-device-info';
 import {actions} from '../app-redux';
 import {formatCurrencyToSring} from '../utils/common';
 
@@ -154,10 +153,10 @@ const HomeScreen = ({navigation}) => {
                 latitude: parseFloat(company.latitude),
                 longitude: parseFloat(company.longitude),
               }}
-              title={`Cách bạn: ${distance}km`}
-              description={`Lương: ${formatCurrencyToSring(
+              title={`Lương: ${formatCurrencyToSring(
                 min_salary,
-              )}tr - ${formatCurrencyToSring(max_salary)}tr`}
+              )} - ${formatCurrencyToSring(max_salary)}tr`}
+              description={`Cách bạn: ${distance}km`}
               anchor={{x: 0.84, y: 1}}
               centerOffset={{x: -18, y: -60}}
             />
@@ -208,7 +207,7 @@ const styles = StyleSheet.create({
   changePositionButtonStyle: {
     position: 'absolute',
     zIndex: 10,
-    top: 120,
+    top: isNotch ? 120 : 60,
     left: width / 2 - 50,
   },
   changePositionButtonBackgroundStyle: {backgroundColor: 'white'},

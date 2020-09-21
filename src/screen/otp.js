@@ -2,6 +2,7 @@ import React, {useCallback, useState, useEffect} from 'react';
 import {SafeAreaView, StyleSheet, Image, Text} from 'react-native';
 import {Input, Button} from 'react-native-elements';
 import auth from '@react-native-firebase/auth';
+import Toast from 'react-native-toast-message';
 import {useDispatch} from 'react-redux';
 import {AuthApi} from '../api';
 import {actions} from '../app-redux';
@@ -36,6 +37,20 @@ const OTPScreen = ({navigation, route}) => {
     getOTPCode();
   }, []);
 
+  useEffect(() => {
+    if (!confirm) return;
+
+    Toast.show({
+      type: 'success',
+      position: 'top',
+      text1: '',
+      text2: 'Mã xác thực đã được gửi tin nhắn đến số điện thoại của bạn!',
+      visibilityTime: 2000,
+      autoHide: true,
+      topOffset: 70,
+    });
+  }, [confirm]);
+
   const onTypingCode = useCallback((text) => setCode(text), []);
 
   const confirmCode = async () => {
@@ -55,23 +70,31 @@ const OTPScreen = ({navigation, route}) => {
       dispatch(actions.user.saveUser(response));
       navigation.reset({index: 0, routes: [{name: 'Home'}]});
     } catch (error) {
-      alert(JSON.stringify(error));
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Xác nhận mã thất bại, vui lòng thử lại!',
+        visibilityTime: 2000,
+        autoHide: true,
+        topOffset: 70,
+      });
     }
   };
   return (
     <>
       <Image source={bg} style={styles.bgImage} />
       <SafeAreaView style={styles.container}>
-        {confirm && (
+        {/* {confirm && (
           <Text style={styles.tips}>
             Mã xác thực đã được gửi về điện thoại của bạn!
           </Text>
-        )}
+        )} */}
         <Input
           inputStyle={styles.inputStyle}
           inputContainerStyle={styles.inputContainerStyle}
           value={code}
           onChangeText={onTypingCode}
+          selectionColor="black"
           placeholder="Nhập mã xác thực"
           placeholderTextColor="white"
         />
@@ -103,13 +126,14 @@ const styles = StyleSheet.create({
   },
   inputContainerStyle: {
     borderColor: 'white',
+    height: 30,
   },
   buttonLoginWrapper: {width: '80%'},
   buttLoginStyle: {
     backgroundColor: 'white',
-    paddingHorizontal: 40,
+    paddingHorizontal: 20,
     paddingVertical: 10,
-    borderRadius: 25,
+    borderRadius: 4,
     fontSize: 24,
   },
   buttonLoginColor: {color: 'rgb(38,76,193)', fontSize: 20},

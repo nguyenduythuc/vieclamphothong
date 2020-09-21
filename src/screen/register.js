@@ -1,6 +1,6 @@
 import React, {useCallback, useState} from 'react';
 import {SafeAreaView, StyleSheet, View, Image, Text} from 'react-native';
-import {Input, Button} from 'react-native-elements';
+import {Input, Button, Icon} from 'react-native-elements';
 import DeviceInfo from 'react-native-device-info';
 import {ScrollView} from 'react-native-gesture-handler';
 
@@ -9,7 +9,7 @@ const RegisterScreen = ({route, navigation}) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [fullname, setFullname] = useState('');
   const [password, setPassword] = useState('');
-  const [passwordValidated, setPasswordValidated] = useState(false);
+  const [passwordValidated, setPasswordValidated] = useState(true);
   const logo = require('../assets/logo-transparent.png');
 
   const onTypingPhoneNumber = useCallback((text) => setPhoneNumber(text), []);
@@ -55,6 +55,7 @@ const RegisterScreen = ({route, navigation}) => {
             <Input
               inputStyle={styles.inputStyle}
               inputContainerStyle={styles.inputContainerStyle}
+              selectionColor="black"
               onChangeText={onTypingFullname}
               placeholder="Họ và tên"
               placeholderTextColor="white"
@@ -62,15 +63,28 @@ const RegisterScreen = ({route, navigation}) => {
             <Input
               inputStyle={styles.inputStyle}
               inputContainerStyle={styles.inputContainerStyle}
+              selectionColor="black"
               onChangeText={onTypingPassword}
+              keyboardType="number-pad"
+              textContentType="password"
+              maxLength={6}
               placeholder="Mật khẩu (6 số)"
               placeholderTextColor="white"
+              errorMessage={
+                password.length > 0 &&
+                password.length < 6 &&
+                'Mật khẩu gồm 6 ký tự số, từ 0 - 9'
+              }
               secureTextEntry
             />
             <Input
               inputStyle={styles.inputStyle}
               inputContainerStyle={styles.inputContainerStyle}
+              selectionColor="black"
               onChangeText={onTypingRePassword}
+              keyboardType="number-pad"
+              textContentType="password"
+              maxLength={6}
               placeholder="Nhập lại mật khẩu"
               placeholderTextColor="white"
               errorMessage={
@@ -83,17 +97,23 @@ const RegisterScreen = ({route, navigation}) => {
             <Input
               inputStyle={styles.inputStyle}
               inputContainerStyle={styles.inputContainerStyle}
+              selectionColor="black"
               onChangeText={onTypingPhoneNumber}
+              keyboardType="number-pad"
+              textContentType="telephoneNumber"
+              maxLength={10}
               placeholder="Số điện thoại"
               placeholderTextColor="white"
             />
-            <Button
-              onPress={onTOSPressed}
-              containerStyle={{marginVertical: 10}}
-              type="clear"
-              titleStyle={styles.tos}
-              title="Tôi đồng ý với điều khoản sử dụng và chính sách bảo mật"
-            />
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Icon name="checksquareo" type="antdesign" color="white" />
+              <Button
+                onPress={onTOSPressed}
+                type="clear"
+                titleStyle={styles.tos}
+                title="Tôi đã đọc và đồng ý với điều khoản sử dụng và chính sách bảo mật"
+              />
+            </View>
           </View>
           <Button
             containerStyle={styles.buttonLoginWrapper}
@@ -104,7 +124,7 @@ const RegisterScreen = ({route, navigation}) => {
             type="outline"
           />
           <View style={styles.registerWrapper}>
-            <Text style={styles.registerText}>Đã có tài khoản?</Text>
+            <Text style={styles.registerText}>Bạn đã có tài khoản?</Text>
             <Button
               titleStyle={styles.register}
               onPress={onLogin}
@@ -127,25 +147,31 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-  loginForm: {width: '90%', marginBottom: 10, alignItems: 'center'},
+  loginForm: {
+    width: '90%',
+    marginBottom: 10,
+    paddingBottom: 40,
+    alignItems: 'center',
+  },
   inputStyle: {
     color: 'white',
   },
   inputContainerStyle: {
     borderColor: 'white',
+    height: 30,
   },
-  buttonLoginWrapper: {width: '50%'},
+  buttonLoginWrapper: {width: '50%', backgroundColor: 'white'},
   buttLoginStyle: {
-    borderColor: 'white',
-    borderWidth: 1,
     paddingHorizontal: 40,
     paddingVertical: 10,
     borderRadius: 25,
+    fontSize: 24,
   },
-  buttonLoginColor: {color: 'white'},
+  buttonLoginColor: {color: 'rgb(38,76,193)', fontSize: 20},
   register: {
     color: 'white',
     fontWeight: 'bold',
+    textDecorationLine: 'underline',
     fontSize: 20,
   },
   registerWrapper: {
@@ -162,7 +188,7 @@ const styles = StyleSheet.create({
   logoImage: {
     width: 130,
     height: 130,
-    marginBottom: 60,
+    marginBottom: 40,
   },
 });
 
