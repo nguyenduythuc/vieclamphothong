@@ -18,11 +18,11 @@ import {
   TouchableOpacity,
   PixelRatio,
 } from 'react-native';
-import {Card, Icon} from 'react-native-elements';
+import {Card, Icon, Divider} from 'react-native-elements';
 import {useDispatch, useSelector} from 'react-redux';
 import {actions} from '../app-redux';
 import ImagePicker from 'react-native-image-picker';
-import {formatCurrency} from '../utils/common';
+import {formatCurrency, formatCurrencyToSring} from '../utils/common';
 import {UserApi} from '../api';
 import moment from 'moment';
 
@@ -36,7 +36,12 @@ const Profile = ({navigation}) => {
   );
   const selectPhotoTapped = () => {
     const options = {
+      title: 'Chọn một ảnh',
       quality: 1.0,
+      takePhotoButtonTitle: 'Chụp ảnh',
+      chooseFromLibraryButtonTitle: 'Chọn từ thư viện',
+      cancelButtonTitle: 'Hủy',
+      mediaType: 'photo',
       maxWidth: 500,
       maxHeight: 500,
       storageOptions: {
@@ -115,6 +120,7 @@ const Profile = ({navigation}) => {
           <Card containerStyle={styles.cardContainer}>
             <View>
               <Text style={styles.noteHeader}>Tiểu sử:</Text>
+              <Divider style={styles.divider} />
             </View>
             <View>
               <Text>{`Họ và tên: ${userProfile?.full_name}`}</Text>
@@ -130,6 +136,7 @@ const Profile = ({navigation}) => {
           <Card containerStyle={styles.cardContainer}>
             <View>
               <Text style={styles.noteHeader}>Liên hệ:</Text>
+              <Divider style={styles.divider} />
             </View>
             <View>
               <Text>{`Điện thoại: ${userProfile?.phone_number}`}</Text>
@@ -138,7 +145,8 @@ const Profile = ({navigation}) => {
           </Card>
           <Card containerStyle={styles.cardContainer}>
             <View>
-              <Text style={styles.noteHeader}>Học tập:</Text>
+              <Text style={styles.noteHeader}>Trình độ học vấn:</Text>
+              <Divider style={styles.divider} />
             </View>
             <View>
               <Text>{`Trình độ: ${userProfile?.resume?.educational_background_id}`}</Text>
@@ -148,36 +156,17 @@ const Profile = ({navigation}) => {
           <Card containerStyle={styles.cardContainer}>
             <View>
               <Text style={styles.noteHeader}>Kinh nghiệm:</Text>
+              <Divider style={styles.divider} />
             </View>
             <View>
-              <Text>{`Số năm: ${userProfile?.resume?.experience}`}</Text>
+              <Text>{`Số năm làm việc: ${userProfile?.resume?.experience}`}</Text>
               <Text>{`Công việc: ${userProfile?.resume?.experience_description}`}</Text>
             </View>
           </Card>
           <Card containerStyle={styles.cardContainer}>
             <View>
-              <Text style={styles.noteHeader}>Giới thiệu bản thân:</Text>
-            </View>
-            <View>
-              <Text>{userProfile?.introduce}</Text>
-            </View>
-          </Card>
-          <Card containerStyle={styles.cardContainer}>
-            <View>
-              <Text style={styles.noteHeader}>Mức lương mong muốn:</Text>
-            </View>
-            <View>
-              <Text style={styles.textSalary}>{`Tối thiểu: ${formatCurrency(
-                userProfile?.resume?.expect_price_min,
-              )} VND`}</Text>
-              <Text style={styles.textSalary}>{`Tối đa: ${formatCurrency(
-                userProfile?.resume?.expect_price_max,
-              )} VND`}</Text>
-            </View>
-          </Card>
-          <Card containerStyle={styles.cardContainer}>
-            <View>
               <Text style={styles.noteHeader}>Công việc mong muốn:</Text>
+              <Divider style={styles.divider} />
             </View>
             <View style={styles.primary}>
               <Text style={styles.textPrimary}>Công việc chính:</Text>
@@ -192,6 +181,29 @@ const Profile = ({navigation}) => {
               ))}
             </View>
           </Card>
+          <Card containerStyle={styles.cardContainer}>
+            <View>
+              <Text style={styles.noteHeader}>Mức lương mong muốn:</Text>
+              <Divider style={styles.divider} />
+            </View>
+            <View style={styles.salaryWrapper}>
+              <Text>Mức lương: </Text>
+              <Text style={styles.textSalary}>{`${formatCurrencyToSring(
+                userProfile?.resume?.expect_price_min,
+              )} - ${formatCurrencyToSring(
+                userProfile?.resume?.expect_price_max,
+              )} triệu`}</Text>
+            </View>
+          </Card>
+          <Card containerStyle={styles.cardContainer}>
+            <View>
+              <Text style={styles.noteHeader}>Giới thiệu bản thân:</Text>
+              <Divider style={styles.divider} />
+            </View>
+            <View>
+              <Text>{userProfile?.introduce}</Text>
+            </View>
+          </Card>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -199,6 +211,9 @@ const Profile = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
+  salaryWrapper: {
+    flexDirection: 'row',
+  },
   textSalary: {
     marginBottom: 5,
     fontWeight: '600',
@@ -229,9 +244,9 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   noteHeader: {
-    textDecorationLine: 'underline',
-    fontStyle: 'italic',
-    marginBottom: 15,
+    textTransform: 'uppercase',
+    fontWeight: '500',
+    color: '#3182ce',
   },
   imageProfile: {
     height: 120,

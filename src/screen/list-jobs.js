@@ -1,26 +1,13 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/**
- * Product Management: Up product, Buy premium, modify
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
-
 import React, {useState, useCallback, useEffect, memo} from 'react';
 import {
   SafeAreaView,
-  ScrollView,
   View,
   Text,
   StyleSheet,
   FlatList,
   ActivityIndicator,
-  TouchableOpacity,
 } from 'react-native';
-import {Icon, Button, ButtonGroup} from 'react-native-elements';
-import Popover from 'react-native-popover-view';
-import RadioButtonRN from 'radio-buttons-react-native';
+import {Icon, ButtonGroup} from 'react-native-elements';
 import {JobItem, Sortable} from '../components';
 import {RecruitmentApi} from '../api';
 import {useSelector} from 'react-redux';
@@ -29,31 +16,33 @@ const ENTRIES2 = [
   {
     value: 'ALL',
     label: 'Tất cả',
+    index: 1,
   },
   {
     value: 'salary',
     label: 'Lương tăng dần',
+    index: 2,
   },
   {
     value: '-salary',
     label: 'Lương giảm dần',
+    index: 3,
   },
   {
     value: 'distance',
     label: 'Khoảng cách lớn dần',
+    index: 4,
   },
 ];
 
 const ListJobs = ({navigation}) => {
   const [sortList, setSortList] = useState(ENTRIES2);
-  const [sortId, setSortId] = useState('ALL');
-  const [sortValue, setSortValue] = useState({});
+  const [sortValue, setSortValue] = useState(ENTRIES2[0]);
   const [paramSend, setParamSend] = useState('');
   const [paramFilter, setParamFilter] = useState('');
   const [listJobs, setListJobs] = useState([]);
   const [metaResponse, setMetaResponse] = useState({});
   const [isLoading, setIsLoading] = useState(true);
-  const [showPopover, setShowPopover] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
   const userLocation = useSelector((state) => state.user.userLocation);
 
@@ -62,7 +51,7 @@ const ListJobs = ({navigation}) => {
       return;
     }
     getListData();
-  }, [isLoading]);
+  }, [getListData, isLoading]);
 
   const onFilter = useCallback(() => {
     navigation.navigate('Filter', {onFilterResult: onFilterResult});
@@ -111,24 +100,22 @@ const ListJobs = ({navigation}) => {
     [userLocation, paramSend, paramFilter, metaResponse, listJobs],
   );
 
-  const onPressTag = (radio) => {
-    console.log(radio.value);
-    setSortId(radio.value);
-    setSortValue(radio);
-    setShowPopover(false);
-    let param = radio.value === 'ALL' ? '' : `&sort=${radio.value}`;
-    setListJobs([]);
-    setMetaResponse({});
-    setIsLoading(true);
-    setParamSend(param);
-  };
+  const onPressTag = useCallback(
+    (radio) => {
+      setSortValue(radio);
+      let param = radio.value === 'ALL' ? '' : `&sort=${radio.value}`;
+      setListJobs([]);
+      setMetaResponse({});
+      setIsLoading(true);
+      setParamSend(param);
+    },
+    [sortValue],
+  );
 
   const loadMore = () => {
     setIsLoading(true);
   };
   const toggleModal = (string) => {
-    // setModalVisible(!isModalVisible);
-    console.log(string);
     setModalVisible(!isModalVisible);
   };
 
@@ -201,7 +188,9 @@ const ListJobs = ({navigation}) => {
         toggleModal={toggleModal}
         isModalVisible={isModalVisible}
         sortList={sortList}
-        title="LỌC KẾT QUẢ"
+        title="Sắp xếp theo"
+        sortValue={sortValue}
+        onPressTag={onPressTag}
       />
     </SafeAreaView>
   );

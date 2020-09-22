@@ -1,53 +1,56 @@
-/**
- * Product Management: Up product, Buy premium, modify
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
-
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {Button, CheckBox} from 'react-native-elements';
+import RadioButtonRN from 'radio-buttons-react-native';
 import Modal from 'react-native-modal';
 
-const Sortable = ({isModalVisible, toggleModal, sortList, title}) => {
+const Sortable = ({
+  isModalVisible,
+  toggleModal,
+  sortList,
+  title,
+  sortValue,
+  onPressTag,
+}) => {
   return (
-    // <Modal testID={'modal'} isVisible={isModalVisible} onBackdropPress={toggleModal}>
-    //   <View>
-    //     <Text style={styles.textTitle}>{title}</Text>
-    //   </View>
-    // </Modal>
     <Modal
       testID={'modal'}
       isVisible={isModalVisible}
-      // swipeDirection={['up', 'left', 'right', 'down']}
       onBackdropPress={toggleModal}
       style={styles.modalView}>
       <View style={[styles.modalContent]}>
         <View>
           <Text style={styles.textTitle}>{title}</Text>
         </View>
-        {sortList.map((item, idx) => (
-          <CheckBox
-            containerStyle={styles.checkboxAll}
-            title={item.label}
-            checkedIcon="dot-circle-o"
-            uncheckedIcon="circle-o"
-            // checked={checkBoxPlace}
-            // onPress={() => onCheckAllPlace()}
+        <View style={styles.radioGroups}>
+          <RadioButtonRN
+            key={Math.random()}
+            textStyle={styles.textStyleSort}
+            initial={sortValue?.index}
+            box={false}
+            data={sortList}
+            animationTypes={['pulse']}
+            selectedBtn={(e) => {
+              if(e.index === sortValue.index) return;
+              onPressTag(e);
+            }}
           />
-        ))}
+        </View>
       </View>
     </Modal>
   );
 };
 
 const styles = StyleSheet.create({
+  textStyleSort: {
+    paddingLeft: 10,
+  },
+  radioGroups: {
+    width: 200,
+    paddingBottom: 15,
+    paddingHorizontal: 20,
+  },
   modalView: {
-    // justifyContent: 'flex-end',
-    // position: 'absolute',
-    // top: 150,
     paddingHorizontal: 30,
     flex: 1,
     width: '100%',
@@ -55,6 +58,7 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: 'white',
+    borderRadius: 4,
   },
   checkboxAll: {
     backgroundColor: 'transparent',

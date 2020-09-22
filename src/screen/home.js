@@ -19,13 +19,19 @@ import {useDispatch, useSelector} from 'react-redux';
 import {actions} from '../app-redux';
 import {formatCurrencyToSring} from '../utils/common';
 
+const defaultPosition = {
+  latitude: 21.312542,
+  longitude: 105.704714,
+  latitudeDelta: 0.1,
+  longitudeDelta: 0.1,
+};
 const isNotch = DeviceInfo.hasNotch();
 const HomeScreen = ({navigation}) => {
   const dispatch = useDispatch();
   const listJobs = useSelector((state) => state.recruitment.listJobs);
   const userLocation = useSelector((state) => state.user.userLocation);
   const [search, setSearch] = useState('');
-  const [currentPosition, setCurentPosition] = useState(userLocation);
+  const [currentPosition, setCurentPosition] = useState(defaultPosition);
   const [positionChanged, setPositionChanged] = useState(false);
   const [isShowButtonPositionChange, setIsShowButtonPositionChange] = useState(
     false,
@@ -36,7 +42,7 @@ const HomeScreen = ({navigation}) => {
   const markerRef = useRef([]);
   useEffect(() => {
     RecruitmentApi.getList(
-      `filter[location]=${currentPosition.latitude},${currentPosition.longitude},10&include=educational_background,occupation,workplace,company`,
+      `filter[location]=${currentPosition.latitude},${currentPosition.longitude},100&include=educational_background,occupation,workplace,company`,
     ).then((response) => {
       dispatch(actions.recruitment.saveListJobs(response.data));
     });
@@ -188,14 +194,12 @@ const styles = StyleSheet.create({
   },
   searchBar: {
     flex: 1,
-    marginRight: 10,
-    // backgroundColor: 'red',
     backgroundColor: '#3182ce',
     borderRadius: 5,
     padding: 1,
   },
   map: {
-    height: isNotch ? height * 0.43 : height * 0.37,
+    height: isNotch ? height * 0.43 : height * 0.41,
     width,
     justifyContent: 'flex-end',
     alignItems: 'center',
@@ -214,7 +218,7 @@ const styles = StyleSheet.create({
   listButtonStyle: {
     position: 'absolute',
     zIndex: 10,
-    top: isNotch ? height / 2 - 10 : height / 2 - 80,
+    top: isNotch ? height / 2 - 10 : height / 2 - 50,
     right: 0,
     paddingRight: 10,
   },
