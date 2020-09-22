@@ -21,7 +21,7 @@ import {
 import {Icon, Button, ButtonGroup} from 'react-native-elements';
 import Popover from 'react-native-popover-view';
 import RadioButtonRN from 'radio-buttons-react-native';
-import {JobItem, TagSort} from '../components';
+import {JobItem, Sortable} from '../components';
 import {RecruitmentApi} from '../api';
 import {useSelector} from 'react-redux';
 
@@ -54,6 +54,7 @@ const ListJobs = ({navigation}) => {
   const [metaResponse, setMetaResponse] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [showPopover, setShowPopover] = useState(false);
+  const [isModalVisible, setModalVisible] = useState(false);
   const userLocation = useSelector((state) => state.user.userLocation);
 
   useEffect(() => {
@@ -125,6 +126,11 @@ const ListJobs = ({navigation}) => {
   const loadMore = () => {
     setIsLoading(true);
   };
+  const toggleModal = (string) => {
+    // setModalVisible(!isModalVisible);
+    console.log(string);
+    setModalVisible(!isModalVisible);
+  };
 
   const renderRow = ({item}) => {
     return (
@@ -148,30 +154,15 @@ const ListJobs = ({navigation}) => {
     if (selectedIndexBtn === 1) {
       onFilter();
     } else {
-      setShowPopover(true);
+      toggleModal();
     }
   };
 
   const sort = () => (
-    <Popover
-      isVisible={showPopover}
-      // onRequestClose={() => setShowPopover(false)}
-      from={
-        <View style={styles.buttonInGrBtn}>
-          <Icon name="sort" type="font-awesome" color="#4f7ac7" size={18} />
-          <Text style={styles.textStyle}>Sắp xếp</Text>
-        </View>
-      }>
-      <View style={styles.radioGroups}>
-        <RadioButtonRN
-          key={Math.random()}
-          // initial={sortId}
-          box={false}
-          data={sortList}
-          selectedBtn={(e) => onPressTag(e)}
-        />
-      </View>
-    </Popover>
+    <View style={styles.buttonInGrBtn}>
+      <Icon name="sort" type="font-awesome" color="#4f7ac7" size={18} />
+      <Text style={styles.textStyle}>Sắp xếp</Text>
+    </View>
   );
   const filter = () => (
     <View style={styles.buttonInGrBtn}>
@@ -197,12 +188,6 @@ const ListJobs = ({navigation}) => {
           Tổng số: {metaResponse.total} công việc
         </Text>
       </View>
-      {/* <View style={styles.sidebarCustom}>
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-          <TagSort data={sortList} activeId={sortId} onClick={onPressTag} />
-          <Text style={styles.threeDots}>...</Text>
-        </ScrollView>
-      </View> */}
       <FlatList
         style={styles.flatList}
         data={listJobs}
@@ -211,6 +196,12 @@ const ListJobs = ({navigation}) => {
         onEndReached={loadMore}
         onEndReachedThreshold={0}
         ListFooterComponent={renderFooter}
+      />
+      <Sortable
+        toggleModal={toggleModal}
+        isModalVisible={isModalVisible}
+        sortList={sortList}
+        title="LỌC KẾT QUẢ"
       />
     </SafeAreaView>
   );

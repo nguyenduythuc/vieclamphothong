@@ -1,11 +1,12 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomeScreen from '../screen/home';
+import DeviceInfo from 'react-native-device-info';
 import LegalConsultantScreen from '../screen/legal-consultant';
 import AccountScreen from '../screen/account';
 
 const Tab = createBottomTabNavigator();
-
+const isNotch = DeviceInfo.hasNotch();
 export default function HomeTabNavigator() {
   return (
     <Tab.Navigator
@@ -14,7 +15,7 @@ export default function HomeTabNavigator() {
           fontSize: 17,
         },
         style: {
-          paddingBottom: 10,
+          paddingBottom: isNotch ? 30 : 10,
         },
       }}>
       <Tab.Screen

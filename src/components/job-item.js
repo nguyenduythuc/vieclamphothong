@@ -74,9 +74,9 @@ const JobItem = ({
         <Text style={styles.quantityText}>{`Số lượng: ${item?.quantity}`}</Text>
       </View>
       <View style={styles.row}>
-        <Text style={styles.quantityText}>{`Hạn nộp: ${moment(item?.expired_at).format(
-          'DD-MM-YYYY',
-        )}`}</Text>
+        <Text style={styles.quantityText}>{`Hạn nộp: ${moment(
+          item?.expired_at,
+        ).format('DD-MM-YYYY')}`}</Text>
         <Text
           style={styles.redText}>{`Còn ${item?.expired_in_number} ngày`}</Text>
       </View>

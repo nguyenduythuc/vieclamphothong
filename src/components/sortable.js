@@ -13,27 +13,31 @@ import Modal from 'react-native-modal';
 
 const Sortable = ({isModalVisible, toggleModal, sortList, title}) => {
   return (
+    // <Modal testID={'modal'} isVisible={isModalVisible} onBackdropPress={toggleModal}>
+    //   <View>
+    //     <Text style={styles.textTitle}>{title}</Text>
+    //   </View>
+    // </Modal>
     <Modal
       testID={'modal'}
       isVisible={isModalVisible}
-      swipeDirection={['up', 'left', 'right', 'down']}
+      // swipeDirection={['up', 'left', 'right', 'down']}
       onBackdropPress={toggleModal}
       style={styles.modalView}>
-      <View style={styles.modalContent}>
+      <View style={[styles.modalContent]}>
         <View>
           <Text style={styles.textTitle}>{title}</Text>
         </View>
         {sortList.map((item, idx) => (
           <CheckBox
             containerStyle={styles.checkboxAll}
-            title={item.text}
+            title={item.label}
             checkedIcon="dot-circle-o"
             uncheckedIcon="circle-o"
             // checked={checkBoxPlace}
             // onPress={() => onCheckAllPlace()}
           />
         ))}
-        <Button title="Lọc" onPress={toggleModal} />
       </View>
     </Modal>
   );
@@ -41,7 +45,12 @@ const Sortable = ({isModalVisible, toggleModal, sortList, title}) => {
 
 const styles = StyleSheet.create({
   modalView: {
-    justifyContent: 'flex-end',
+    // justifyContent: 'flex-end',
+    // position: 'absolute',
+    // top: 150,
+    paddingHorizontal: 30,
+    flex: 1,
+    width: '100%',
     margin: 0,
   },
   modalContent: {
