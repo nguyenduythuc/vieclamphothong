@@ -288,9 +288,6 @@ const styles = StyleSheet.create({
   },
   uploadWrapper: {
     justifyContent: 'center',
-    alignContent: 'center',
-    alignSelf: 'center',
-    textAlign: 'center',
     marginLeft: 100,
   },
 });

@@ -31,7 +31,8 @@ const HomeScreen = ({navigation}) => {
   const listJobs = useSelector((state) => state.recruitment.listJobs);
   const userLocation = useSelector((state) => state.user.userLocation);
   const [search, setSearch] = useState('');
-  const [currentPosition, setCurentPosition] = useState(defaultPosition);
+  // const [currentPosition, setCurentPosition] = useState(defaultPosition);
+  const [currentPosition, setCurentPosition] = useState(userLocation);
   const [positionChanged, setPositionChanged] = useState(false);
   const [isShowButtonPositionChange, setIsShowButtonPositionChange] = useState(
     false,
