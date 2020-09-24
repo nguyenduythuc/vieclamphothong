@@ -20,7 +20,7 @@ function formatCurrencyToSring(amount) {
   if (!amount) {
     return 0;
   }
-  return Math.ceil(amount) / 1000000;
+  return Math.floor(amount / 1000000);
 }
 
 export {getWindowDimensions, formatCurrency, formatCurrencyToSring};

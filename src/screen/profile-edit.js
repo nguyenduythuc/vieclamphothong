@@ -23,6 +23,9 @@ const ProfileEdit = ({navigation}) => {
   const educationBackground = useSelector(
     (state) => state.recruitment?.listFilters?.educationBackground,
   );
+  const salaryRange = useSelector(
+    (state) => state.recruitment?.listFilters?.salaryRange,
+  );
 
   const educationBackgroundResult = () => {
     return educationBackground.map((item) => {
@@ -32,6 +35,28 @@ const ProfileEdit = ({navigation}) => {
       };
     });
   };
+  const salaryRangeResult = () => {
+    return salaryRange.map((item) => {
+      return {
+        label: item.label,
+        value: [item.min, item.max],
+        max: item.max,
+        min: item.min,
+        id: item.id,
+      };
+    });
+  };
+  const [inputSalaryRange, setInputSalaryRange] = useState([
+    parseInt(userProfile?.resume?.expect_price_min),
+    parseInt(userProfile?.resume?.expect_price_max),
+  ]);
+  const onTypingSalaryRange = useCallback(
+    (text) => {
+      console.log(inputSalaryRange);
+      setInputSalaryRange(text);
+    },
+    [inputSalaryRange],
+  );
 
   const [fullname, setFullname] = useState(userProfile?.full_name);
   const onTypingFullname = useCallback((text) => setFullname(text), []);
@@ -72,19 +97,6 @@ const ProfileEdit = ({navigation}) => {
     (text) => setExperienceDescription(text),
     [],
   );
-
-  const [minSalary, setMinSalary] = useState(
-    userProfile?.resume?.expect_price_min.toString(),
-  );
-  const onTypingMinSalary = useCallback((text) => {
-    console.log(text);
-    setMinSalary(parseFloat(text));
-  }, []);
-
-  const [maxSalary, setMaxSalary] = useState(
-    userProfile?.resume?.expect_price_max.toString(),
-  );
-  const onTypingMaxSalary = useCallback((text) => setMaxSalary(text), []);
 
   const [introduce, setIntroduce] = useState(userProfile?.introduce);
   const onTypingexpIntroduce = useCallback((text) => setIntroduce(text), []);
@@ -177,8 +189,8 @@ const ProfileEdit = ({navigation}) => {
         experience_description: experienceDescription,
         primary_occupation_id: occupationResultSendPrimary(),
         secondary_occupation_ids: occupationResultSendSecond(),
-        expect_price_max: minSalary,
-        expect_price_min: maxSalary,
+        expect_price_min: inputSalaryRange[0],
+        expect_price_max: inputSalaryRange[1],
       };
       console.log('payload', payload);
       UserApi.updateProfile(payload).then((response) => {
@@ -208,10 +220,9 @@ const ProfileEdit = ({navigation}) => {
       school,
       experience,
       experienceDescription,
-      maxSalary,
-      minSalary,
       occupationResultSendPrimary,
       occupationResultSendSecond,
+      inputSalaryRange,
       dispatch,
     ],
   );
@@ -226,75 +237,79 @@ const ProfileEdit = ({navigation}) => {
       <ScrollView>
         <View style={styles.container}>
           <View>
-            <Input
-              placeholder="Họ và tên"
-              inputStyle={styles.inputStyle}
-              onChangeText={onTypingFullname}
-              label="Họ và tên"
-              value={fullname}
-            />
+            <Text style={styles.titleSelectWrapper}>Thông tin cá nhân</Text>
+            <View style={styles.selectInner}>
+              <Text style={styles.titleSelect}>Họ và tên</Text>
+              <Input
+                placeholder="Họ và tên"
+                inputStyle={styles.inputStyle}
+                onChangeText={onTypingFullname}
+                value={fullname}
+              />
+            </View>
+            <View style={styles.selectInner}>
+              <Text style={styles.titleSelect}>Email</Text>
+              <Input
+                placeholder="Email"
+                inputStyle={styles.inputStyle}
+                onChangeText={onTypingEmail}
+                value={email}
+              />
+            </View>
+            <View style={[styles.datePickerWrapper, styles.selectInner]}>
+              <Text style={styles.titleSelect}>Ngày sinh</Text>
+              <DatePicker
+                style={styles.datepicker}
+                date={birthDay}
+                mode="date"
+                placeholder="Chọn ngày sinh"
+                format="DD-MM-YYYY"
+                minDate="01-01-1900"
+                maxDate={new Date()}
+                confirmBtnText="Xác nhận"
+                cancelBtnText="Hủy"
+                customStyles={{
+                  dateInput: {
+                    borderWidth: 0,
+                    marginLeft: 10,
+                  },
+                  dateText: {
+                    fontSize: 17,
+                    fontWeight: '500',
+                  },
+                }}
+                onDateChange={(date) => onTypingBirthDay(date)}
+              />
+              <View style={styles.hairLine} />
+            </View>
+            <View style={styles.selectInner}>
+              <Text style={styles.titleSelect}>Chọn giới tính</Text>
+              <RNPickerSelect
+                onValueChange={(value) => onTypingGender(value)}
+                value={gender}
+                placeholder={placeholder}
+                itemKey={Math.random()}
+                style={{...pickerSelectStyles}}
+                hideIcon={true}
+                items={[
+                  {label: 'Nam', value: 'male'},
+                  {label: 'Nữ', value: 'female'},
+                ]}
+              />
+            </View>
+            <View style={styles.selectInner}>
+              <Text style={styles.titleSelect}>Địa chỉ đang cư trú</Text>
+              <Input
+                placeholder="Địa chỉ đang cư trú"
+                inputStyle={styles.inputStyle}
+                onChangeText={onTypingAddress}
+                value={address}
+              />
+            </View>
           </View>
           <View>
-            <Input
-              placeholder="Email"
-              inputStyle={styles.inputStyle}
-              onChangeText={onTypingEmail}
-              label="Email"
-              value={email}
-            />
-          </View>
-          <View style={styles.datePickerWrapper}>
-            <Text style={styles.titleSelect}>Ngày sinh</Text>
-            <DatePicker
-              style={styles.datepicker}
-              date={birthDay}
-              mode="date"
-              placeholder="Chọn ngày sinh"
-              format="DD-MM-YYYY"
-              minDate="01-01-1900"
-              maxDate={new Date()}
-              confirmBtnText="Xác nhận"
-              cancelBtnText="Hủy"
-              customStyles={{
-                dateInput: {
-                  borderWidth: 0,
-                  marginLeft: 10,
-                },
-                dateText: {
-                  fontSize: 17,
-                  fontWeight: '500',
-                },
-              }}
-              onDateChange={(date) => onTypingBirthDay(date)}
-            />
-            <View style={styles.hairLine} />
-          </View>
-          <View>
-            <Text style={styles.titleSelect}>Chọn giới tính</Text>
-            <RNPickerSelect
-              onValueChange={(value) => onTypingGender(value)}
-              value={gender}
-              placeholder={placeholder}
-              itemKey={Math.random()}
-              style={{...pickerSelectStyles}}
-              hideIcon={true}
-              items={[
-                {label: 'Nam', value: 'male'},
-                {label: 'Nữ', value: 'female'},
-              ]}
-            />
-          </View>
-          <View>
-            <Input
-              placeholder="Địa chỉ đang cư trú"
-              label="Địa chỉ đang cư trú"
-              inputStyle={styles.inputStyle}
-              onChangeText={onTypingAddress}
-              value={address}
-            />
-          </View>
-          <View>
-            <View>
+            <Text style={styles.titleSelectWrapper}>Trình độ học vấn</Text>
+            <View style={styles.selectInner}>
               <Text style={styles.titleSelect}>Trình độ</Text>
               <RNPickerSelect
                 onValueChange={(value) => onTypingEducational(value)}
@@ -309,113 +324,123 @@ const ProfileEdit = ({navigation}) => {
                 items={educationBackgroundResult()}
               />
             </View>
+            <View style={styles.selectInner}>
+              <Text style={styles.titleSelect}>Trường</Text>
+              <Input
+                placeholder="Trường"
+                inputStyle={styles.inputStyle}
+                onChangeText={onTypingSchool}
+                value={school}
+              />
+            </View>
           </View>
           <View>
-            <Input
-              placeholder="Trường"
-              label="Trường"
-              inputStyle={styles.inputStyle}
-              onChangeText={onTypingSchool}
-              value={school}
-            />
+            <Text style={styles.titleSelectWrapper}>Kinh nghiệm</Text>
+            <View style={styles.selectInner}>
+              <Text style={styles.titleSelect}>Số năm làm việc</Text>
+              <Input
+                placeholder="Số năm làm việc"
+                inputStyle={styles.inputStyle}
+                onChangeText={onTypingExperience}
+                value={experience}
+              />
+            </View>
+            <View style={styles.selectInner}>
+              <Text style={styles.titleSelect}>Công việc</Text>
+              <Input
+                placeholder="Công việc"
+                multiline={true}
+                inputStyle={styles.inputStyle}
+                onChangeText={onTypingexpErienceDescription}
+                value={experienceDescription}
+              />
+            </View>
           </View>
           <View>
-            <Input
-              placeholder="Kinh nghiệm"
-              label="Kinh nghiệm"
-              inputStyle={styles.inputStyle}
-              onChangeText={onTypingExperience}
-              value={experience}
-            />
+            <Text style={styles.titleSelectWrapper}>Công việc mong muốn</Text>
+            <View style={styles.selectInner}>
+              <Text style={styles.titleSelect}>Công việc chính (Chọn 1)</Text>
+              <TouchableWithoutFeedback
+                onPress={onPressSelectOccupationPrimary}>
+                <View style={styles.buttonOccupation}>
+                  {!occupationsWishPrimary && (
+                    <Text style={styles.buttonOccupationText}>
+                      Công việc chính (Lựa chọn 1)
+                    </Text>
+                  )}
+                  {occupationsWishPrimary &&
+                    occupationsWishPrimary?.map((item, idx) => (
+                      <View key={Math.random()}>
+                        <Badge
+                          value={item.label}
+                          status="success"
+                          textStyle={{fontSize: 17}}
+                          badgeStyle={{height: 30, paddingHorizontal: 15}}
+                        />
+                      </View>
+                    ))}
+                  <Icon name="right" type="antdesign" color="#a0aec0" />
+                </View>
+              </TouchableWithoutFeedback>
+              <View style={styles.hairLine} />
+            </View>
+            {/* second */}
+            <View style={styles.selectInner}>
+              <Text style={styles.titleSelect}>Công việc phụ (Chọn 2)</Text>
+              <TouchableWithoutFeedback onPress={onPressSelectOccupationSecond}>
+                <View style={styles.buttonOccupation}>
+                  {!occupationsWishSecond && (
+                    <Text style={styles.buttonOccupationText}>
+                      Công việc phụ (Lựa chọn 2)
+                    </Text>
+                  )}
+                  {occupationsWishSecond &&
+                    occupationsWishSecond?.map((item, idx) => (
+                      <View key={Math.random()}>
+                        <Badge
+                          value={item.label}
+                          status="success"
+                          textStyle={{fontSize: 17}}
+                          badgeStyle={{height: 30, paddingHorizontal: 15}}
+                        />
+                      </View>
+                    ))}
+                  <Icon name="right" type="antdesign" color="#a0aec0" />
+                </View>
+              </TouchableWithoutFeedback>
+              <View style={styles.hairLine} />
+            </View>
           </View>
           <View>
-            <Input
-              placeholder="Công việc"
-              label="Công việc"
-              multiline={true}
-              inputStyle={styles.inputStyle}
-              onChangeText={onTypingexpErienceDescription}
-              value={experienceDescription}
-            />
+            <Text style={styles.titleSelectWrapper}>Mức lương mong muốn</Text>
+            <View style={styles.selectInner}>
+              <Text style={styles.titleSelect}>Mức lương</Text>
+              <RNPickerSelect
+                onValueChange={(value) => onTypingSalaryRange(value)}
+                value={inputSalaryRange}
+                placeholder={{
+                  label: 'Chọn mức lương',
+                  value: null,
+                }}
+                itemKey={Math.random()}
+                style={{...pickerSelectStyles}}
+                hideIcon={true}
+                items={salaryRangeResult()}
+              />
+            </View>
           </View>
           <View>
-            <Input
-              placeholder="Giới thiệu bản thân"
-              label="Giới thiệu bản thân"
-              multiline={true}
-              inputStyle={styles.inputStyle}
-              onChangeText={onTypingexpIntroduce}
-              value={introduce}
-            />
-          </View>
-          <View>
-            <Input
-              placeholder="Mức lương mong muốn (Thấp nhất)"
-              label="Mức lương mong muốn (Thấp nhất)"
-              inputStyle={styles.inputStyle}
-              onChangeText={onTypingMinSalary}
-              value={Math.floor(minSalary).toString()}
-            />
-          </View>
-          <View>
-            <Input
-              placeholder="Mức lương mong muốn (Cao nhất)"
-              label="Mức lương mong muốn (Cao nhất)"
-              inputStyle={styles.inputStyle}
-              onChangeText={onTypingMaxSalary}
-              value={Math.floor(maxSalary).toString()}
-            />
-          </View>
-          <View>
-            <Text style={styles.titleSelect}>Công việc chính (Lựa chọn 1)</Text>
-            <TouchableWithoutFeedback onPress={onPressSelectOccupationPrimary}>
-              <View style={styles.buttonOccupation}>
-                {!occupationsWishPrimary && (
-                  <Text style={styles.buttonOccupationText}>
-                    Công việc chính (Lựa chọn 1)
-                  </Text>
-                )}
-                {occupationsWishPrimary &&
-                  occupationsWishPrimary?.map((item, idx) => (
-                    <View key={Math.random()}>
-                      <Badge
-                        value={item.label}
-                        status="success"
-                        textStyle={{fontSize: 17}}
-                        badgeStyle={{height: 30, paddingHorizontal: 15}}
-                      />
-                    </View>
-                  ))}
-                <Icon name="right" type="antdesign" color="#a0aec0" />
-              </View>
-            </TouchableWithoutFeedback>
-            <View style={styles.hairLine} />
-          </View>
-          {/* second */}
-          <View>
-            <Text style={styles.titleSelect}>Công việc phụ (Lựa chọn 2)</Text>
-            <TouchableWithoutFeedback onPress={onPressSelectOccupationSecond}>
-              <View style={styles.buttonOccupation}>
-                {!occupationsWishSecond && (
-                  <Text style={styles.buttonOccupationText}>
-                    Công việc phụ (Lựa chọn 2)
-                  </Text>
-                )}
-                {occupationsWishSecond &&
-                  occupationsWishSecond?.map((item, idx) => (
-                    <View key={Math.random()}>
-                      <Badge
-                        value={item.label}
-                        status="success"
-                        textStyle={{fontSize: 17}}
-                        badgeStyle={{height: 30, paddingHorizontal: 15}}
-                      />
-                    </View>
-                  ))}
-                <Icon name="right" type="antdesign" color="#a0aec0" />
-              </View>
-            </TouchableWithoutFeedback>
-            <View style={styles.hairLine} />
+            <Text style={styles.titleSelectWrapper}>Giới thiệu bản thân</Text>
+            <View style={styles.selectInner}>
+              <Text style={styles.titleSelect}>Tính cách/Sở thích</Text>
+              <Input
+                placeholder="Giới thiệu bản thân"
+                multiline={true}
+                inputStyle={styles.inputStyle}
+                onChangeText={onTypingexpIntroduce}
+                value={introduce}
+              />
+            </View>
           </View>
           <View style={styles.btnFooter}>
             <View style={styles.btnItem}>
@@ -461,7 +486,17 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     fontSize: 16,
     color: '#718096',
-    fontWeight: '700',
+    fontWeight: '400',
+  },
+  titleSelectWrapper: {
+    paddingLeft: 10,
+    paddingVertical: 10,
+    fontSize: 17,
+    color: '#3182ce',
+    fontWeight: '600',
+  },
+  selectInner: {
+    paddingHorizontal: 10,
   },
   hairLine: {
     borderBottomColor: '#a0aec0',
