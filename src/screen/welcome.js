@@ -37,7 +37,7 @@ const WelcomeScreen = ({navigation}) => {
       <SafeAreaView style={styles.container}>
         <View style={styles.logo}>
           <Image source={logo} style={styles.logoImage} />
-          <Text style={styles.welcome}>{'S.JOB Xin chào!'}</Text>
+          <Text style={styles.welcome}>{'Xin chào!'}</Text>
         </View>
         <View style={styles.buttons}>
           <Button
@@ -91,8 +91,8 @@ const styles = StyleSheet.create({
     width: '80%',
   },
   buttonText: {
-    color: 'white',
-    fontSize: 16,
+    color: '#3c89ff',
+    fontSize: 20,
     fontWeight: '500',
   },
   buttonWrapper: {
@@ -100,8 +100,9 @@ const styles = StyleSheet.create({
   },
   buttonStyle: {
     borderColor: 'white',
+    backgroundColor: 'white',
     borderWidth: 2,
-    paddingHorizontal: 40,
+    paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 25,
     marginBottom: 30,

@@ -208,6 +208,8 @@ const Filter = ({navigation, route}) => {
           <Slider
             style={{width: '86%'}}
             thumbStyle={{backgroundColor: 'blue'}}
+            trackStyle={{backgroundColor: 'red', color: 'red'}}
+            thumbTintColor="red"
             value={distance}
             onValueChange={(value) => setDistance(value)}
           />
@@ -216,7 +218,6 @@ const Filter = ({navigation, route}) => {
         <View style={styles.blockTitle}>
           <Text style={styles.blockTitleText}>Nơi làm việc</Text>
         </View>
-        <View style={styles.hairLine} />
 
         <CheckBox
           containerStyle={styles.checkboxAll}
@@ -224,6 +225,7 @@ const Filter = ({navigation, route}) => {
           checkedIcon="dot-circle-o"
           uncheckedIcon="circle-o"
           checked={checkBoxPlace}
+          textStyle={styles.textStyleCheckBox}
           onPress={() => onCheckAllPlace()}
         />
 
@@ -241,7 +243,7 @@ const Filter = ({navigation, route}) => {
                   titleStyle={{
                     color: checkBoxPlaceList.includes(item.id)
                       ? 'white'
-                      : 'black',
+                      : '#0070C0',
                     fontSize: 13,
                   }}
                   onPress={() => {
@@ -251,11 +253,11 @@ const Filter = ({navigation, route}) => {
               </View>
             ))}
         </View>
+        <View style={styles.hairLine} />
 
         <View style={styles.blockTitle}>
           <Text style={styles.blockTitleText}>Công việc</Text>
         </View>
-        <View style={styles.hairLine} />
 
         <CheckBox
           containerStyle={styles.checkboxAll}
@@ -263,10 +265,11 @@ const Filter = ({navigation, route}) => {
           checkedIcon="dot-circle-o"
           uncheckedIcon="circle-o"
           checked={checkBoxWork}
+          textStyle={styles.textStyleCheckBox}
           onPress={() => onCheckAllWork()}
         />
 
-        <View style={styles.row}>
+        <View style={[styles.row, styles.workList]}>
           {listFilters?.occupation &&
             listFilters?.occupation.map((item, idx) => (
               <View style={styles.col}>
@@ -280,7 +283,7 @@ const Filter = ({navigation, route}) => {
                   titleStyle={{
                     color: checkBoxWorkList.includes(item.id)
                       ? 'white'
-                      : 'black',
+                      : '#0070C0',
                     fontSize: 13,
                   }}
                   onPress={() => {
@@ -290,11 +293,11 @@ const Filter = ({navigation, route}) => {
               </View>
             ))}
         </View>
+        <View style={styles.hairLine} />
 
         <View style={styles.blockTitle}>
           <Text style={styles.blockTitleText}>Trình độ</Text>
         </View>
-        <View style={styles.hairLine} />
         <View style={styles.row}>
           {listFilters?.educationBackground.map((item, idx) => (
             <View style={styles.col}>
@@ -308,7 +311,9 @@ const Filter = ({navigation, route}) => {
                 }
                 titleStyle={{
                   color:
-                    checkBoxEducationBackground === item.id ? 'white' : 'black',
+                    checkBoxEducationBackground === item.id
+                      ? 'white'
+                      : '#0070C0',
                   fontSize: 13,
                 }}
                 onPress={() => {
@@ -318,11 +323,11 @@ const Filter = ({navigation, route}) => {
             </View>
           ))}
         </View>
+        <View style={styles.hairLine} />
 
         <View style={styles.blockTitle}>
           <Text style={styles.blockTitleText}>Giới tính</Text>
         </View>
-        <View style={styles.hairLine} />
         <View style={styles.row}>
           {listFilters?.gender.map((item, idx) => (
             <View style={styles.col}>
@@ -335,7 +340,7 @@ const Filter = ({navigation, route}) => {
                     : styles.btnNoneActive
                 }
                 titleStyle={{
-                  color: checkBoxGender === item.key ? 'white' : 'black',
+                  color: checkBoxGender === item.key ? 'white' : '#0070C0',
                   fontSize: 13,
                 }}
                 onPress={() => {
@@ -345,11 +350,11 @@ const Filter = ({navigation, route}) => {
             </View>
           ))}
         </View>
+        <View style={styles.hairLine} />
 
         <View style={styles.blockTitle}>
           <Text style={styles.blockTitleText}>Độ tuổi</Text>
         </View>
-        <View style={styles.hairLine} />
         <View style={styles.row}>
           {listFilters?.ageRange.map((item, idx) => (
             <View style={styles.col}>
@@ -362,7 +367,7 @@ const Filter = ({navigation, route}) => {
                     : styles.btnNoneActive
                 }
                 titleStyle={{
-                  color: checkBoxAge === item.id ? 'white' : 'black',
+                  color: checkBoxAge === item.id ? 'white' : '#0070C0',
                   fontSize: 13,
                 }}
                 onPress={() => {
@@ -372,17 +377,18 @@ const Filter = ({navigation, route}) => {
             </View>
           ))}
         </View>
+        <View style={styles.hairLine} />
 
         <View style={styles.blockTitle}>
           <Text style={styles.blockTitleText}>Lương</Text>
         </View>
-        <View style={styles.hairLine} />
 
         <CheckBox
           containerStyle={styles.checkboxAll}
           title="Chọn tất cả"
           checkedIcon="dot-circle-o"
           uncheckedIcon="circle-o"
+          textStyle={styles.textStyleCheckBox}
           checked={checkBoxSalary}
           onPress={() => onCheckAllSalary()}
         />
@@ -401,7 +407,7 @@ const Filter = ({navigation, route}) => {
                   titleStyle={{
                     color: checkBoxSalaryList.includes(item.id)
                       ? 'white'
-                      : 'black',
+                      : '#0070C0',
                     fontSize: 13,
                   }}
                   onPress={() => {
@@ -411,11 +417,11 @@ const Filter = ({navigation, route}) => {
               </View>
             ))}
         </View>
+        <View style={styles.hairLine} />
 
         <View style={styles.blockTitle}>
           <Text style={styles.blockTitleText}>Kinh nghiệm</Text>
         </View>
-        <View style={styles.hairLine} />
         <View style={styles.row}>
           {listFilters?.experienceRange &&
             listFilters?.experienceRange.map((item, idx) => (
@@ -429,7 +435,7 @@ const Filter = ({navigation, route}) => {
                       : styles.btnNoneActive
                   }
                   titleStyle={{
-                    color: checkBoxExperience === item.id ? 'white' : 'black',
+                    color: checkBoxExperience === item.id ? 'white' : '#0070C0',
                     fontSize: 13,
                   }}
                   onPress={() => {
@@ -439,6 +445,7 @@ const Filter = ({navigation, route}) => {
               </View>
             ))}
         </View>
+        <View style={styles.hairLine} />
         <View style={styles.btnFooter}>
           <View style={styles.col50}>
             <Button
@@ -465,6 +472,12 @@ const Filter = ({navigation, route}) => {
 };
 
 const styles = StyleSheet.create({
+  workList: {
+    height: 10,
+  },
+  textStyleCheckBox: {
+    fontWeight: '500',
+  },
   btnFooter: {
     marginTop: 25,
     width: '100%',
@@ -505,19 +518,23 @@ const styles = StyleSheet.create({
   blockTitleText: {
     fontSize: 17,
     fontWeight: '500',
+    paddingBottom: 15,
   },
   blockTitle: {
     marginVertical: 4,
     marginTop: 40,
   },
   hairLine: {
-    borderBottomColor: '#a0aec0',
+    borderBottomColor: '#d9d9d9',
     borderBottomWidth: 1,
-    marginVertical: 4,
+    // marginVertical: 4,
+    marginTop: 15,
   },
   checkboxAll: {
     backgroundColor: 'transparent',
     borderWidth: 0,
+    padding: 0,
+    paddingBottom: 5,
   },
   btnActive: {
     borderWidth: 1,

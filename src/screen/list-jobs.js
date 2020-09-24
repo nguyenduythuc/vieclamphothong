@@ -15,7 +15,7 @@ import {useSelector} from 'react-redux';
 const ENTRIES2 = [
   {
     value: 'ALL',
-    label: 'Tất cả',
+    label: 'Mới nhất',
     index: 1,
   },
   {
