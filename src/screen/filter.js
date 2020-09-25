@@ -259,7 +259,7 @@ const Filter = ({navigation, route}) => {
           <Text style={styles.blockTitleText}>Công việc</Text>
         </View>
 
-        <CheckBox
+        {/* <CheckBox
           containerStyle={styles.checkboxAll}
           title="Chọn tất cả"
           checkedIcon="dot-circle-o"
@@ -267,31 +267,45 @@ const Filter = ({navigation, route}) => {
           checked={checkBoxWork}
           textStyle={styles.textStyleCheckBox}
           onPress={() => onCheckAllWork()}
+        /> */}
+
+        <Button
+          title="Chọn công việc khác"
+          buttonStyle={styles.btnNoneActive}
+          titleStyle={{
+            color: '#0070C0',
+            fontSize: 13,
+          }}
+          onPress={() => {
+            navigation.navigate('FilterWork');
+          }}
         />
 
         <View style={[styles.row, styles.workList]}>
           {listFilters?.occupation &&
-            listFilters?.occupation.map((item, idx) => (
-              <View style={styles.col}>
-                <Button
-                  title={item.name}
-                  buttonStyle={
-                    checkBoxWorkList.includes(item.id)
-                      ? styles.btnActive
-                      : styles.btnNoneActive
-                  }
-                  titleStyle={{
-                    color: checkBoxWorkList.includes(item.id)
-                      ? 'white'
-                      : '#0070C0',
-                    fontSize: 13,
-                  }}
-                  onPress={() => {
-                    onCheckOneWork(item.id);
-                  }}
-                />
-              </View>
-            ))}
+            listFilters?.occupation.map((item, idx) =>
+              idx > 8 ? null : (
+                <View style={styles.col}>
+                  <Button
+                    title={item.name}
+                    buttonStyle={
+                      checkBoxWorkList.includes(item.id)
+                        ? styles.btnActive
+                        : styles.btnNoneActive
+                    }
+                    titleStyle={{
+                      color: checkBoxWorkList.includes(item.id)
+                        ? 'white'
+                        : '#0070C0',
+                      fontSize: 13,
+                    }}
+                    onPress={() => {
+                      onCheckOneWork(item.id);
+                    }}
+                  />
+                </View>
+              ),
+            )}
         </View>
         <View style={styles.hairLine} />
 
@@ -473,7 +487,7 @@ const Filter = ({navigation, route}) => {
 
 const styles = StyleSheet.create({
   workList: {
-    height: 10,
+    // height: 10,
   },
   textStyleCheckBox: {
     fontWeight: '500',

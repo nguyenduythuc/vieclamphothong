@@ -15,6 +15,7 @@ import InterviewLetter from '../screen/interview-letter';
 import Profile from '../screen/profile';
 import ProfileEdit from '../screen/profile-edit';
 import SelectMultiple from '../screen/select-multiple';
+import FilterWork from '../screen/filter-work';
 import EmployerInfo from '../screen/employer-info';
 import InterviewCalendar from '../screen/interview-calendar';
 import HomeTabNavigator from './home-tab-navigator';
@@ -113,6 +114,11 @@ export default function Route() {
         name="InterviewCalendar"
         component={InterviewCalendar}
         options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="FilterWork"
+        component={FilterWork}
+        options={{title: 'Chọn công việc'}}
       />
     </Stack.Navigator>
   );
