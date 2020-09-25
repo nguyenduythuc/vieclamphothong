@@ -71,12 +71,17 @@ const JobItem = ({
             item?.min_salary,
           )}-${formatCurrencyToSring(item?.max_salary)}tr`}</Text>
         </View>
-        <Text style={styles.quantityText}>{`Số lượng: ${item?.quantity}`}</Text>
+        <Text style={styles.greyText}>
+          Số lượng: <Text style={styles.quantityText}>{item?.quantity}</Text>
+        </Text>
       </View>
       <View style={styles.row}>
-        <Text style={styles.quantityText}>{`Hạn nộp: ${moment(
-          item?.expired_at,
-        ).format('DD-MM-YYYY')}`}</Text>
+        <Text style={styles.greyText}>
+          Hạn nộp:{' '}
+          <Text style={styles.quantityText}>
+            {moment(item?.expired_at).format('DD-MM-YYYY')}
+          </Text>
+        </Text>
         <Text
           style={styles.redText}>{`Còn ${item?.expired_in_number} ngày`}</Text>
       </View>
@@ -87,11 +92,11 @@ const JobItem = ({
       <View style={styles.row}>
         <Rating imageSize={12} startingValue={item?.company?.rating_point} />
         <View style={styles.comments}>
-          <Icon name="comments" type="fontisto" color="red" size={12} />
-          <Text style={styles.commentsText}>Xem nhận xét</Text>
+          <Icon name="comments" type="fontisto" color="red" size={10} />
+          <Text style={styles.commentsText}> Xem nhận xét</Text>
         </View>
       </View>
-      <Text style={styles.marginBottom} numberOfLines={2}>
+      <Text style={[styles.marginBottom, styles.greyText]} numberOfLines={2}>
         {item?.company?.address}
       </Text>
       <View style={styles.colText}>
@@ -129,11 +134,17 @@ const JobItem = ({
 const styles = StyleSheet.create({
   cardContainer: {
     backgroundColor: 'white',
-    borderRadius: 8,
-    borderColor: 'white',
-    paddingHorizontal: 10,
-    paddingTop: 10,
-    paddingBottom: 0,
+    margin: 0,
+    marginTop: 20,
+    borderRadius: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   title: {
     marginBottom: 10,
@@ -159,10 +170,11 @@ const styles = StyleSheet.create({
   },
   comments: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   commentsText: {
     fontStyle: 'italic',
-    color: 'gray',
+    color: 'black',
     fontSize: 12,
   },
   divider: {backgroundColor: 'grey', marginBottom: 10},
@@ -200,7 +212,7 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
   colText: {
-    display: 'flex',
+    alignItems: 'center',
     flexDirection: 'row',
   },
   redText: {
@@ -213,6 +225,7 @@ const styles = StyleSheet.create({
   },
   quantityText: {
     fontSize: 12,
+    color: 'black',
   },
 });
 
