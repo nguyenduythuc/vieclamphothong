@@ -46,7 +46,7 @@ const HomeScreen = ({navigation}) => {
       `filter[location]=${currentPosition.latitude},${currentPosition.longitude},100&include=educational_background,occupation,workplace,company`,
     ).then((response) => {
       dispatch(actions.recruitment.saveListJobs(response.data));
-      console.log(markerRef.current)
+      console.log(markerRef.current);
     });
   }, []);
 
@@ -61,14 +61,14 @@ const HomeScreen = ({navigation}) => {
     navigation.navigate('ListJobs');
   }, [navigation]);
 
-  const onRegionChange = useCallback((region) => {
+  const onRegionChange = (region) => {
     setIsShowButtonPositionChange(true);
     setCurentPosition(region);
-  }, []);
+  };
 
   const onChangePostionButton = useCallback(() => {
     RecruitmentApi.getList(
-      `filter[location]=${currentPosition.latitude},${currentPosition.longitude},10&include=educational_background,occupation,workplace,company`,
+      `filter[location]=${currentPosition.latitude},${currentPosition.longitude},100&include=educational_background,occupation,workplace,company`,
     ).then((response) => {
       dispatch(actions.recruitment.saveListJobs(response.data));
     });
@@ -83,22 +83,25 @@ const HomeScreen = ({navigation}) => {
     );
   }, []);
 
-  const onSwipeToItem = (index) => {
-    const newPosition = {...currentPosition};
-    newPosition.latitude = parseFloat(listJobs[index]?.company.latitude);
-    newPosition.longitude = parseFloat(listJobs[index]?.company.longitude);
-    setCurentPosition(newPosition);
-    setSelectedMarker(listJobs[index]?.id);
-    mapRef.current?.animateCamera({center: newPosition, pitch: 45});
-    markerRef.current[index].showCallout();
-  };
+  const onSwipeToItem = useCallback(
+    (index) => {
+      const newPosition = {...currentPosition};
+      newPosition.latitude = parseFloat(listJobs[index]?.company.latitude);
+      newPosition.longitude = parseFloat(listJobs[index]?.company.longitude);
+      setCurentPosition(newPosition);
+      setSelectedMarker(listJobs[index]?.id);
+      mapRef.current?.animateCamera({center: newPosition, pitch: 45});
+      markerRef.current[index].showCallout();
+    },
+    [currentPosition, listJobs, mapRef, markerRef],
+  );
 
   function onItemSelected(itemId) {
     setSelectedMarker(itemId);
     const index = listJobs.findIndex((item) => item.id === itemId);
     carouselRef.current.snapToItem(index !== -1 ? index : 0);
   }
-
+  console.log(selectedMarker);
   return (
     <SafeAreaView style={{backgroundColor: 'white'}}>
       <View style={styles.header}>
@@ -166,7 +169,6 @@ const HomeScreen = ({navigation}) => {
           ) => (
             <Marker
               key={id}
-              pinColor={selectedMarker === id ? 'red' : '#3182ce'}
               ref={(el) => (markerRef.current[index] = el)}
               onPress={() => onItemSelected(id)}
               coordinate={{
@@ -178,8 +180,15 @@ const HomeScreen = ({navigation}) => {
               )} - ${formatCurrencyToSring(max_salary)}tr`}
               description={`Cách bạn: ${distance}km`}
               anchor={{x: 0.84, y: 1}}
-              centerOffset={{x: -18, y: -60}}
-            />
+              centerOffset={{x: -18, y: -60}}>
+              <Icon
+                name="map-marker-alt"
+                type="font-awesome-5"
+                color={selectedMarker === id ? 'red' : '#3182ce'}
+                size={30}
+                style={{paddingRight: 5, paddingTop: 2}}
+              />
+            </Marker>
           ),
         )}
       </MapView>

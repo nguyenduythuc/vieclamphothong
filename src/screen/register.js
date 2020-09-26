@@ -10,6 +10,8 @@ const RegisterScreen = ({route, navigation}) => {
   const [fullname, setFullname] = useState('');
   const [password, setPassword] = useState('');
   const [passwordValidated, setPasswordValidated] = useState(true);
+  const [isShowInputPassword, setShowPassword] = useState(false);
+  const [isShowReInputPassword, setShowRePassword] = useState(false);
   const logo = require('../assets/logo-transparent.png');
 
   const onTypingPhoneNumber = useCallback((text) => setPhoneNumber(text), []);
@@ -45,6 +47,14 @@ const RegisterScreen = ({route, navigation}) => {
     navigation.navigate('Login');
   }, [navigation]);
 
+  const showInputPassword = useCallback(() => {
+    setShowPassword(!isShowInputPassword);
+  }, [isShowInputPassword]);
+
+  const showReInputPassword = useCallback(() => {
+    setShowRePassword(!isShowReInputPassword);
+  }, [isShowReInputPassword]);
+
   return (
     <>
       <Image source={bg} style={styles.bgImage} />
@@ -60,40 +70,58 @@ const RegisterScreen = ({route, navigation}) => {
               placeholder="Họ và tên"
               placeholderTextColor="white"
             />
-            <Input
-              inputStyle={styles.inputStyle}
-              inputContainerStyle={styles.inputContainerStyle}
-              selectionColor="black"
-              onChangeText={onTypingPassword}
-              keyboardType="number-pad"
-              textContentType="password"
-              maxLength={6}
-              placeholder="Mật khẩu (6 số)"
-              placeholderTextColor="white"
-              errorMessage={
-                password.length > 0 &&
-                password.length < 6 &&
-                'Mật khẩu gồm 6 ký tự số, từ 0 - 9'
-              }
-              secureTextEntry
-            />
-            <Input
-              inputStyle={styles.inputStyle}
-              inputContainerStyle={styles.inputContainerStyle}
-              selectionColor="black"
-              onChangeText={onTypingRePassword}
-              keyboardType="number-pad"
-              textContentType="password"
-              maxLength={6}
-              placeholder="Nhập lại mật khẩu"
-              placeholderTextColor="white"
-              errorMessage={
-                !passwordValidated &&
-                password.length > 0 &&
-                'Mật khẩu không khớp'
-              }
-              secureTextEntry
-            />
+            <View style={{flexDirection: 'row'}}>
+              <Input
+                inputStyle={styles.inputStyle}
+                inputContainerStyle={styles.inputContainerStyle}
+                selectionColor="black"
+                onChangeText={onTypingPassword}
+                keyboardType="number-pad"
+                textContentType="password"
+                maxLength={6}
+                placeholder="Mật khẩu (6 số)"
+                placeholderTextColor="white"
+                errorStyle={styles.errorMessage}
+                errorMessage={
+                  password.length > 0 &&
+                  password.length < 6 &&
+                  'Mật khẩu gồm 6 ký tự số, từ 0 - 9'
+                }
+                secureTextEntry={isShowInputPassword}
+              />
+              <Icon
+                name="remove-red-eye"
+                color={isShowInputPassword ? 'black' : 'white'}
+                onPress={showInputPassword}
+                containerStyle={styles.absoluteRight}
+              />
+            </View>
+            <View style={{flexDirection: 'row'}}>
+              <Input
+                inputStyle={styles.inputStyle}
+                inputContainerStyle={styles.inputContainerStyle}
+                selectionColor="black"
+                onChangeText={onTypingRePassword}
+                keyboardType="number-pad"
+                textContentType="password"
+                maxLength={6}
+                placeholder="Nhập lại mật khẩu"
+                placeholderTextColor="white"
+                errorStyle={styles.errorMessage}
+                errorMessage={
+                  !passwordValidated &&
+                  password.length > 0 &&
+                  'Mật khẩu không khớp'
+                }
+                secureTextEntry={isShowReInputPassword}
+              />
+              <Icon
+                name="remove-red-eye"
+                color={isShowReInputPassword ? 'black' : 'white'}
+                onPress={showReInputPassword}
+                containerStyle={styles.absoluteRight}
+              />
+            </View>
             <Input
               inputStyle={styles.inputStyle}
               inputContainerStyle={styles.inputContainerStyle}
@@ -105,7 +133,7 @@ const RegisterScreen = ({route, navigation}) => {
               placeholder="Số điện thoại"
               placeholderTextColor="white"
             />
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={styles.tosWrapper}>
               <Icon name="checksquareo" type="antdesign" color="white" />
               <Button
                 onPress={onTOSPressed}
@@ -160,6 +188,7 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     height: 30,
   },
+  absoluteRight: {position: 'absolute', right: 10},
   buttonLoginWrapper: {width: '50%', backgroundColor: 'white'},
   buttLoginStyle: {
     paddingHorizontal: 40,
@@ -180,6 +209,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   registerText: {color: 'white', fontSize: 20, fontWeight: '500'},
+  tosWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
   tos: {
     textDecorationLine: 'underline',
     color: 'white',
@@ -190,6 +224,7 @@ const styles = StyleSheet.create({
     height: 130,
     marginBottom: 40,
   },
+  errorMessage: {color: '#b51414', fontWeight: '500'},
 });
 
 export default RegisterScreen;
