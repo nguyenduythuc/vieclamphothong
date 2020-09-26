@@ -10,18 +10,14 @@
 import React, {useState, useCallback, useEffect} from 'react';
 import {SafeAreaView, ScrollView, View, Text, StyleSheet} from 'react-native';
 import {Slider, Button, CheckBox} from 'react-native-elements';
-import {RecruitmentApi, setToken} from '../api';
-import {useDispatch, useSelector} from 'react-redux';
-import {actions} from '../app-redux';
+import {useSelector} from 'react-redux';
 
 function getKm(distance) {
-  return Math.floor(distance * 100);
+  return Math.floor(distance * 30);
 }
 const Filter = ({navigation, route}) => {
   const [distance, setDistance] = useState(0.1);
-  const dispatch = useDispatch();
   const listFilters = useSelector((state) => state.recruitment.listFilters);
-  const userLocation = useSelector((state) => state.user.userLocation);
   const {onFilterResult} = route.params;
   useEffect(() => {
     console.log('didmount');
@@ -59,7 +55,7 @@ const Filter = ({navigation, route}) => {
   const [listWork, setListWork] = useState(occupation);
   const goFilterWork = () => {
     navigation.navigate('FilterWork', {
-      callbackFilterWork: findIdsWork,
+      callbackFilterWork: callbackFilterWork,
       listIdsWordOld: checkBoxWorkList,
     });
   };
@@ -76,20 +72,28 @@ const Filter = ({navigation, route}) => {
     },
     [checkBoxWorkList],
   );
-  const findIdsWork = useCallback(
+  const callbackFilterWork = useCallback(
     (tempIdsWork) => {
       setListWork(occupation);
       let tempListWork = [];
       tempIdsWork.forEach((item, idx) => {
-        const index = listWork.map((x) => x.id).indexOf(item);
-        index > -1 ? tempListWork.push(listWork[index]) : null;
+        const index = occupation.map((x) => x.id).indexOf(item);
+        index > -1 ? tempListWork.push(occupation[index]) : null;
       });
-      setTimeout(() => {
-        setListWork(tempListWork);
-      }, 300);
+      occupation.forEach((item, idx) => {
+        const index = tempIdsWork.map((id) => id).indexOf(item.id);
+        if (index < 0) {
+          if (tempListWork.length < 10) {
+            tempListWork.push(occupation[idx]);
+          } else {
+            return;
+          }
+        }
+      });
+      setListWork(tempListWork);
       setCheckBoxWorkList(tempIdsWork);
     },
-    [listWork, occupation],
+    [occupation],
   );
 
   //checkbox one
@@ -278,16 +282,6 @@ const Filter = ({navigation, route}) => {
         <View style={styles.blockTitle}>
           <Text style={styles.blockTitleText}>Công việc</Text>
         </View>
-
-        {/* <CheckBox
-          containerStyle={styles.checkboxAll}
-          title="Chọn tất cả"
-          checkedIcon="dot-circle-o"
-          uncheckedIcon="circle-o"
-          checked={checkBoxWork}
-          textStyle={styles.textStyleCheckBox}
-          onPress={() => onCheckAllWork()}
-        /> */}
 
         <Button
           title="Chọn công việc khác"

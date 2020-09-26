@@ -53,7 +53,11 @@ const JobItem = ({
     });
   };
   return (
-    <Card containerStyle={styles.cardContainer}>
+    <Card
+      containerStyle={[
+        styles.cardContainer,
+        {marginHorizontal: isHome ? 0 : 15},
+      ]}>
       <View style={styles.cardHeader}>
         <Text
           onPress={() => {
