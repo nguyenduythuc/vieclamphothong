@@ -4,12 +4,15 @@ import {Button} from 'react-native-elements';
 import {useSelector} from 'react-redux';
 
 const FilterWork = ({navigation, route}) => {
-  const listFilters = useSelector((state) => state.recruitment.listFilters);
+  const occupation = useSelector(
+    (state) => state.recruitment.listFilters?.occupation,
+  );
   useEffect(() => {
     console.log('didmount');
   }, []);
 
-  const [checkBoxWorkList, setCheckBoxWorkList] = useState([]);
+  const {callbackFilterWork, listIdsWordOld} = route.params;
+  const [checkBoxWorkList, setCheckBoxWorkList] = useState(listIdsWordOld);
   const onCheckOneWork = useCallback(
     (work) => {
       let tempWork = [...checkBoxWorkList];
@@ -19,9 +22,17 @@ const FilterWork = ({navigation, route}) => {
         : tempWork.length === 4
         ? null
         : tempWork.push(work);
+      console.log(tempWork);
       setCheckBoxWorkList(tempWork);
     },
     [checkBoxWorkList],
+  );
+  const submitWork = useCallback(
+    (work) => {
+      callbackFilterWork(checkBoxWorkList);
+      navigation.goBack();
+    },
+    [callbackFilterWork, checkBoxWorkList, navigation],
   );
 
   return (
@@ -31,8 +42,8 @@ const FilterWork = ({navigation, route}) => {
           <Text style={styles.blockTitleText}>Chọn tối đa 4 công việc</Text>
         </View>
         <View style={[styles.row, styles.workList]}>
-          {listFilters?.occupation &&
-            listFilters?.occupation.map((item, idx) => (
+          {occupation &&
+            occupation.map((item, idx) => (
               <View style={styles.col}>
                 <Button
                   title={item.name}
@@ -41,6 +52,7 @@ const FilterWork = ({navigation, route}) => {
                       ? styles.btnActive
                       : styles.btnNoneActive
                   }
+                  // eslint-disable-next-line react-native/no-inline-styles
                   titleStyle={{
                     color: checkBoxWorkList.includes(item.id)
                       ? 'white'
@@ -61,6 +73,7 @@ const FilterWork = ({navigation, route}) => {
             buttonStyle={styles.btnViewResult}
             type="clear"
             titleStyle={{color: 'white'}}
+            onPress={submitWork}
           />
         </View>
       </ScrollView>
@@ -108,6 +121,11 @@ const styles = StyleSheet.create({
     margin: 3,
     marginHorizontal: 5,
     backgroundColor: 'white',
+  },
+  btnViewResult: {
+    backgroundColor: '#48bb78',
+    borderRadius: 20,
+    marginHorizontal: 17,
   },
 });
 

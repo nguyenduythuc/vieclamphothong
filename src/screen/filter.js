@@ -52,24 +52,44 @@ const Filter = ({navigation, route}) => {
   );
 
   //checkbox group
-  const [checkBoxWork, setCheckBoxWork] = useState(false);
   const [checkBoxWorkList, setCheckBoxWorkList] = useState([]);
-  const listIdsWork = listFilters?.occupation.map((item) => item.id);
-  const onCheckAllWork = useCallback(() => {
-    !checkBoxWork ? setCheckBoxWorkList(listIdsWork) : setCheckBoxWorkList([]);
-    setCheckBoxWork(!checkBoxWork);
-  }, [checkBoxWork, listIdsWork]);
+  const occupation = listFilters?.occupation.map((item) => {
+    return {id: item.id, name: item.name};
+  });
+  const [listWork, setListWork] = useState(occupation);
+  const goFilterWork = () => {
+    navigation.navigate('FilterWork', {
+      callbackFilterWork: findIdsWork,
+      listIdsWordOld: checkBoxWorkList,
+    });
+  };
   const onCheckOneWork = useCallback(
     (work) => {
       let tempWork = [...checkBoxWorkList];
       const index = tempWork.indexOf(work);
-      index > -1 ? tempWork.splice(index, 1) : tempWork.push(work);
-      tempWork.length === listIdsWork.length
-        ? setCheckBoxWork(true)
-        : setCheckBoxWork(false);
+      index > -1
+        ? tempWork.splice(index, 1)
+        : tempWork.length === 4
+        ? null
+        : tempWork.push(work);
       setCheckBoxWorkList(tempWork);
     },
-    [checkBoxWorkList, listIdsWork.length],
+    [checkBoxWorkList],
+  );
+  const findIdsWork = useCallback(
+    (tempIdsWork) => {
+      setListWork(occupation);
+      let tempListWork = [];
+      tempIdsWork.forEach((item, idx) => {
+        const index = listWork.map((x) => x.id).indexOf(item);
+        index > -1 ? tempListWork.push(listWork[index]) : null;
+      });
+      setTimeout(() => {
+        setListWork(tempListWork);
+      }, 300);
+      setCheckBoxWorkList(tempIdsWork);
+    },
+    [listWork, occupation],
   );
 
   //checkbox one
@@ -277,13 +297,13 @@ const Filter = ({navigation, route}) => {
             fontSize: 13,
           }}
           onPress={() => {
-            navigation.navigate('FilterWork');
+            goFilterWork();
           }}
         />
 
         <View style={[styles.row, styles.workList]}>
-          {listFilters?.occupation &&
-            listFilters?.occupation.map((item, idx) =>
+          {listWork &&
+            listWork.map((item, idx) =>
               idx > 8 ? null : (
                 <View style={styles.col}>
                   <Button
