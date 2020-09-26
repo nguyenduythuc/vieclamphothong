@@ -58,6 +58,7 @@ const ListJobs = ({navigation}) => {
   }, [navigation]);
 
   const onFilterResult = (param) => {
+    console.log(param);
     setParamFilter(param);
     getListData(paramSend, param);
   };
@@ -79,7 +80,7 @@ const ListJobs = ({navigation}) => {
 
   const getListData = useCallback(
     (paramSortLocal, paramFilterLocal) => {
-      const distanceDefault = paramFilterLocal || paramFilter ? '' : '100';
+      const distanceDefault = paramFilterLocal || paramFilter ? '' : '30';
       const pageDefault = metaResponse.current_page + 1 || 1;
       RecruitmentApi.getList(
         `page=${pageDefault}&include=educational_background,occupation,workplace,company&filter[location]=${
@@ -108,8 +109,9 @@ const ListJobs = ({navigation}) => {
       setMetaResponse({});
       setIsLoading(true);
       setParamSend(param);
+      toggleModal();
     },
-    [sortValue],
+    [toggleModal],
   );
 
   const loadMore = () => {

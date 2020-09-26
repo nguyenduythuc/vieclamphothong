@@ -31,6 +31,7 @@ const HomeScreen = ({navigation}) => {
   const listJobs = useSelector((state) => state.recruitment.listJobs);
   const userLocation = useSelector((state) => state.user.userLocation);
   const [search, setSearch] = useState('');
+  const [paramFilter, setParamFilter] = useState('');
   // const [currentPosition, setCurentPosition] = useState(defaultPosition);
   const [currentPosition, setCurentPosition] = useState(userLocation);
   const [selectedMarker, setSelectedMarker] = useState(null);
@@ -42,21 +43,43 @@ const HomeScreen = ({navigation}) => {
   const mapRef = useRef(null);
   const markerRef = useRef([]);
   useEffect(() => {
+    getListData();
+  }, []);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      getListData(paramFilter, search);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [search, paramFilter]);
+
+  const getListData = useCallback((paramFilterLocal, keyword) => {
+    console.log('keyword', keyword);
+    const distanceDefault = paramFilterLocal || paramFilter ? '' : '30';
     RecruitmentApi.getList(
-      `filter[location]=${currentPosition.latitude},${currentPosition.longitude},100&include=educational_background,occupation,workplace,company`,
+      `include=educational_background,occupation,workplace,company&filter[location]=${
+        currentPosition.latitude
+      },${currentPosition.longitude},${distanceDefault}${
+        paramFilterLocal || paramFilter
+      }&keyword=${keyword}`,
     ).then((response) => {
       dispatch(actions.recruitment.saveListJobs(response.data));
-      console.log(markerRef.current)
     });
   }, []);
 
   const onSearch = useCallback((text) => {
+    console.log(text);
     setSearch(text);
   }, []);
 
   const onFilter = useCallback(() => {
-    navigation.navigate('Filter');
+    navigation.navigate('Filter', {onFilterResult: onFilterResult});
   }, [navigation]);
+
+  const onFilterResult = (param) => {
+    console.log(param);
+    setParamFilter(param);
+    getListData(param);
+  };
   const onPressToList = useCallback(() => {
     navigation.navigate('ListJobs');
   }, [navigation]);
@@ -113,12 +136,20 @@ const HomeScreen = ({navigation}) => {
           value={search}
           lightTheme
         />
-        {/* <Icon
-          onPress={onFilter}
-          name="filter"
-          type="antdesign"
-          color="#517fa4"
-        /> */}
+        <Button
+          icon={
+            <Icon
+              onPress={onFilter}
+              name="filter"
+              type="antdesign"
+              color="#517fa4"
+              style={{paddingRight: 5, paddingTop: 2}}
+            />
+          }
+          buttonStyle={styles.listButtonBackgroundStyle}
+          onPress={onPressToList}
+          type="clear"
+        />
       </View>
       {isShowButtonPositionChange && selectedMarker && (
         <Button
@@ -126,13 +157,14 @@ const HomeScreen = ({navigation}) => {
             <Icon
               name="my-location"
               color="#517fa4"
-              size={25}
+              size={17}
               style={{paddingRight: 5, paddingTop: 2}}
             />
           }
           title="Tìm kiếm khu vực này"
           containerStyle={styles.changePositionButtonStyle}
           buttonStyle={styles.changePositionButtonBackgroundStyle}
+          titleStyle={{fontSize: 15}}
           onPress={onChangePostionButton}
           type="clear"
         />
@@ -143,7 +175,7 @@ const HomeScreen = ({navigation}) => {
             name="list"
             type="fsather"
             color="#517fa4"
-            size={28}
+            size={19}
             style={{paddingRight: 5, paddingTop: 2}}
           />
         }
@@ -151,6 +183,7 @@ const HomeScreen = ({navigation}) => {
         containerStyle={styles.listButtonStyle}
         buttonStyle={styles.listButtonBackgroundStyle}
         onPress={onPressToList}
+        titleStyle={{fontSize: 15}}
         type="clear"
       />
       <MapView
@@ -233,6 +266,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 10,
     top: isNotch ? height / 2 - 10 : height / 2 - 50,
+    right: 0,
+    paddingRight: 10,
+  },
+  filterButtonStyle: {
+    position: 'absolute',
+    zIndex: 10,
+    top: isNotch ? height / 3 - 10 : height / 3 - 50,
     right: 0,
     paddingRight: 10,
   },
