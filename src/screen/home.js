@@ -63,7 +63,7 @@ const HomeScreen = ({navigation}) => {
 
   const onRegionChange = (region) => {
     setIsShowButtonPositionChange(true);
-    setCurentPosition(region);
+    // setCurentPosition(region);
   };
 
   const onChangePostionButton = useCallback(() => {
@@ -192,15 +192,17 @@ const HomeScreen = ({navigation}) => {
           ),
         )}
       </MapView>
-      <Carousel
-        ref={carouselRef}
-        sliderWidth={width}
-        sliderHeight={height * 0.09}
-        itemWidth={width - 80}
-        data={listJobs}
-        onSnapToItem={onSwipeToItem}
-        renderItem={renderItem}
-      />
+      <View style={{position: 'absolute', bottom: 0}}>
+        <Carousel
+          ref={carouselRef}
+          sliderWidth={width}
+          sliderHeight={height * 0.09}
+          itemWidth={width - 80}
+          data={listJobs}
+          onSnapToItem={onSwipeToItem}
+          renderItem={renderItem}
+        />
+      </View>
     </SafeAreaView>
   );
 };
@@ -222,7 +224,7 @@ const styles = StyleSheet.create({
     padding: 1,
   },
   map: {
-    height: isNotch ? height * 0.43 : height * 0.41,
+    height: isNotch ? height * 0.88 : height * 0.9,
     width,
     justifyContent: 'flex-end',
     alignItems: 'center',

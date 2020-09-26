@@ -45,7 +45,7 @@ const OTPScreen = ({navigation, route}) => {
       position: 'top',
       text1: '',
       text2: 'Mã xác thực đã được gửi tin nhắn đến số điện thoại của bạn!',
-      visibilityTime: 2000,
+      visibilityTime: 6000,
       autoHide: true,
       topOffset: 70,
     });
@@ -74,7 +74,7 @@ const OTPScreen = ({navigation, route}) => {
         type: 'error',
         position: 'top',
         text1: 'Xác nhận mã thất bại, vui lòng thử lại!',
-        visibilityTime: 2000,
+        visibilityTime: 6000,
         autoHide: true,
         topOffset: 70,
       });
