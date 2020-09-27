@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   radioGroups: {
-    width: 200,
+    width: 300,
     paddingBottom: 15,
     paddingHorizontal: 20,
   },

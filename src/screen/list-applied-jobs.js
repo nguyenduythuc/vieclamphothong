@@ -10,24 +10,56 @@
 import React, {useState, useCallback, useEffect} from 'react';
 import {SafeAreaView, ScrollView, View, Text, StyleSheet} from 'react-native';
 import Toast from 'react-native-toast-message';
-import {JobAppliedItem, TagSort} from '../components';
+import {Icon, Button} from 'react-native-elements';
+import {JobAppliedItem, Sortable} from '../components';
 import {RecruitmentApi} from '../api';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
+const ENTRIES2 = [
+  {
+    value: 'ALL',
+    label: 'Tất cả',
+    index: 1,
+  },
+  {
+    value: '0',
+    label: 'Đang đợi doanh nghiệp trả lời',
+    index: 2,
+  },
+  {
+    value: '1',
+    label: 'Được mời phỏng vấn',
+    index: 3,
+  },
+  {
+    value: '2',
+    label: 'Đã đồng ý phỏng vấn',
+    index: 4,
+  },
+  {
+    value: '3',
+    label: 'Đã từ chối phỏng vấn',
+    index: 5,
+  },
+  {
+    value: '4',
+    label: 'Doanh nghiệp đã từ chối',
+    index: 6,
+  },
+];
 
-const ListSavedJobs = ({navigation}) => {
+const ListAppliedJobs = ({navigation}) => {
   const [listAppliedJobs, setListAppliedJobs] = useState([]);
   const [sortId, setSortId] = useState('ALL');
+  const [sortValue, setSortValue] = useState(ENTRIES2[0]);
   const [paramStatus, setParamStatus] = useState('');
   const [sortList, setSortList] = useState([]);
   const [totalQuantity, setTotalQuantity] = useState(0);
   const userLocation = useSelector((state) => state.user.userLocation);
-  const listStatusApplied = useSelector(
-    (state) => state.recruitment.listStatusApplied,
-  );
+  const [isModalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     getListData();
-    setSortList([{label: 'Tất cả', value: 'ALL'}, ...listStatusApplied]);
+    setSortList(ENTRIES2);
   }, []);
   useEffect(() => {
     getListData();
@@ -37,7 +69,7 @@ const ListSavedJobs = ({navigation}) => {
       console.log(paramStatus);
       RecruitmentApi.getListApplied(
         `location=${userLocation.latitude},${userLocation.longitude}`,
-        paramStatus,
+        param || paramStatus,
       ).then((response) => {
         setTotalQuantity(response.meta.total);
         setListAppliedJobs(response.data);
@@ -53,18 +85,28 @@ const ListSavedJobs = ({navigation}) => {
         position: 'top',
         text1: 'Thành công!',
         text2: 'Đã xóa công việc đã ứng tuyển thành công.',
-        visibilityTime: 2000,
+        visibilityTime: 1000,
         autoHide: true,
         topOffset: 70,
       });
     });
   };
-  const onPressTag = (value) => {
-    console.log(value);
-    setSortId(value);
-    let param = value === 'ALL' ? '' : `&filter[status]=${value}`;
-    setParamStatus(param);
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
   };
+  const onPressTag = useCallback(
+    (radio) => {
+      setSortValue(radio);
+      let param = radio.value === 'ALL' ? '' : `&filter[status]=${radio.value}`;
+      setListAppliedJobs([]);
+      // setMetaResponse({});
+      // setIsLoading(true);
+      setParamStatus(param);
+      getListData(param);
+      toggleModal();
+    },
+    [getListData, toggleModal],
+  );
 
   return (
     <SafeAreaView>
@@ -73,12 +115,20 @@ const ListSavedJobs = ({navigation}) => {
           <Text style={styles.blockTitleText}>
             Tổng số: {totalQuantity} công việc
           </Text>
+          <Button
+            icon={
+              <Icon name="filter" type="antdesign" color="#517fa4" size={19} />
+            }
+            buttonStyle={styles.listButtonBackgroundStyle}
+            onPress={toggleModal}
+            type="clear"
+          />
         </View>
-        <View style={styles.sidebarCustom}>
+        {/* <View style={styles.sidebarCustom}>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
             <TagSort data={sortList} activeId={sortId} onClick={onPressTag} />
           </ScrollView>
-        </View>
+        </View> */}
         <View style={styles.row}>
           <View style={styles.item}>
             {listAppliedJobs.map((item, idx) => (
@@ -91,6 +141,14 @@ const ListSavedJobs = ({navigation}) => {
             ))}
           </View>
         </View>
+        <Sortable
+          toggleModal={toggleModal}
+          isModalVisible={isModalVisible}
+          sortList={sortList}
+          title="Lọc theo"
+          sortValue={sortValue}
+          onPressTag={onPressTag}
+        />
       </ScrollView>
     </SafeAreaView>
   );
@@ -134,6 +192,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 10,
   },
+  listButtonBackgroundStyle: {
+    backgroundColor: 'white',
+    borderColor: '#3c89ff',
+    borderWidth: 1,
+  },
 });
 
-export default ListSavedJobs;
+export default ListAppliedJobs;

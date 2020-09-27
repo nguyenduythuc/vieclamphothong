@@ -60,7 +60,7 @@ const HomeScreen = ({navigation}) => {
         currentPosition.latitude
       },${currentPosition.longitude},${distanceDefault}${
         paramFilterLocal || paramFilter
-      }&keyword=${keyword}`,
+      }&filter[title]=${keyword}`,
     ).then((response) => {
       dispatch(actions.recruitment.saveListJobs(response.data));
       console.log(markerRef.current);

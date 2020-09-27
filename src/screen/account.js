@@ -17,10 +17,10 @@ const list = [
     title: 'Hồ sơ xin việc',
     screen: 'Profile',
   },
-  {
-    title: 'Danh sách công việc',
-    screen: 'ListJobs',
-  },
+  // {
+  //   title: 'Danh sách công việc',
+  //   screen: 'ListJobs',
+  // },
   {
     title: 'Công việc đã xem',
     screen: 'ListSeenJobs',
@@ -33,18 +33,18 @@ const list = [
     title: 'Công việc đã nộp',
     screen: 'ListAppliedJobs',
   },
-  // {
-  //   title: 'Lịch phỏng vấn',
-  //   screen: 'InterviewDate',
-  // },
+  {
+    title: 'Lịch phỏng vấn',
+    screen: 'InterviewCalendar',
+  },
   // {
   //   title: 'Hotline',
   //   screen: 'Hotline',
   // },
-  // {
-  //   title: 'Cài đặt',
-  //   screen: 'Setting',
-  // },
+  {
+    title: 'Cài đặt',
+    screen: 'Settings',
+  },
   // {
   //   title: 'Thông báo',
   //   screen: 'Notification',

@@ -47,7 +47,7 @@ const JobAppliedItem = ({item, navigation, isApplied, isSaved, deleteItem}) => {
             }}
             style={styles.title}
             numberOfLines={2}>
-            {item.recruitment.position}
+            {item.recruitment.title}
           </Text>
         </View>
         <View style={styles.col10}>
