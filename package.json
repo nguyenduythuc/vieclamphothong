@@ -11,7 +11,7 @@
     "test": "jest",
     "lint": "eslint .",
     "build-android": "cd android && ./gradlew assembleRelease && cd ..",
-    "open-android-dir": "open android/app/build/generated/apk/release",
+    "open-android-dir": "open android/app/build/outouts/apk/release",
     "postinstall": "sh ./script/upload-image-patch"
   },
   "dependencies": {

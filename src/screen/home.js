@@ -32,8 +32,8 @@ const HomeScreen = ({navigation}) => {
   const userLocation = useSelector((state) => state.user.userLocation);
   const [search, setSearch] = useState('');
   const [paramFilter, setParamFilter] = useState('');
-  // const [currentPosition, setCurentPosition] = useState(defaultPosition);
-  const [currentPosition, setCurentPosition] = useState(userLocation);
+  const [currentPosition, setCurentPosition] = useState(defaultPosition);
+  // const [currentPosition, setCurentPosition] = useState(userLocation);
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [isShowButtonPositionChange, setIsShowButtonPositionChange] = useState(
     false,

@@ -49,7 +49,6 @@ const ENTRIES2 = [
 
 const ListAppliedJobs = ({navigation}) => {
   const [listAppliedJobs, setListAppliedJobs] = useState([]);
-  const [sortId, setSortId] = useState('ALL');
   const [sortValue, setSortValue] = useState(ENTRIES2[0]);
   const [paramStatus, setParamStatus] = useState('');
   const [sortList, setSortList] = useState([]);
@@ -84,7 +83,7 @@ const ListAppliedJobs = ({navigation}) => {
         type: 'success',
         position: 'top',
         text1: 'Thành công!',
-        text2: 'Đã xóa công việc đã ứng tuyển thành công.',
+        text2: 'Đã xóa thành công.',
         visibilityTime: 1000,
         autoHide: true,
         topOffset: 70,
@@ -110,25 +109,20 @@ const ListAppliedJobs = ({navigation}) => {
 
   return (
     <SafeAreaView>
+      <View style={styles.blockTitle}>
+        <Text style={styles.blockTitleText}>
+          Tổng số: {totalQuantity} công việc
+        </Text>
+        <Button
+          icon={
+            <Icon name="filter" type="antdesign" color="#517fa4" size={19} />
+          }
+          buttonStyle={styles.listButtonBackgroundStyle}
+          onPress={toggleModal}
+          type="clear"
+        />
+      </View>
       <ScrollView contentContainerStyle={styles.container}>
-        <View style={styles.blockTitle}>
-          <Text style={styles.blockTitleText}>
-            Tổng số: {totalQuantity} công việc
-          </Text>
-          <Button
-            icon={
-              <Icon name="filter" type="antdesign" color="#517fa4" size={19} />
-            }
-            buttonStyle={styles.listButtonBackgroundStyle}
-            onPress={toggleModal}
-            type="clear"
-          />
-        </View>
-        {/* <View style={styles.sidebarCustom}>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            <TagSort data={sortList} activeId={sortId} onClick={onPressTag} />
-          </ScrollView>
-        </View> */}
         <View style={styles.row}>
           <View style={styles.item}>
             {listAppliedJobs.map((item, idx) => (
@@ -168,6 +162,7 @@ const styles = StyleSheet.create({
   },
   blockTitle: {
     marginTop: 20,
+    marginBottom: 10,
     paddingLeft: 20,
     width: '100%',
     flexDirection: 'row',

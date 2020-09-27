@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Image,
   PixelRatio,
+  ScrollView,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {ListItem, Icon} from 'react-native-elements';
@@ -72,28 +73,34 @@ const AccountScreen = ({navigation}) => {
 
   return (
     <SafeAreaView>
-      <View style={styles.header}>
+      <ScrollView>
         <View style={styles.header}>
-          <View
-            style={[styles.avatar, styles.avatarContainer, {marginBottom: 20}]}>
-            <Image style={styles.avatar} source={{uri: avatarSource}} />
-          </View>
-          <View>
-            <Text style={styles.headerText}>{userProfile.full_name}</Text>
-            <Text style={styles.headerText}>{userProfile.phone_number}</Text>
+          <View style={styles.header}>
+            <View
+              style={[
+                styles.avatar,
+                styles.avatarContainer,
+                {marginBottom: 20},
+              ]}>
+              <Image style={styles.avatar} source={{uri: avatarSource}} />
+            </View>
+            <View>
+              <Text style={styles.headerText}>{userProfile.full_name}</Text>
+              <Text style={styles.headerText}>{userProfile.phone_number}</Text>
+            </View>
           </View>
         </View>
-      </View>
-      {list.map((item, i) => (
-        <ListItem
-          key={i}
-          chevron
-          bottomDivider
-          title={item.title}
-          onPress={() => onSelectedItem(item.screen)}
-          contentContainerStyle={styles.featureItem}
-        />
-      ))}
+        {list.map((item, i) => (
+          <ListItem
+            key={i}
+            chevron
+            bottomDivider
+            title={item.title}
+            onPress={() => onSelectedItem(item.screen)}
+            contentContainerStyle={styles.featureItem}
+          />
+        ))}
+      </ScrollView>
     </SafeAreaView>
   );
 };

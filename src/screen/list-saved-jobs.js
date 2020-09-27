@@ -37,8 +37,8 @@ const ListSavedJobs = ({navigation}) => {
         type: 'success',
         position: 'top',
         text1: 'Thành công!',
-        text2: 'Đã xóa công việc đã lưu thành công.',
-        visibilityTime: 2000,
+        text2: 'Đã xóa thành công.',
+        visibilityTime: 1000,
         autoHide: true,
         topOffset: 70,
       });

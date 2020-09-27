@@ -9,6 +9,7 @@
 import React, {useEffect, useState} from 'react';
 import {SafeAreaView, View, Text, StyleSheet, Dimensions} from 'react-native';
 import {LocaleConfig, Calendar} from 'react-native-calendars';
+import DeviceInfo from 'react-native-device-info';
 import {RecruitmentApi} from '../api';
 
 const getCurrentDate = () => {
@@ -52,6 +53,7 @@ LocaleConfig.locales.vi = {
   today: 'Hôm nay',
 };
 LocaleConfig.defaultLocale = 'vi';
+const isNotch = DeviceInfo.hasNotch();
 const InterviewCalendar = () => {
   const [selectedMonth, setMonth] = useState(1);
   useEffect(() => {
@@ -107,7 +109,7 @@ const styles = StyleSheet.create({
   textNothing: {
     position: 'absolute',
     zIndex: 10,
-    top: (height * 1) / 2 - 30,
+    top: isNotch ? (height * 1) / 2 - 30 : (height * 1) / 2 + 30,
     alignSelf: 'center',
   },
 });

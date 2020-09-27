@@ -378,11 +378,6 @@ const ProfileEdit = ({navigation}) => {
               <TouchableWithoutFeedback
                 onPress={onPressSelectOccupationPrimary}>
                 <View style={styles.buttonOccupation}>
-                  {!occupationsWishPrimary && (
-                    <Text style={styles.buttonOccupationText}>
-                      Công việc chính (Lựa chọn 1)
-                    </Text>
-                  )}
                   {occupationsWishPrimary &&
                     occupationsWishPrimary?.map((item, idx) => (
                       <View key={Math.random()}>
@@ -404,11 +399,6 @@ const ProfileEdit = ({navigation}) => {
               <Text style={styles.titleSelect}>Công việc phụ (Chọn 2)</Text>
               <TouchableWithoutFeedback onPress={onPressSelectOccupationSecond}>
                 <View style={styles.buttonOccupation}>
-                  {!occupationsWishSecond && (
-                    <Text style={styles.buttonOccupationText}>
-                      Công việc phụ (Lựa chọn 2)
-                    </Text>
-                  )}
                   {occupationsWishSecond &&
                     occupationsWishSecond?.map((item, idx) => (
                       <View key={Math.random()}>
@@ -516,6 +506,7 @@ const styles = StyleSheet.create({
   titleSelectWrapper: {
     paddingLeft: 10,
     paddingVertical: 15,
+    marginBottom: 10,
     fontSize: 17,
     color: '#3182ce',
     fontWeight: '600',
