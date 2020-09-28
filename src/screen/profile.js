@@ -240,8 +240,9 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   divider: {
-    backgroundColor: 'grey',
+    backgroundColor: '#3182ce',
     marginVertical: 10,
+    marginBottom: 15,
   },
   noteHeader: {
     textTransform: 'uppercase',

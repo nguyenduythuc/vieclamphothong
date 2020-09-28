@@ -61,7 +61,7 @@ const JobItem = ({
       <View style={styles.cardHeader}>
         <Text
           onPress={() => {
-            navigation.navigate('EmployerInfo', {id: item?.id});
+            navigation.navigate('EmployerInfo', {id: item?.id, name: 'lol'});
           }}
           style={item?.has_seen ? styles.titleSeen : styles.title}
           numberOfLines={2}>

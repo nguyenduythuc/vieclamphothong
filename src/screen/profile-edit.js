@@ -12,11 +12,13 @@ import {useDispatch, useSelector} from 'react-redux';
 import RNPickerSelect from 'react-native-picker-select';
 import DatePicker from 'react-native-datepicker';
 import Toast from 'react-native-toast-message';
+import DeviceInfo from 'react-native-device-info';
 import {formatCurrency} from '../utils/common';
 import {actions} from '../app-redux';
 import {UserApi} from '../api';
 import moment from 'moment';
 
+const isNotch = DeviceInfo.hasNotch();
 const ProfileEdit = ({navigation}) => {
   const dispatch = useDispatch();
   const userProfile = useSelector((state) => state.user.userProfile);
@@ -262,29 +264,31 @@ const ProfileEdit = ({navigation}) => {
                 <Text style={styles.titleSelect}>Ngày sinh</Text>
                 <Text style={styles.dotRequirer}>(*)</Text>
               </View>
-              <DatePicker
-                style={styles.datepicker}
-                date={birthDay}
-                mode="date"
-                placeholder="Chọn ngày sinh"
-                format="DD-MM-YYYY"
-                minDate="01-01-1900"
-                maxDate={new Date()}
-                confirmBtnText="Xác nhận"
-                cancelBtnText="Hủy"
-                customStyles={{
-                  dateInput: {
-                    borderWidth: 0,
-                    marginLeft: 10,
-                  },
-                  dateText: {
-                    fontSize: 17,
-                    fontWeight: '500',
-                  },
-                }}
-                onDateChange={(date) => onTypingBirthDay(date)}
-              />
-              <View style={styles.hairLine} />
+              <View style={styles.dobWrapper}>
+                <Input
+                  placeholder="Ngày"
+                  inputStyle={styles.inputStyleDob}
+                  inputContainerStyle={styles.inputContainerStyleDob}
+                  containerStyle={styles.containerStyle}
+                  keyboardType="numeric"
+                />
+                <Text style={styles.dobText}>/</Text>
+                <Input
+                  placeholder="Tháng"
+                  inputStyle={styles.inputStyleDob}
+                  inputContainerStyle={styles.inputContainerStyleDob}
+                  containerStyle={styles.containerStyle}
+                  keyboardType="numeric"
+                />
+                <Text style={styles.dobText}>/</Text>
+                <Input
+                  placeholder="Năm"
+                  inputStyle={styles.inputStyleDob}
+                  inputContainerStyle={styles.inputContainerStyleDob}
+                  containerStyle={styles.containerStyle}
+                  keyboardType="numeric"
+                />
+              </View>
             </View>
             <View style={styles.selectInner}>
               <View style={styles.titleInner}>
@@ -306,12 +310,48 @@ const ProfileEdit = ({navigation}) => {
             </View>
             <View style={styles.selectInner}>
               <Text style={styles.titleSelect}>Địa chỉ đang cư trú</Text>
-              <Input
+              <View style={styles.addressWrapper}>
+                <Input
+                  placeholder="Số nhà/Đường"
+                  inputStyle={styles.inputStyleAddress}
+                  inputContainerStyle={styles.inputContainerStyle}
+                  containerStyle={styles.containerStyleAddress}
+                  // onChangeText={onTypingAddress}
+                  // value={address}
+                />
+                <Input
+                  placeholder="Phường/Xã"
+                  inputStyle={styles.inputStyleAddress}
+                  inputContainerStyle={styles.inputContainerStyle}
+                  containerStyle={styles.containerStyleAddress}
+                  // onChangeText={onTypingAddress}
+                  // value={address}
+                />
+              </View>
+              <View style={styles.addressWrapper}>
+                <Input
+                  placeholder="Quận/Huyện"
+                  inputStyle={styles.inputStyleAddress}
+                  inputContainerStyle={styles.inputContainerStyle}
+                  containerStyle={styles.containerStyleAddress}
+                  // onChangeText={onTypingAddress}
+                  // value={address}
+                />
+                <Input
+                  placeholder="Tỉnh/Thành phố"
+                  inputStyle={styles.inputStyleAddress}
+                  inputContainerStyle={styles.inputContainerStyle}
+                  containerStyle={styles.containerStyleAddress}
+                  // onChangeText={onTypingAddress}
+                  // value={address}
+                />
+              </View>
+              {/* <Input
                 inputStyle={styles.inputStyle}
                 inputContainerStyle={styles.inputContainerStyle}
                 onChangeText={onTypingAddress}
                 value={address}
-              />
+              /> */}
             </View>
           </View>
           <View>
@@ -353,8 +393,10 @@ const ProfileEdit = ({navigation}) => {
               </View>
               <Input
                 inputStyle={styles.inputStyle}
+                inputContainerStyle={styles.inputContainerStyle}
                 onChangeText={onTypingExperience}
                 value={experience}
+                keyboardType="numeric"
               />
             </View>
             <View style={styles.selectInner}>
@@ -417,7 +459,9 @@ const ProfileEdit = ({navigation}) => {
             </View>
           </View>
           <View>
-            <Text style={[styles.titleSelectWrapper, styles.salaryWrapper]}>Mức lương mong muốn</Text>
+            <Text style={[styles.titleSelectWrapper, styles.salaryWrapper]}>
+              Mức lương mong muốn
+            </Text>
             <View style={styles.selectInner}>
               <View style={styles.titleInner}>
                 <Text style={styles.titleSelect}>Mức lương</Text>
@@ -545,6 +589,41 @@ const styles = StyleSheet.create({
   inputContainerStyle: {
     borderColor: '#a0aec0',
     borderBottomWidth: 0.5,
+  },
+  inputContainerStyleDob: {
+    borderColor: '#a0aec0',
+    borderBottomWidth: 0.5,
+    maxWidth: 60,
+    // borderRadius: 1,
+    marginTop: 10,
+    paddingRight: 0,
+    marginRight: 0,
+    marginBottom: -10,
+  },
+  dobText: {
+    marginTop: isNotch ? 36 : 44,
+  },
+  containerStyle: {
+    maxWidth: 80,
+    paddingRight: 4,
+    paddingLeft: 10,
+  },
+  inputStyleDob: {
+    height: 'auto',
+    maxWidth: 60,
+  },
+  dobWrapper: {
+    flexDirection: 'row',
+    alignContent: 'flex-start',
+  },
+  containerStyleAddress: {
+    maxWidth: '50%',
+    paddingRight: 4,
+    paddingLeft: 10,
+  },
+  addressWrapper: {
+    flexDirection: 'row',
+    alignContent: 'space-between',
   },
 });
 const pickerSelectStyles = StyleSheet.create({
