@@ -12,11 +12,13 @@ import {useDispatch, useSelector} from 'react-redux';
 import RNPickerSelect from 'react-native-picker-select';
 import DatePicker from 'react-native-datepicker';
 import Toast from 'react-native-toast-message';
+import DeviceInfo from 'react-native-device-info';
 import {formatCurrency} from '../utils/common';
 import {actions} from '../app-redux';
 import {UserApi} from '../api';
 import moment from 'moment';
 
+const isNotch = DeviceInfo.hasNotch();
 const ProfileEdit = ({navigation}) => {
   const dispatch = useDispatch();
   const userProfile = useSelector((state) => state.user.userProfile);
@@ -113,14 +115,12 @@ const ProfileEdit = ({navigation}) => {
     onTypingexpsetOccupationsWishPrimary(multi);
   };
   const occupationsOldPrimary = () => {
-    // return userProfile?.resume?.[primary_occupation].map((item) => {
     return [
       {
         label: userProfile?.resume?.primary_occupation.name,
         value: userProfile?.resume?.primary_occupation.id,
       },
     ];
-    // });
   };
 
   const [occupationsWishPrimary, setOccupationsWishPrimary] = useState(
@@ -239,51 +239,62 @@ const ProfileEdit = ({navigation}) => {
           <View>
             <Text style={styles.titleSelectWrapper}>Thông tin cá nhân</Text>
             <View style={styles.selectInner}>
-              <Text style={styles.titleSelect}>Họ và tên</Text>
+              <View style={styles.titleInner}>
+                <Text style={styles.titleSelect}>Họ và tên</Text>
+                <Text style={styles.dotRequirer}>(*)</Text>
+              </View>
               <Input
-                placeholder="Họ và tên"
                 inputStyle={styles.inputStyle}
                 onChangeText={onTypingFullname}
+                inputContainerStyle={styles.inputContainerStyle}
                 value={fullname}
               />
             </View>
             <View style={styles.selectInner}>
               <Text style={styles.titleSelect}>Email</Text>
               <Input
-                placeholder="Email"
                 inputStyle={styles.inputStyle}
+                inputContainerStyle={styles.inputContainerStyle}
                 onChangeText={onTypingEmail}
                 value={email}
               />
             </View>
             <View style={[styles.datePickerWrapper, styles.selectInner]}>
-              <Text style={styles.titleSelect}>Ngày sinh</Text>
-              <DatePicker
-                style={styles.datepicker}
-                date={birthDay}
-                mode="date"
-                placeholder="Chọn ngày sinh"
-                format="DD-MM-YYYY"
-                minDate="01-01-1900"
-                maxDate={new Date()}
-                confirmBtnText="Xác nhận"
-                cancelBtnText="Hủy"
-                customStyles={{
-                  dateInput: {
-                    borderWidth: 0,
-                    marginLeft: 10,
-                  },
-                  dateText: {
-                    fontSize: 17,
-                    fontWeight: '500',
-                  },
-                }}
-                onDateChange={(date) => onTypingBirthDay(date)}
-              />
-              <View style={styles.hairLine} />
+              <View style={styles.titleInner}>
+                <Text style={styles.titleSelect}>Ngày sinh</Text>
+                <Text style={styles.dotRequirer}>(*)</Text>
+              </View>
+              <View style={styles.dobWrapper}>
+                <Input
+                  placeholder="Ngày"
+                  inputStyle={styles.inputStyleDob}
+                  inputContainerStyle={styles.inputContainerStyleDob}
+                  containerStyle={styles.containerStyle}
+                  keyboardType="numeric"
+                />
+                <Text style={styles.dobText}>/</Text>
+                <Input
+                  placeholder="Tháng"
+                  inputStyle={styles.inputStyleDob}
+                  inputContainerStyle={styles.inputContainerStyleDob}
+                  containerStyle={styles.containerStyle}
+                  keyboardType="numeric"
+                />
+                <Text style={styles.dobText}>/</Text>
+                <Input
+                  placeholder="Năm"
+                  inputStyle={styles.inputStyleDob}
+                  inputContainerStyle={styles.inputContainerStyleDob}
+                  containerStyle={styles.containerStyle}
+                  keyboardType="numeric"
+                />
+              </View>
             </View>
             <View style={styles.selectInner}>
-              <Text style={styles.titleSelect}>Chọn giới tính</Text>
+              <View style={styles.titleInner}>
+                <Text style={styles.titleSelect}>Chọn giới tính</Text>
+                <Text style={styles.dotRequirer}>(*)</Text>
+              </View>
               <RNPickerSelect
                 onValueChange={(value) => onTypingGender(value)}
                 value={gender}
@@ -299,18 +310,57 @@ const ProfileEdit = ({navigation}) => {
             </View>
             <View style={styles.selectInner}>
               <Text style={styles.titleSelect}>Địa chỉ đang cư trú</Text>
-              <Input
-                placeholder="Địa chỉ đang cư trú"
+              <View style={styles.addressWrapper}>
+                <Input
+                  placeholder="Số nhà/Đường"
+                  inputStyle={styles.inputStyleAddress}
+                  inputContainerStyle={styles.inputContainerStyle}
+                  containerStyle={styles.containerStyleAddress}
+                  // onChangeText={onTypingAddress}
+                  // value={address}
+                />
+                <Input
+                  placeholder="Phường/Xã"
+                  inputStyle={styles.inputStyleAddress}
+                  inputContainerStyle={styles.inputContainerStyle}
+                  containerStyle={styles.containerStyleAddress}
+                  // onChangeText={onTypingAddress}
+                  // value={address}
+                />
+              </View>
+              <View style={styles.addressWrapper}>
+                <Input
+                  placeholder="Quận/Huyện"
+                  inputStyle={styles.inputStyleAddress}
+                  inputContainerStyle={styles.inputContainerStyle}
+                  containerStyle={styles.containerStyleAddress}
+                  // onChangeText={onTypingAddress}
+                  // value={address}
+                />
+                <Input
+                  placeholder="Tỉnh/Thành phố"
+                  inputStyle={styles.inputStyleAddress}
+                  inputContainerStyle={styles.inputContainerStyle}
+                  containerStyle={styles.containerStyleAddress}
+                  // onChangeText={onTypingAddress}
+                  // value={address}
+                />
+              </View>
+              {/* <Input
                 inputStyle={styles.inputStyle}
+                inputContainerStyle={styles.inputContainerStyle}
                 onChangeText={onTypingAddress}
                 value={address}
-              />
+              /> */}
             </View>
           </View>
           <View>
             <Text style={styles.titleSelectWrapper}>Trình độ học vấn</Text>
             <View style={styles.selectInner}>
-              <Text style={styles.titleSelect}>Trình độ</Text>
+              <View style={styles.titleInner}>
+                <Text style={styles.titleSelect}>Trình độ</Text>
+                <Text style={styles.dotRequirer}>(*)</Text>
+              </View>
               <RNPickerSelect
                 onValueChange={(value) => onTypingEducational(value)}
                 value={educational}
@@ -327,8 +377,8 @@ const ProfileEdit = ({navigation}) => {
             <View style={styles.selectInner}>
               <Text style={styles.titleSelect}>Trường</Text>
               <Input
-                placeholder="Trường"
                 inputStyle={styles.inputStyle}
+                inputContainerStyle={styles.inputContainerStyle}
                 onChangeText={onTypingSchool}
                 value={school}
               />
@@ -337,20 +387,24 @@ const ProfileEdit = ({navigation}) => {
           <View>
             <Text style={styles.titleSelectWrapper}>Kinh nghiệm</Text>
             <View style={styles.selectInner}>
-              <Text style={styles.titleSelect}>Số năm làm việc</Text>
+              <View style={styles.titleInner}>
+                <Text style={styles.titleSelect}>Số năm làm việc</Text>
+                <Text style={styles.dotRequirer}>(*)</Text>
+              </View>
               <Input
-                placeholder="Số năm làm việc"
                 inputStyle={styles.inputStyle}
+                inputContainerStyle={styles.inputContainerStyle}
                 onChangeText={onTypingExperience}
                 value={experience}
+                keyboardType="numeric"
               />
             </View>
             <View style={styles.selectInner}>
               <Text style={styles.titleSelect}>Công việc</Text>
               <Input
-                placeholder="Công việc"
                 multiline={true}
                 inputStyle={styles.inputStyle}
+                inputContainerStyle={styles.inputContainerStyle}
                 onChangeText={onTypingexpErienceDescription}
                 value={experienceDescription}
               />
@@ -359,15 +413,13 @@ const ProfileEdit = ({navigation}) => {
           <View>
             <Text style={styles.titleSelectWrapper}>Công việc mong muốn</Text>
             <View style={styles.selectInner}>
-              <Text style={styles.titleSelect}>Công việc chính (Chọn 1)</Text>
+              <View style={styles.titleInner}>
+                <Text style={styles.titleSelect}>Công việc chính (Chọn 1)</Text>
+                <Text style={styles.dotRequirer}>(*)</Text>
+              </View>
               <TouchableWithoutFeedback
                 onPress={onPressSelectOccupationPrimary}>
                 <View style={styles.buttonOccupation}>
-                  {!occupationsWishPrimary && (
-                    <Text style={styles.buttonOccupationText}>
-                      Công việc chính (Lựa chọn 1)
-                    </Text>
-                  )}
                   {occupationsWishPrimary &&
                     occupationsWishPrimary?.map((item, idx) => (
                       <View key={Math.random()}>
@@ -389,11 +441,6 @@ const ProfileEdit = ({navigation}) => {
               <Text style={styles.titleSelect}>Công việc phụ (Chọn 2)</Text>
               <TouchableWithoutFeedback onPress={onPressSelectOccupationSecond}>
                 <View style={styles.buttonOccupation}>
-                  {!occupationsWishSecond && (
-                    <Text style={styles.buttonOccupationText}>
-                      Công việc phụ (Lựa chọn 2)
-                    </Text>
-                  )}
                   {occupationsWishSecond &&
                     occupationsWishSecond?.map((item, idx) => (
                       <View key={Math.random()}>
@@ -412,9 +459,14 @@ const ProfileEdit = ({navigation}) => {
             </View>
           </View>
           <View>
-            <Text style={styles.titleSelectWrapper}>Mức lương mong muốn</Text>
+            <Text style={[styles.titleSelectWrapper, styles.salaryWrapper]}>
+              Mức lương mong muốn
+            </Text>
             <View style={styles.selectInner}>
-              <Text style={styles.titleSelect}>Mức lương</Text>
+              <View style={styles.titleInner}>
+                <Text style={styles.titleSelect}>Mức lương</Text>
+                <Text style={styles.dotRequirer}>(*)</Text>
+              </View>
               <RNPickerSelect
                 onValueChange={(value) => onTypingSalaryRange(value)}
                 value={inputSalaryRange}
@@ -434,9 +486,9 @@ const ProfileEdit = ({navigation}) => {
             <View style={styles.selectInner}>
               <Text style={styles.titleSelect}>Tính cách/Sở thích</Text>
               <Input
-                placeholder="Giới thiệu bản thân"
                 multiline={true}
                 inputStyle={styles.inputStyle}
+                inputContainerStyle={styles.inputContainerStyle}
                 onChangeText={onTypingexpIntroduce}
                 value={introduce}
               />
@@ -462,6 +514,12 @@ const styles = StyleSheet.create({
     marginTop: 20,
     backgroundColor: 'white',
   },
+  dotRequirer: {
+    color: 'red',
+  },
+  titleInner: {
+    flexDirection: 'row',
+  },
   textLabel: {
     fontWeight: '600',
     marginLeft: 10,
@@ -469,6 +527,7 @@ const styles = StyleSheet.create({
   },
   inputStyle: {
     height: 'auto',
+    minHeight: 30,
   },
   btnFooter: {
     marginTop: 15,
@@ -490,17 +549,21 @@ const styles = StyleSheet.create({
   },
   titleSelectWrapper: {
     paddingLeft: 10,
-    paddingVertical: 10,
+    paddingVertical: 15,
+    marginBottom: 10,
     fontSize: 17,
     color: '#3182ce',
     fontWeight: '600',
+  },
+  salaryWrapper: {
+    marginTop: 15,
   },
   selectInner: {
     paddingHorizontal: 10,
   },
   hairLine: {
     borderBottomColor: '#a0aec0',
-    borderBottomWidth: 1,
+    borderBottomWidth: 0.5,
     paddingHorizontal: 4,
     alignSelf: 'center',
     width: '96%',
@@ -523,15 +586,54 @@ const styles = StyleSheet.create({
   datePickerWrapper: {
     marginBottom: 14,
   },
+  inputContainerStyle: {
+    borderColor: '#a0aec0',
+    borderBottomWidth: 0.5,
+  },
+  inputContainerStyleDob: {
+    borderColor: '#a0aec0',
+    borderBottomWidth: 0.5,
+    maxWidth: 60,
+    // borderRadius: 1,
+    marginTop: 10,
+    paddingRight: 0,
+    marginRight: 0,
+    marginBottom: -10,
+  },
+  dobText: {
+    marginTop: isNotch ? 36 : 44,
+  },
+  containerStyle: {
+    maxWidth: 80,
+    paddingRight: 4,
+    paddingLeft: 10,
+  },
+  inputStyleDob: {
+    height: 'auto',
+    maxWidth: 60,
+  },
+  dobWrapper: {
+    flexDirection: 'row',
+    alignContent: 'flex-start',
+  },
+  containerStyleAddress: {
+    maxWidth: '50%',
+    paddingRight: 4,
+    paddingLeft: 10,
+  },
+  addressWrapper: {
+    flexDirection: 'row',
+    alignContent: 'space-between',
+  },
 });
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
     fontSize: 18,
     paddingTop: 13,
     paddingHorizontal: 10,
-    paddingBottom: 12,
-    borderBottomColor: 'grey',
-    borderBottomWidth: 1,
+    paddingBottom: 8,
+    borderColor: '#a0aec0',
+    borderBottomWidth: 0.5,
     borderRadius: 4,
     color: 'black',
     paddingLeft: 10,

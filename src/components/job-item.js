@@ -31,7 +31,7 @@ const JobItem = ({
         text1: 'Thành công!',
         text2:
           'Đã ứng tuyển thành công bạn có thể kiểm tra ở danh sách công việc đã ứng tuyển.',
-        visibilityTime: 2000,
+        visibilityTime: 1000,
         autoHide: true,
         topOffset: 70,
       });
@@ -46,7 +46,7 @@ const JobItem = ({
         text1: 'Thành công!',
         text2:
           'Đã lưu thành công bạn có thể kiểm tra ở danh sách công việc đã lưu.',
-        visibilityTime: 2000,
+        visibilityTime: 1000,
         autoHide: true,
         topOffset: 70,
       });
@@ -61,11 +61,11 @@ const JobItem = ({
       <View style={styles.cardHeader}>
         <Text
           onPress={() => {
-            navigation.navigate('EmployerInfo', {id: item?.id});
+            navigation.navigate('EmployerInfo', {id: item?.id, name: 'lol'});
           }}
           style={item?.has_seen ? styles.titleSeen : styles.title}
           numberOfLines={2}>
-          {item?.position}
+          {item?.title}
         </Text>
       </View>
       <View style={styles.row}>

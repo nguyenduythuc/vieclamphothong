@@ -188,7 +188,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     // width: '90%',
   },
-  divider: {backgroundColor: 'grey', marginBottom: 10},
+  divider: {
+    backgroundColor: '#3182ce',
+    marginTop: 5,
+    marginBottom: 18,
+  },
   row: {
     width: '100%',
     flexDirection: 'row',

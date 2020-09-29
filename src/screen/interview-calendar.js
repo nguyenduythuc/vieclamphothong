@@ -7,8 +7,9 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, View, Text, StyleSheet} from 'react-native';
+import {SafeAreaView, View, Text, StyleSheet, Dimensions} from 'react-native';
 import {LocaleConfig, Calendar} from 'react-native-calendars';
+import DeviceInfo from 'react-native-device-info';
 import {RecruitmentApi} from '../api';
 
 const getCurrentDate = () => {
@@ -52,6 +53,7 @@ LocaleConfig.locales.vi = {
   today: 'Hôm nay',
 };
 LocaleConfig.defaultLocale = 'vi';
+const isNotch = DeviceInfo.hasNotch();
 const InterviewCalendar = () => {
   const [selectedMonth, setMonth] = useState(1);
   useEffect(() => {
@@ -61,43 +63,55 @@ const InterviewCalendar = () => {
   });
   return (
     <SafeAreaView style={styles.container}>
-      <Calendar
-        current={getCurrentDate}
-        style={styles.calendar}
-        hideExtraDays
-        markedDates={{
-          '2020-09-10': {
-            selected: true,
-            disableTouchEvent: true,
-            selectedColor: 'orange',
-            selectedTextColor: 'red',
-          },
-          '2020-09-15': {
-            selected: true,
-            disableTouchEvent: true,
-            selectedColor: 'orange',
-            selectedTextColor: 'red',
-          },
-          '2020-09-19': {
-            selected: true,
-            disableTouchEvent: true,
-            selectedColor: 'orange',
-            selectedTextColor: 'red',
-          },
-          '2020-09-20': {
-            selected: true,
-            disableTouchEvent: true,
-            selectedColor: 'orange',
-            selectedTextColor: 'red',
-          },
-        }}
-      />
+      <View>
+        <Calendar
+          current={getCurrentDate}
+          style={styles.calendar}
+          hideExtraDays
+          // markedDates={{
+          //   '2020-09-10': {
+          //     selected: true,
+          //     disableTouchEvent: true,
+          //     selectedColor: 'orange',
+          //     selectedTextColor: 'red',
+          //   },
+          //   '2020-09-15': {
+          //     selected: true,
+          //     disableTouchEvent: true,
+          //     selectedColor: 'orange',
+          //     selectedTextColor: 'red',
+          //   },
+          //   '2020-09-19': {
+          //     selected: true,
+          //     disableTouchEvent: true,
+          //     selectedColor: 'orange',
+          //     selectedTextColor: 'red',
+          //   },
+          //   '2020-09-20': {
+          //     selected: true,
+          //     disableTouchEvent: true,
+          //     selectedColor: 'orange',
+          //     selectedTextColor: 'red',
+          //   },
+          // }}
+        />
+        <View style={styles.textNothing}>
+          <Text>Hiện tại bạn chưa có lịch phỏng vấn cho công việc nào</Text>
+        </View>
+      </View>
     </SafeAreaView>
   );
 };
 
+const {width, height} = Dimensions.get('window');
 const styles = StyleSheet.create({
-  container: {flex: 1, marginTop: 100},
+  container: {flex: 1, marginTop: 20},
+  textNothing: {
+    position: 'absolute',
+    zIndex: 10,
+    top: isNotch ? (height * 1) / 2 - 30 : (height * 1) / 2 + 30,
+    alignSelf: 'center',
+  },
 });
 
 export default InterviewCalendar;

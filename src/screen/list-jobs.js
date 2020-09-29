@@ -117,7 +117,7 @@ const ListJobs = ({navigation}) => {
   const loadMore = () => {
     setIsLoading(true);
   };
-  const toggleModal = (string) => {
+  const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
 

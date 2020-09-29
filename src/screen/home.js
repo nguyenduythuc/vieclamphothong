@@ -32,8 +32,8 @@ const HomeScreen = ({navigation}) => {
   const userLocation = useSelector((state) => state.user.userLocation);
   const [search, setSearch] = useState('');
   const [paramFilter, setParamFilter] = useState('');
-  // const [currentPosition, setCurentPosition] = useState(defaultPosition);
-  const [currentPosition, setCurentPosition] = useState(userLocation);
+  const [currentPosition, setCurentPosition] = useState(defaultPosition);
+  // const [currentPosition, setCurentPosition] = useState(userLocation);
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [isShowButtonPositionChange, setIsShowButtonPositionChange] = useState(
     false,
@@ -60,7 +60,7 @@ const HomeScreen = ({navigation}) => {
         currentPosition.latitude
       },${currentPosition.longitude},${distanceDefault}${
         paramFilterLocal || paramFilter
-      }&keyword=${keyword}`,
+      }&filter[title]=${keyword}`,
     ).then((response) => {
       dispatch(actions.recruitment.saveListJobs(response.data));
       console.log(markerRef.current);
