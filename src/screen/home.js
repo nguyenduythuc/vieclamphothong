@@ -8,7 +8,13 @@
  */
 
 import React, {useEffect, useCallback, useRef, useState} from 'react';
-import {SafeAreaView, StyleSheet, View, Text, Dimensions} from 'react-native';
+import {
+  SafeAreaView,
+  StyleSheet,
+  View,
+  Platform,
+  Dimensions,
+} from 'react-native';
 import {Card, SearchBar, Icon, Button} from 'react-native-elements';
 import {JobItem} from '../components';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
@@ -32,8 +38,7 @@ const HomeScreen = ({navigation}) => {
   const userLocation = useSelector((state) => state.user.userLocation);
   const [search, setSearch] = useState('');
   const [paramFilter, setParamFilter] = useState('');
-  const [currentPosition, setCurentPosition] = useState(defaultPosition);
-  // const [currentPosition, setCurentPosition] = useState(userLocation);
+  const [currentPosition, setCurentPosition] = useState(userLocation);
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [isShowButtonPositionChange, setIsShowButtonPositionChange] = useState(
     false,
@@ -45,6 +50,10 @@ const HomeScreen = ({navigation}) => {
   useEffect(() => {
     getListData();
   }, []);
+
+  // useEffect(() => {
+  //   getListData();
+  // }, []);
   useEffect(() => {
     const timer = setTimeout(() => {
       getListData(paramFilter, search);
@@ -52,23 +61,24 @@ const HomeScreen = ({navigation}) => {
     return () => clearTimeout(timer);
   }, [search, paramFilter]);
 
-  const getListData = useCallback((paramFilterLocal, keyword) => {
-    console.log('keyword', keyword);
-    const distanceDefault = paramFilterLocal || paramFilter ? '' : '30';
-    RecruitmentApi.getList(
-      `include=educational_background,occupation,workplace,company&filter[location]=${
-        currentPosition.latitude
-      },${currentPosition.longitude},${distanceDefault}${
-        paramFilterLocal || paramFilter
-      }&filter[title]=${keyword}`,
-    ).then((response) => {
-      dispatch(actions.recruitment.saveListJobs(response.data));
-      console.log(markerRef.current);
-    });
-  }, []);
+  const getListData = useCallback(
+    (paramFilterLocal, keyword) => {
+      const distanceDefault = paramFilterLocal || paramFilter ? '' : '30';
+      RecruitmentApi.getList(
+        `include=educational_background,occupation,workplace,company&filter[location]=${
+          currentPosition.latitude
+        },${currentPosition.longitude},${distanceDefault}${
+          paramFilterLocal || paramFilter
+        }&filter[title]=${keyword}`,
+      ).then((response) => {
+        dispatch(actions.recruitment.saveListJobs(response.data));
+        setIsShowButtonPositionChange(false);
+      });
+    },
+    [currentPosition],
+  );
 
   const onSearch = useCallback((text) => {
-    console.log(text);
     setSearch(text);
   }, []);
 
@@ -77,7 +87,6 @@ const HomeScreen = ({navigation}) => {
   }, [navigation]);
 
   const onFilterResult = (param) => {
-    console.log(param);
     setParamFilter(param);
     getListData(param);
   };
@@ -85,18 +94,19 @@ const HomeScreen = ({navigation}) => {
     navigation.navigate('ListJobs');
   }, [navigation]);
 
-  const onRegionChange = (region) => {
-    setIsShowButtonPositionChange(true);
-    setCurentPosition(region);
-  };
+  const onRegionChange = useCallback(
+    (region) => {
+      if (Math.abs(currentPosition.latitude - region.latitude) < 0.005) {
+        return;
+      }
+      setIsShowButtonPositionChange(true);
+      setCurentPosition(region);
+    },
+    [currentPosition],
+  );
 
   const onChangePostionButton = useCallback(() => {
-    RecruitmentApi.getList(
-      `filter[location]=${currentPosition.latitude},${currentPosition.longitude},100&include=educational_background,occupation,workplace,company`,
-    ).then((response) => {
-      dispatch(actions.recruitment.saveListJobs(response.data));
-    });
-    setIsShowButtonPositionChange(false);
+    getListData(paramFilter, search);
   }, [currentPosition]);
 
   const renderItem = useCallback(({item, index}, parallaxProps) => {
@@ -112,20 +122,20 @@ const HomeScreen = ({navigation}) => {
       const newPosition = {...currentPosition};
       newPosition.latitude = parseFloat(listJobs[index]?.company.latitude);
       newPosition.longitude = parseFloat(listJobs[index]?.company.longitude);
-      setCurentPosition(newPosition);
+      if (Platform.OS === 'android') setCurentPosition(newPosition);
       setSelectedMarker(listJobs[index]?.id);
-      mapRef.current?.animateCamera({center: newPosition, pitch: 45});
+      // mapRef.current?.animateCamera({center: newPosition, pitch: 45});
       markerRef.current[index].showCallout();
     },
     [currentPosition, listJobs, mapRef, markerRef],
   );
 
   function onItemSelected(itemId) {
-    setSelectedMarker(itemId);
+    // setSelectedMarker(itemId);
     const index = listJobs.findIndex((item) => item.id === itemId);
     carouselRef.current.snapToItem(index !== -1 ? index : 0);
   }
-  console.log(selectedMarker);
+
   return (
     <SafeAreaView style={{backgroundColor: 'white'}}>
       <View style={styles.header}>
@@ -155,7 +165,7 @@ const HomeScreen = ({navigation}) => {
           type="clear"
         />
       </View>
-      {isShowButtonPositionChange && selectedMarker && (
+      {isShowButtonPositionChange && (
         <Button
           icon={
             <Icon
@@ -168,7 +178,7 @@ const HomeScreen = ({navigation}) => {
           title="Tìm kiếm khu vực này"
           containerStyle={styles.changePositionButtonStyle}
           buttonStyle={styles.changePositionButtonBackgroundStyle}
-          titleStyle={{fontSize: 15}}
+          titleStyle={{fontSize: 13}}
           onPress={onChangePostionButton}
           type="clear"
         />
@@ -187,14 +197,25 @@ const HomeScreen = ({navigation}) => {
         containerStyle={styles.listButtonStyle}
         buttonStyle={styles.listButtonBackgroundStyle}
         onPress={onPressToList}
-        titleStyle={{fontSize: 15}}
+        titleStyle={{fontSize: 13}}
         type="clear"
+      />
+      <Icon
+        name="list"
+        type="fsather"
+        color="#517fa4"
+        size={19}
+        style={styles.relocateButton}
       />
       <MapView
         ref={mapRef}
         provider={PROVIDER_GOOGLE} // remove if not using Google Maps
         style={styles.map}
         region={currentPosition}
+        showsUserLocation
+        followsUserLocation
+        mapPadding={{bottom: 300}}
+        paddingAdjustmentBehavior="automatic"
         onRegionChangeComplete={onRegionChange}>
         {listJobs?.map(
           (
@@ -212,9 +233,7 @@ const HomeScreen = ({navigation}) => {
               title={`Lương: ${formatCurrencyToSring(
                 min_salary,
               )} - ${formatCurrencyToSring(max_salary)}tr`}
-              description={`Cách bạn: ${distance}km`}
-              anchor={{x: 0.84, y: 1}}
-              centerOffset={{x: -18, y: -60}}>
+              description={`Cách bạn: ${distance}km`}>
               <Icon
                 name="map-marker-alt"
                 type="font-awesome-5"
@@ -226,15 +245,17 @@ const HomeScreen = ({navigation}) => {
           ),
         )}
       </MapView>
-      <Carousel
-        ref={carouselRef}
-        sliderWidth={width}
-        sliderHeight={height * 0.09}
-        itemWidth={width - 80}
-        data={listJobs}
-        onSnapToItem={onSwipeToItem}
-        renderItem={renderItem}
-      />
+      <View style={{position: 'absolute', bottom: isNotch ? 80 : 50}}>
+        <Carousel
+          ref={carouselRef}
+          sliderWidth={width}
+          sliderHeight={height * 0.09}
+          itemWidth={width - 80}
+          data={listJobs}
+          onSnapToItem={onSwipeToItem}
+          renderItem={renderItem}
+        />
+      </View>
     </SafeAreaView>
   );
 };
@@ -256,7 +277,7 @@ const styles = StyleSheet.create({
     padding: 1,
   },
   map: {
-    height: isNotch ? height * 0.43 : height * 0.41,
+    height: isNotch ? height * 0.88 : height * 0.9,
     width,
     justifyContent: 'flex-end',
     alignItems: 'center',
@@ -268,14 +289,25 @@ const styles = StyleSheet.create({
   changePositionButtonStyle: {
     position: 'absolute',
     zIndex: 10,
-    top: isNotch ? height / 2 - 10 : height / 2 - 80,
+    top: isNotch ? height / 2 : height / 2 - 30,
     left: 10,
   },
-  changePositionButtonBackgroundStyle: {backgroundColor: 'white'},
+  changePositionButtonBackgroundStyle: {
+    backgroundColor: 'white',
+    fontSize: 15,
+    paddingVertical: 5,
+  },
   listButtonStyle: {
     position: 'absolute',
     zIndex: 10,
-    top: isNotch ? height / 2 - 10 : height / 2 - 50,
+    top: isNotch ? height / 2 : height / 2 - 30,
+    right: 0,
+    paddingRight: 10,
+  },
+  relocateButton: {
+    position: 'absolute',
+    zIndex: 10,
+    top: isNotch ? height / 2 - 15 : height / 2 - 50,
     right: 0,
     paddingRight: 10,
   },
@@ -288,6 +320,7 @@ const styles = StyleSheet.create({
   },
   listButtonBackgroundStyle: {
     backgroundColor: 'white',
+    paddingVertical: 5,
   },
   searchBarInput: {
     backgroundColor: 'white',
