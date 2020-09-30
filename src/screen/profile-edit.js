@@ -438,7 +438,7 @@ const ProfileEdit = ({navigation}) => {
             </View>
             {/* second */}
             <View style={styles.selectInner}>
-              <Text style={styles.titleSelect}>Công việc phụ (Chọn 2)</Text>
+              <Text style={styles.titleSelect2}>Công việc phụ (Chọn 2)</Text>
               <TouchableWithoutFeedback onPress={onPressSelectOccupationSecond}>
                 <View style={styles.buttonOccupation}>
                   {occupationsWishSecond &&
@@ -516,9 +516,11 @@ const styles = StyleSheet.create({
   },
   dotRequirer: {
     color: 'red',
+    marginTop: 10,
   },
   titleInner: {
     flexDirection: 'row',
+    marginTop: 10,
   },
   textLabel: {
     fontWeight: '600',
@@ -543,6 +545,14 @@ const styles = StyleSheet.create({
   },
   titleSelect: {
     paddingLeft: 10,
+    marginVertical: 10,
+    fontSize: 16,
+    color: '#718096',
+    fontWeight: '400',
+  },
+  titleSelect2: {
+    marginTop: 20,
+    paddingLeft: 10,
     fontSize: 16,
     color: '#718096',
     fontWeight: '400',
@@ -560,6 +570,7 @@ const styles = StyleSheet.create({
   },
   selectInner: {
     paddingHorizontal: 10,
+    marginBottom: 10,
   },
   hairLine: {
     borderBottomColor: '#a0aec0',
