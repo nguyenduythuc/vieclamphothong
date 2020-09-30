@@ -47,12 +47,12 @@ const ListSavedJobs = ({navigation}) => {
 
   return (
     <SafeAreaView>
+      <View style={styles.blockTitle}>
+        <Text style={styles.blockTitleText}>
+          Tổng số: {totalQuantity} công việc
+        </Text>
+      </View>
       <ScrollView contentContainerStyle={styles.container}>
-        <View style={styles.blockTitle}>
-          <Text style={styles.blockTitleText}>
-            Tổng số: {totalQuantity} công việc
-          </Text>
-        </View>
         <View style={styles.hairLine} />
         <View style={styles.row}>
           <View style={styles.item}>
@@ -85,6 +85,7 @@ const styles = StyleSheet.create({
   },
   blockTitle: {
     marginTop: 20,
+    marginBottom: 10,
     paddingLeft: 20,
     width: '100%',
     flexDirection: 'row',

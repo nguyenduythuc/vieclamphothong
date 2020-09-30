@@ -17,38 +17,50 @@ const list = [
   {
     title: 'Hồ sơ xin việc',
     screen: 'Profile',
+    iconName: 'account-box-outline',
+    iconType: 'material-community',
   },
-  // {
-  //   title: 'Danh sách công việc',
-  //   screen: 'ListJobs',
-  // },
   {
     title: 'Công việc đã xem',
     screen: 'ListSeenJobs',
+    iconName: 'eye-check-outline',
+    iconType: 'material-community',
   },
   {
     title: 'Công việc đã lưu',
     screen: 'ListSavedJobs',
+    iconName: 'download',
+    iconType: 'antdesign',
   },
   {
     title: 'Công việc đã nộp',
     screen: 'ListAppliedJobs',
+    iconName: 'paper-plane-o',
+    iconType: 'font-awesome',
   },
   {
     title: 'Lịch phỏng vấn',
     screen: 'InterviewCalendar',
+    iconName: 'date',
+    iconType: 'fontisto',
   },
   // {
   //   title: 'Hotline',
   //   screen: 'Hotline',
+  //   iconName: 'phone-call',
+  //   iconType: 'feather',
   // },
   {
     title: 'Cài đặt',
     screen: 'Settings',
+    iconName: 'settings',
+    iconType: 'simple-line-icon',
   },
   // {
-  //   title: 'Thông báo',
+  //   title: 'Điều khoản sử dụng',
   //   screen: 'Notification',
+  //   iconName: 'profile',
+  //   iconType: 'antdesign',
   // },
 ];
 const AccountScreen = ({navigation}) => {
@@ -96,9 +108,11 @@ const AccountScreen = ({navigation}) => {
             chevron
             bottomDivider
             title={item.title}
+            leftIcon={{name: item.iconName, type: item.iconType}}
             onPress={() => onSelectedItem(item.screen)}
-            contentContainerStyle={styles.featureItem}
-          />
+            contentContainerStyle={styles.featureItem}>
+            {/* <Icon name={item.iconName} type={item.iconType} /> */}
+          </ListItem>
         ))}
       </ScrollView>
     </SafeAreaView>
