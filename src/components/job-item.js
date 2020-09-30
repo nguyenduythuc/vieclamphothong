@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {Card, Divider, Button, Icon, Rating} from 'react-native-elements';
 import Toast from 'react-native-toast-message';
 import {formatCurrencyToSring} from '../utils/common';
@@ -61,7 +61,10 @@ const JobItem = ({
       <View style={styles.cardHeader}>
         <Text
           onPress={() => {
-            navigation.navigate('EmployerInfo', {id: item?.id, name: 'lol'});
+            navigation.navigate('EmployerInfo', {
+              id: item?.id,
+              indexSend: 0,
+            });
           }}
           style={item?.has_seen ? styles.titleSeen : styles.title}
           numberOfLines={2}>
@@ -95,10 +98,17 @@ const JobItem = ({
       </Text>
       <View style={styles.row}>
         <Rating imageSize={12} startingValue={item?.company?.rating_point} />
-        <View style={styles.comments}>
+        <TouchableOpacity
+          style={styles.comments}
+          onPress={() => {
+            navigation.navigate('EmployerInfo', {
+              id: item?.id,
+              indexSend: 1,
+            });
+          }}>
           <Icon name="comments" type="fontisto" color="red" size={10} />
           <Text style={styles.commentsText}> Xem nhận xét</Text>
-        </View>
+        </TouchableOpacity>
       </View>
       <Text style={[styles.marginBottom, styles.greyText]} numberOfLines={2}>
         {item?.company?.address}

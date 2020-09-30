@@ -8,9 +8,17 @@
  */
 
 import React, {useState, useEffect, useCallback} from 'react';
-import {SafeAreaView, ScrollView, View, Text, StyleSheet} from 'react-native';
+import {
+  SafeAreaView,
+  ScrollView,
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import Toast from 'react-native-toast-message';
 import {JobAppliedItem} from '../components';
+import Modal from 'react-native-modal';
 import {RecruitmentApi} from '../api';
 import {useSelector} from 'react-redux';
 
@@ -18,31 +26,44 @@ const ListSavedJobs = ({navigation}) => {
   const [listSavedJobs, setListSavedJobs] = useState([]);
   const [totalQuantity, setTotalQuantity] = useState(0);
   const userLocation = useSelector((state) => state.user.userLocation);
+  const [isModalVisibleAlert, setModalVisibleAlert] = useState(false);
+  const [idForDelete, setIdForDelete] = useState('');
 
   useEffect(() => {
     getListData();
   }, []);
-  const getListData = () => {
+  const getListData = useCallback(() => {
     RecruitmentApi.getListSaved(
       `location=${userLocation.latitude},${userLocation.longitude}`,
     ).then((response) => {
       setTotalQuantity(response.meta.total);
       setListSavedJobs(response.data);
     });
-  };
+  }, [userLocation.latitude, userLocation.longitude]);
   const onPressDeleteItem = (idRecuitment) => {
-    RecruitmentApi.deleteSavedRecruitment(idRecuitment).then((response) => {
-      getListData();
-      Toast.show({
-        type: 'success',
-        position: 'top',
-        text1: 'Thành công!',
-        text2: 'Đã xóa thành công.',
-        visibilityTime: 1000,
-        autoHide: true,
-        topOffset: 70,
+    toggleModalAlert();
+    setIdForDelete(idRecuitment);
+  };
+  const deleteItem = useCallback(
+    (idRecuitment) => {
+      RecruitmentApi.deleteSavedRecruitment(idForDelete).then((response) => {
+        getListData();
+        toggleModalAlert();
+        Toast.show({
+          type: 'success',
+          position: 'top',
+          text1: 'Thành công!',
+          text2: 'Đã xóa thành công.',
+          visibilityTime: 1000,
+          autoHide: true,
+          topOffset: 70,
+        });
       });
-    });
+    },
+    [getListData, idForDelete, toggleModalAlert],
+  );
+  const toggleModalAlert = () => {
+    setModalVisibleAlert(!isModalVisibleAlert);
   };
 
   return (
@@ -67,11 +88,57 @@ const ListSavedJobs = ({navigation}) => {
           </View>
         </View>
       </ScrollView>
+      <Modal isVisible={isModalVisibleAlert} style={styles.modalView}>
+        <View style={[styles.modalContent]}>
+          <Text style={styles.textAlert}>
+            Bạn chắc chắn muốn xóa công việc này khỏi danh sách đã nộp?
+          </Text>
+
+          <View style={styles.groupBtnDialog}>
+            <TouchableOpacity onPress={toggleModalAlert}>
+              <Text style={styles.textBtnCancel}>Hủy</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={deleteItem}>
+              <Text style={styles.textAlertOk}>Đồng ý</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  textAlert: {
+    paddingBottom: 20,
+    fontSize: 18,
+  },
+  textBtnCancel: {
+    paddingTop: 20,
+    fontSize: 20,
+  },
+  textAlertOk: {
+    paddingTop: 20,
+    fontSize: 20,
+    color: 'blue',
+  },
+  groupBtnDialog: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  modalView: {
+    paddingHorizontal: 30,
+    flex: 1,
+    width: '100%',
+    margin: 0,
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderRadius: 4,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 10,
+  },
   container: {
     backgroundColor: '#f7fafc',
   },

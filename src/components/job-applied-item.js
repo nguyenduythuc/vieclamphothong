@@ -7,7 +7,7 @@
  */
 
 import React, {useCallback} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {Card, Divider, Icon, Rating, Button} from 'react-native-elements';
 import {formatCurrencyToSring} from '../utils/common';
 import Toast from 'react-native-toast-message';
@@ -43,7 +43,10 @@ const JobAppliedItem = ({item, navigation, isApplied, isSaved, deleteItem}) => {
         <View style={styles.col90}>
           <Text
             onPress={() => {
-              navigation.navigate('EmployerInfo', {id: item.recruitment.id});
+              navigation.navigate('EmployerInfo', {
+                id: item?.id,
+                indexSend: 0,
+              });
             }}
             style={styles.title}
             numberOfLines={2}>
@@ -87,10 +90,17 @@ const JobAppliedItem = ({item, navigation, isApplied, isSaved, deleteItem}) => {
           imageSize={14}
           startingValue={item.recruitment.company.rating_point}
         />
-        <View style={styles.comments}>
-          <Icon name="comments" type="fontisto" color="red" size={15} />
-          <Text style={styles.commentsText}>Xem nhận xét</Text>
-        </View>
+        <TouchableOpacity
+          style={styles.comments}
+          onPress={() => {
+            navigation.navigate('EmployerInfo', {
+              id: item?.id,
+              indexSend: 1,
+            });
+          }}>
+          <Icon name="comments" type="fontisto" color="red" size={10} />
+          <Text style={styles.commentsText}> Xem nhận xét</Text>
+        </TouchableOpacity>
       </View>
       <Text style={styles.marginBottom} numberOfLines={2}>
         {item.recruitment.company.address}
