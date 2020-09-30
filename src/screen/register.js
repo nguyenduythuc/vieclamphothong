@@ -60,7 +60,6 @@ const RegisterScreen = ({route, navigation}) => {
       <Image source={bg} style={styles.bgImage} />
       <ScrollView>
         <SafeAreaView style={styles.container}>
-          <Image source={logo} style={styles.logoImage} />
           <View style={styles.loginForm}>
             <Input
               inputStyle={styles.inputStyle}
@@ -167,7 +166,12 @@ const RegisterScreen = ({route, navigation}) => {
 };
 
 const styles = StyleSheet.create({
-  container: {flex: 1, alignItems: 'center', justifyContent: 'center'},
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 50,
+  },
   bgImage: {
     position: 'absolute',
     top: 0,
@@ -185,11 +189,12 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   inputContainerStyle: {
+    marginBottom: 10,
     borderColor: 'white',
     height: 30,
   },
   absoluteRight: {position: 'absolute', right: 10},
-  buttonLoginWrapper: {width: '50%', backgroundColor: 'white'},
+  buttonLoginWrapper: {width: '50%', backgroundColor: 'white', marginTop: 10},
   buttLoginStyle: {
     paddingHorizontal: 40,
     paddingVertical: 10,
@@ -218,11 +223,6 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
     color: 'white',
     textAlign: 'left',
-  },
-  logoImage: {
-    width: 130,
-    height: 130,
-    marginBottom: 40,
   },
   errorMessage: {color: '#b51414', fontWeight: '500'},
 });

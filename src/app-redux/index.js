@@ -9,8 +9,8 @@ import rootSaga from './sagas';
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['user', 'recruitment'],
-  blacklist: ['app'],
+  whitelist: ['recruitment'],
+  blacklist: ['app', 'user'],
 };
 
 const persistedReducer = persistCombineReducers(persistConfig, rootReducer);
