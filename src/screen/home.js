@@ -398,7 +398,7 @@ const styles = StyleSheet.create({
   changePositionButtonStyle: {
     position: 'absolute',
     zIndex: 10,
-    top: isNotch ? height / 2 + 20 : height / 2 - 50,
+    top: isNotch ? height / 2 + 20 : height / 2 - 70,
     left: 10,
   },
   changePositionButtonBackgroundStyle: {
