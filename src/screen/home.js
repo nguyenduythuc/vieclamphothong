@@ -45,6 +45,7 @@ const HomeScreen = ({navigation}) => {
   const [currentPosition, setCurentPosition] = useState(defaultPosition);
   // const [currentPosition, setCurentPosition] = useState(userLocation);
   const [selectedMarker, setSelectedMarker] = useState(null);
+  const [markerPressed, setMarkerPressed] = useState(null);
   const [isShowButtonPositionChange, setIsShowButtonPositionChange] = useState(
     false,
   );
@@ -105,13 +106,14 @@ const HomeScreen = ({navigation}) => {
 
   const onRegionChange = useCallback(
     (region) => {
+      if (markerPressed) return;
       if (Math.abs(currentPosition.latitude - region.latitude) < 0.005) {
         return;
       }
       setIsShowButtonPositionChange(true);
       setCurentPosition(region);
     },
-    [currentPosition],
+    [currentPosition, markerPressed],
   );
 
   const onChangePostionButton = useCallback(() => {
@@ -151,7 +153,8 @@ const HomeScreen = ({navigation}) => {
   );
 
   function onItemSelected(itemId) {
-    // setSelectedMarker(itemId);
+    setMarkerPressed(true);
+    setTimeout(() => setMarkerPressed(false), 2000);
     const index = listJobs.findIndex((item) => item.id === itemId);
     carouselRef.current.snapToItem(index !== -1 ? index : 0);
   }
