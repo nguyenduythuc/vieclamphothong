@@ -17,6 +17,8 @@ export default function HomeTabNavigator() {
         },
         style: {
           paddingBottom: isNotch ? 30 : 10,
+          paddingTop: isNotch ? 10 : 5,
+          height: isNotch ? 90 : 70,
         },
       }}>
       <Tab.Screen

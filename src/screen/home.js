@@ -106,7 +106,9 @@ const HomeScreen = ({navigation}) => {
 
   const onRegionChange = useCallback(
     (region) => {
-      if (markerPressed) return;
+      if (markerPressed) {
+        return;
+      }
       if (Math.abs(currentPosition.latitude - region.latitude) < 0.005) {
         return;
       }
@@ -127,10 +129,31 @@ const HomeScreen = ({navigation}) => {
       </View>
     );
   }, []);
+  const getListDataOnJob = useCallback(
+    (keyword) => {
+      const distanceDefault = '30';
+      RecruitmentApi.getList(
+        `include=educational_background,occupation,workplace,company&filter[location]=${currentPosition.latitude},${currentPosition.longitude},${distanceDefault}&&filter[occupation_id]=${keyword}`,
+      ).then((response) => {
+        dispatch(actions.recruitment.saveListJobs(response.data));
+        setIsShowButtonPositionChange(false);
+      });
+    },
+    [currentPosition],
+  );
+  const onClickOccupationItem = useCallback(
+    (item) => {
+      console.log(item);
+      getListDataOnJob(item.id);
+      toggleModalAlert();
+    },
+    [toggleModalAlert, isModalVisibleAlert],
+  );
+
   const renderRow = ({item}) => {
     return (
       <TouchableOpacity
-        onPress={toggleModalAlert}
+        onPress={() => onClickOccupationItem(item)}
         style={styles.occupationItem}>
         <Text style={styles.occupationItemText}>{item.name}</Text>
       </TouchableOpacity>
@@ -164,33 +187,6 @@ const HomeScreen = ({navigation}) => {
 
   return (
     <SafeAreaView style={{backgroundColor: 'white'}}>
-      <View style={styles.header}>
-        <SearchBar
-          onChangeText={onSearch}
-          containerStyle={styles.searchBar}
-          inputStyle={styles.searchBarInput}
-          returnKeyType="search"
-          leftIconContainerStyle={styles.leftIconContainerStyle}
-          inputContainerStyle={styles.inputContainerStyle}
-          placeholder="Nhập công việc mong muốn."
-          value={search}
-          lightTheme
-        />
-        <Button
-          icon={
-            <Icon
-              onPress={onFilter}
-              name="filter"
-              type="antdesign"
-              color="#517fa4"
-              style={{paddingRight: 5, paddingTop: 2}}
-            />
-          }
-          buttonStyle={styles.listButtonBackgroundStyle}
-          onPress={onPressToList}
-          type="clear"
-        />
-      </View>
       {isShowButtonPositionChange && (
         <Button
           icon={
@@ -316,6 +312,7 @@ const {width, height} = Dimensions.get('window');
 const styles = StyleSheet.create({
   occupationItemText: {
     fontSize: 18,
+    color: '#4a5568',
   },
   occupationItem: {
     // backgroundColor: '#f1f5f8',
@@ -345,7 +342,7 @@ const styles = StyleSheet.create({
   modalView: {
     paddingHorizontal: 10,
     flex: 1,
-    width: '60%',
+    width: '50%',
     margin: 0,
     position: 'absolute',
     zIndex: 10,
@@ -389,7 +386,7 @@ const styles = StyleSheet.create({
     padding: 1,
   },
   map: {
-    height: isNotch ? height * 0.88 : height * 0.9,
+    height: isNotch ? height * 0.9 : height * 0.92,
     width,
     justifyContent: 'flex-end',
     alignItems: 'center',
@@ -401,7 +398,7 @@ const styles = StyleSheet.create({
   changePositionButtonStyle: {
     position: 'absolute',
     zIndex: 10,
-    top: isNotch ? height / 2 : height / 2 - 30,
+    top: isNotch ? height / 2 + 20 : height / 2 - 50,
     left: 10,
   },
   changePositionButtonBackgroundStyle: {
@@ -412,7 +409,7 @@ const styles = StyleSheet.create({
   listButtonStyle: {
     position: 'absolute',
     zIndex: 10,
-    top: isNotch ? height / 2 : height / 2 - 30,
+    top: isNotch ? height / 2 + 20 : height / 2 - 70,
     right: 0,
     paddingRight: 10,
   },
