@@ -14,6 +14,9 @@ import {
   View,
   Platform,
   Dimensions,
+  TouchableOpacity,
+  Text,
+  FlatList,
 } from 'react-native';
 import {Card, SearchBar, Icon, Button} from 'react-native-elements';
 import {JobItem} from '../components';
@@ -24,6 +27,7 @@ import {RecruitmentApi} from '../api';
 import {useDispatch, useSelector} from 'react-redux';
 import {actions} from '../app-redux';
 import {formatCurrencyToSring} from '../utils/common';
+import Modal from 'react-native-modal';
 
 const defaultPosition = {
   latitude: 21.312542,
@@ -38,11 +42,16 @@ const HomeScreen = ({navigation}) => {
   const userLocation = useSelector((state) => state.user.userLocation);
   const [search, setSearch] = useState('');
   const [paramFilter, setParamFilter] = useState('');
-  const [currentPosition, setCurentPosition] = useState(userLocation);
+  const [currentPosition, setCurentPosition] = useState(defaultPosition);
+  // const [currentPosition, setCurentPosition] = useState(userLocation);
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [isShowButtonPositionChange, setIsShowButtonPositionChange] = useState(
     false,
   );
+  const occupation = useSelector(
+    (state) => state.recruitment?.listFilters?.occupation,
+  );
+  const [isModalVisibleAlert, setModalVisibleAlert] = useState(false);
 
   const carouselRef = useRef(null);
   const mapRef = useRef(null);
@@ -116,13 +125,24 @@ const HomeScreen = ({navigation}) => {
       </View>
     );
   }, []);
+  const renderRow = ({item}) => {
+    return (
+      <TouchableOpacity
+        onPress={toggleModalAlert}
+        style={styles.occupationItem}>
+        <Text>{item.name}</Text>
+      </TouchableOpacity>
+    );
+  };
 
   const onSwipeToItem = useCallback(
     (index) => {
       const newPosition = {...currentPosition};
       newPosition.latitude = parseFloat(listJobs[index]?.company.latitude);
       newPosition.longitude = parseFloat(listJobs[index]?.company.longitude);
-      if (Platform.OS === 'android') setCurentPosition(newPosition);
+      if (Platform.OS === 'android') {
+        setCurentPosition(newPosition);
+      }
       setSelectedMarker(listJobs[index]?.id);
       // mapRef.current?.animateCamera({center: newPosition, pitch: 45});
       markerRef.current[index].showCallout();
@@ -135,6 +155,9 @@ const HomeScreen = ({navigation}) => {
     const index = listJobs.findIndex((item) => item.id === itemId);
     carouselRef.current.snapToItem(index !== -1 ? index : 0);
   }
+  const toggleModalAlert = () => {
+    setModalVisibleAlert(!isModalVisibleAlert);
+  };
 
   return (
     <SafeAreaView style={{backgroundColor: 'white'}}>
@@ -200,6 +223,13 @@ const HomeScreen = ({navigation}) => {
         titleStyle={{fontSize: 13}}
         type="clear"
       />
+      <Button
+        icon={<Icon name="search1" type="antdesign" color="white" size={23} />}
+        containerStyle={styles.listButtonStyleSearch}
+        buttonStyle={styles.listButtonBackgroundStyleSearch}
+        onPress={toggleModalAlert}
+        type="clear"
+      />
       <Icon
         name="list"
         type="fsather"
@@ -257,12 +287,87 @@ const HomeScreen = ({navigation}) => {
           renderItem={renderItem}
         />
       </View>
+      <Modal
+        isVisible={isModalVisibleAlert}
+        style={styles.modalView}
+        onBackdropPress={toggleModalAlert}
+        animationIn="slideInRight"
+        backdropColor="transparent">
+        <View style={[styles.modalContent]}>
+          <View style={styles.groupBtnDialog}>
+            <FlatList
+              style={styles.flatList}
+              data={occupation}
+              renderItem={renderRow}
+              keyExtractor={(item, index) => index.toString()}
+              onEndReachedThreshold={0}
+            />
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
 
 const {width, height} = Dimensions.get('window');
 const styles = StyleSheet.create({
+  occupationItem: {
+    // backgroundColor: '#f1f5f8',
+    padding: 5,
+    marginBottom: 4,
+  },
+  flatList: {
+    height: 300,
+  },
+  textAlert: {
+    paddingBottom: 20,
+    fontSize: 18,
+  },
+  textBtnCancel: {
+    paddingTop: 20,
+    fontSize: 20,
+  },
+  textAlertOk: {
+    paddingTop: 20,
+    fontSize: 20,
+    color: 'blue',
+  },
+  groupBtnDialog: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  modalView: {
+    paddingHorizontal: 10,
+    flex: 1,
+    width: '60%',
+    margin: 0,
+    position: 'absolute',
+    zIndex: 10,
+    top: isNotch ? height / 3 + 5 : height / 3 - 35,
+    right: 0,
+    paddingRight: 10,
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderRadius: 4,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 10,
+  },
+  listButtonStyleSearch: {
+    position: 'absolute',
+    zIndex: 10,
+    top: isNotch ? height / 3 - 40 : height / 3 - 80,
+    right: 0,
+    paddingRight: 10,
+  },
+  listButtonBackgroundStyleSearch: {
+    backgroundColor: 'red',
+    // paddingVertical: 5,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+  },
   header: {
     width: '100%',
     flexDirection: 'row',
