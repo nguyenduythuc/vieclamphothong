@@ -132,7 +132,7 @@ const HomeScreen = ({navigation}) => {
       <TouchableOpacity
         onPress={toggleModalAlert}
         style={styles.occupationItem}>
-        <Text>{item.name}</Text>
+        <Text style={styles.occupationItemText}>{item.name}</Text>
       </TouchableOpacity>
     );
   };
@@ -314,6 +314,9 @@ const HomeScreen = ({navigation}) => {
 
 const {width, height} = Dimensions.get('window');
 const styles = StyleSheet.create({
+  occupationItemText: {
+    fontSize: 18,
+  },
   occupationItem: {
     // backgroundColor: '#f1f5f8',
     padding: 5,
