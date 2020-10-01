@@ -214,6 +214,7 @@ const HomeScreen = ({navigation}) => {
         region={currentPosition}
         showsUserLocation
         followsUserLocation
+        moveOnMarkerPress={false}
         mapPadding={{bottom: 300}}
         paddingAdjustmentBehavior="automatic"
         onRegionChangeComplete={onRegionChange}>

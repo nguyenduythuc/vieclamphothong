@@ -1,11 +1,11 @@
 import qs from 'querystringify';
 import {navigationNative} from '../app';
 import {actions, configStore} from '../app-redux';
-import { reset } from '../utils/navigation';
 
 const {store} = configStore();
 
-const baseUrl = 'https://app.s-job.vn';
+// const baseUrl = 'https://app.s-job.vn';
+const baseUrl = 'http://app-prod.s-job.vn';
 // const navigation = useNavigation();
 
 let HEADERS = {
