@@ -94,7 +94,7 @@ const Profile = ({navigation}) => {
                   {marginBottom: 20},
                 ]}>
                 {avatarSource === null ? (
-                  <Text>Chọn ảnh đại diện</Text>
+                  <Text>Chọn ảnh</Text>
                 ) : (
                   <Image style={styles.avatar} source={{uri: avatarSource}} />
                 )}
@@ -130,7 +130,7 @@ const Profile = ({navigation}) => {
               <Text>{`Giới tính: ${
                 userProfile.gender === 'male' ? 'Nam' : 'Nữ'
               }`}</Text>
-              <Text>{`Địa chỉ đang cư trú: ${userProfile?.address}`}</Text>
+              <Text>{`Địa chỉ đang cư trú: ${userProfile?.address}, ${userProfile?.village}, ${userProfile?.district}, ${userProfile?.city}`}</Text>
             </View>
           </Card>
           <Card containerStyle={styles.cardContainer}>

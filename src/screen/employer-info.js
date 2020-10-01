@@ -47,15 +47,18 @@ const initialLayout = {width: Dimensions.get('window').width};
 
 const EmployerInfo = ({navigation, route}) => {
   const dispatch = useDispatch();
-  const {id} = route.params;
+  const {id, indexSend} = route.params;
+  const [avataSource, setAvataSource] = useState('');
   useEffect(() => {
     RecruitmentApi.getDetailRecruitment(id).then((response) => {
+      navigation.setOptions({title: response.data.company?.name});
+      setAvataSource(response.data.company?.cover);
       dispatch(actions.recruitment.saveDetailRecruitment(response.data));
       RecruitmentApi.makeRecuitmentSeen(id);
     });
-  }, [dispatch, id]);
+  }, [dispatch, id, navigation]);
 
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(indexSend);
   const [routes] = useState([
     {key: 'job', title: 'CÔNG VIỆC'},
     {key: 'comment', title: 'NHẬN XÉT'},
@@ -72,7 +75,7 @@ const EmployerInfo = ({navigation, route}) => {
     <SafeAreaView>
       <ScrollView>
         <View style={styles.header}>
-          <Image source={bg} style={styles.imageProfile} />
+          <Image source={{uri: avataSource}} style={styles.imageProfile} />
         </View>
         <TabView
           navigationState={{index, routes}}
@@ -99,6 +102,7 @@ const styles = StyleSheet.create({
   },
   imageProfile: {
     height: 300,
+    width: '100%',
     borderRadius: 12,
   },
   scene: {

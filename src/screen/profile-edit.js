@@ -10,10 +10,8 @@ import {
 import {Input, Button, Icon, Badge} from 'react-native-elements';
 import {useDispatch, useSelector} from 'react-redux';
 import RNPickerSelect from 'react-native-picker-select';
-import DatePicker from 'react-native-datepicker';
 import Toast from 'react-native-toast-message';
 import DeviceInfo from 'react-native-device-info';
-import {formatCurrency} from '../utils/common';
 import {actions} from '../app-redux';
 import {UserApi} from '../api';
 import moment from 'moment';
@@ -22,6 +20,7 @@ const isNotch = DeviceInfo.hasNotch();
 const ProfileEdit = ({navigation}) => {
   const dispatch = useDispatch();
   const userProfile = useSelector((state) => state.user.userProfile);
+  const checkDob = moment(userProfile?.dob, 'YYYY-MM-DD');
   const educationBackground = useSelector(
     (state) => state.recruitment?.listFilters?.educationBackground,
   );
@@ -66,16 +65,29 @@ const ProfileEdit = ({navigation}) => {
   const [email, setEmail] = useState(userProfile?.email);
   const onTypingEmail = useCallback((text) => setEmail(text), []);
 
-  const [birthDay, setBirthDay] = useState(
-    moment(userProfile?.dob).format('DD-MM-YYYY'),
-  );
-  const onTypingBirthDay = useCallback((text) => setBirthDay(text), []);
-
   const [gender, setGender] = useState(userProfile?.gender);
   const onTypingGender = useCallback((text) => setGender(text), []);
 
   const [address, setAddress] = useState(userProfile?.address);
   const onTypingAddress = useCallback((text) => setAddress(text), []);
+
+  const [village, setVillage] = useState(userProfile?.village);
+  const onTypingVillage = useCallback((text) => setVillage(text), []);
+
+  const [district, setDistrict] = useState(userProfile?.district);
+  const onTypingDistrict = useCallback((text) => setDistrict(text), []);
+
+  const [city, setCity] = useState(userProfile?.city);
+  const onTypingCity = useCallback((text) => setCity(text), []);
+
+  const [dobDate, setDobDate] = useState(checkDob.format('DD'));
+  const onTypingDobDate = useCallback((text) => setDobDate(text), []);
+
+  const [dobMonth, setDobMonth] = useState(checkDob.format('MM'));
+  const onTypingDobMonth = useCallback((text) => setDobMonth(text), []);
+
+  const [dobYear, setDobYear] = useState(checkDob.format('YYYY'));
+  const onTypingDobYear = useCallback((text) => setDobYear(text), []);
 
   const [educational, setEducational] = useState(
     userProfile?.resume?.educational_background_id,
@@ -181,8 +193,11 @@ const ProfileEdit = ({navigation}) => {
         email: email,
         gender: gender,
         address: address,
+        village: village,
+        district: district,
+        city: city,
         introduce: introduce,
-        dob: birthDay,
+        dob: `${dobDate}-${dobMonth}-${dobYear}`,
         educational_background_id: educational,
         education_description: school,
         experience: experience,
@@ -214,8 +229,14 @@ const ProfileEdit = ({navigation}) => {
       email,
       gender,
       address,
+      village,
+      district,
+      city,
       introduce,
-      birthDay,
+      // birthDay,
+      dobDate,
+      dobMonth,
+      dobYear,
       educational,
       school,
       experience,
@@ -271,6 +292,8 @@ const ProfileEdit = ({navigation}) => {
                   inputContainerStyle={styles.inputContainerStyleDob}
                   containerStyle={styles.containerStyle}
                   keyboardType="numeric"
+                  onChangeText={onTypingDobDate}
+                  value={dobDate}
                 />
                 <Text style={styles.dobText}>/</Text>
                 <Input
@@ -279,6 +302,8 @@ const ProfileEdit = ({navigation}) => {
                   inputContainerStyle={styles.inputContainerStyleDob}
                   containerStyle={styles.containerStyle}
                   keyboardType="numeric"
+                  onChangeText={onTypingDobMonth}
+                  value={dobMonth}
                 />
                 <Text style={styles.dobText}>/</Text>
                 <Input
@@ -287,6 +312,8 @@ const ProfileEdit = ({navigation}) => {
                   inputContainerStyle={styles.inputContainerStyleDob}
                   containerStyle={styles.containerStyle}
                   keyboardType="numeric"
+                  onChangeText={onTypingDobYear}
+                  value={dobYear}
                 />
               </View>
             </View>
@@ -316,16 +343,16 @@ const ProfileEdit = ({navigation}) => {
                   inputStyle={styles.inputStyleAddress}
                   inputContainerStyle={styles.inputContainerStyle}
                   containerStyle={styles.containerStyleAddress}
-                  // onChangeText={onTypingAddress}
-                  // value={address}
+                  onChangeText={onTypingAddress}
+                  value={address}
                 />
                 <Input
                   placeholder="Phường/Xã"
                   inputStyle={styles.inputStyleAddress}
                   inputContainerStyle={styles.inputContainerStyle}
                   containerStyle={styles.containerStyleAddress}
-                  // onChangeText={onTypingAddress}
-                  // value={address}
+                  onChangeText={onTypingVillage}
+                  value={village}
                 />
               </View>
               <View style={styles.addressWrapper}>
@@ -334,24 +361,18 @@ const ProfileEdit = ({navigation}) => {
                   inputStyle={styles.inputStyleAddress}
                   inputContainerStyle={styles.inputContainerStyle}
                   containerStyle={styles.containerStyleAddress}
-                  // onChangeText={onTypingAddress}
-                  // value={address}
+                  onChangeText={onTypingDistrict}
+                  value={district}
                 />
                 <Input
                   placeholder="Tỉnh/Thành phố"
                   inputStyle={styles.inputStyleAddress}
                   inputContainerStyle={styles.inputContainerStyle}
                   containerStyle={styles.containerStyleAddress}
-                  // onChangeText={onTypingAddress}
-                  // value={address}
+                  onChangeText={onTypingCity}
+                  value={city}
                 />
               </View>
-              {/* <Input
-                inputStyle={styles.inputStyle}
-                inputContainerStyle={styles.inputContainerStyle}
-                onChangeText={onTypingAddress}
-                value={address}
-              /> */}
             </View>
           </View>
           <View>
@@ -488,7 +509,7 @@ const ProfileEdit = ({navigation}) => {
               <Input
                 multiline={true}
                 inputStyle={styles.inputStyle}
-                inputContainerStyle={styles.inputContainerStyle}
+                inputContainerStyle={styles.inputContainerStyleIntroduction}
                 onChangeText={onTypingexpIntroduce}
                 value={introduce}
               />
@@ -601,6 +622,11 @@ const styles = StyleSheet.create({
     borderColor: '#a0aec0',
     borderBottomWidth: 0.5,
   },
+  inputContainerStyleIntroduction: {
+    borderColor: '#a0aec0',
+    borderBottomWidth: 0.5,
+    paddingBottom: 10,
+  },
   inputContainerStyleDob: {
     borderColor: '#a0aec0',
     borderBottomWidth: 0.5,
@@ -610,6 +636,7 @@ const styles = StyleSheet.create({
     paddingRight: 0,
     marginRight: 0,
     marginBottom: -10,
+    justifyContent: 'flex-end',
   },
   dobText: {
     marginTop: isNotch ? 36 : 44,
@@ -622,6 +649,7 @@ const styles = StyleSheet.create({
   inputStyleDob: {
     height: 'auto',
     maxWidth: 60,
+    justifyContent: 'flex-end',
   },
   dobWrapper: {
     flexDirection: 'row',
