@@ -40,6 +40,7 @@ const HomeScreen = ({navigation}) => {
   const [paramFilter, setParamFilter] = useState('');
   const [currentPosition, setCurentPosition] = useState(userLocation);
   const [selectedMarker, setSelectedMarker] = useState(null);
+  const [markerPressed, setMarkerPressed] = useState(null);
   const [isShowButtonPositionChange, setIsShowButtonPositionChange] = useState(
     false,
   );
@@ -96,13 +97,14 @@ const HomeScreen = ({navigation}) => {
 
   const onRegionChange = useCallback(
     (region) => {
+      if (markerPressed) return;
       if (Math.abs(currentPosition.latitude - region.latitude) < 0.005) {
         return;
       }
       setIsShowButtonPositionChange(true);
       setCurentPosition(region);
     },
-    [currentPosition],
+    [currentPosition, markerPressed],
   );
 
   const onChangePostionButton = useCallback(() => {
@@ -122,7 +124,7 @@ const HomeScreen = ({navigation}) => {
       const newPosition = {...currentPosition};
       newPosition.latitude = parseFloat(listJobs[index]?.company.latitude);
       newPosition.longitude = parseFloat(listJobs[index]?.company.longitude);
-      if (Platform.OS === 'android') setCurentPosition(newPosition);
+      // if (Platform.OS === 'android') setCurentPosition(newPosition);
       setSelectedMarker(listJobs[index]?.id);
       // mapRef.current?.animateCamera({center: newPosition, pitch: 45});
       markerRef.current[index].showCallout();
@@ -131,7 +133,8 @@ const HomeScreen = ({navigation}) => {
   );
 
   function onItemSelected(itemId) {
-    // setSelectedMarker(itemId);
+    setMarkerPressed(true);
+    setTimeout(() => setMarkerPressed(false), 2000);
     const index = listJobs.findIndex((item) => item.id === itemId);
     carouselRef.current.snapToItem(index !== -1 ? index : 0);
   }
