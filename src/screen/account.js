@@ -7,11 +7,12 @@ import {
   Image,
   PixelRatio,
   ScrollView,
+  Button,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {ListItem, Icon} from 'react-native-elements';
 import {actions} from '../app-redux';
-import {UserApi} from '../api';
+import {UserApi, setToken} from '../api';
 
 const list = [
   {
@@ -81,6 +82,12 @@ const AccountScreen = ({navigation}) => {
     navigation.navigate(screen);
   }
 
+  const onLogout = () => {
+    dispatch(actions.user.saveUser({}));
+    setToken('');
+    navigation.reset({index: 0, routes: [{name: 'Login'}]});
+  };
+
   console.log(user);
 
   return (
@@ -114,6 +121,8 @@ const AccountScreen = ({navigation}) => {
             {/* <Icon name={item.iconName} type={item.iconType} /> */}
           </ListItem>
         ))}
+
+        <Button title="Đăng xuất" color="#517fa4" onPress={onLogout} />
       </ScrollView>
     </SafeAreaView>
   );
