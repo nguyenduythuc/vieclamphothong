@@ -3,7 +3,7 @@ import types from '../types';
 const INITIAL_STATE = {
   user: null,
   userType: null,
-  userLocation: {},
+  userLocation: null,
   userProfile: {},
 };
 

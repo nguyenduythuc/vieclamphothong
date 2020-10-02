@@ -73,6 +73,8 @@ const LoginScreen = ({navigation}) => {
           <Input
             inputStyle={styles.inputStyle}
             inputContainerStyle={styles.inputContainerStyle}
+            keyboardType="number-pad"
+            maxLength={10}
             onChangeText={onTypingPhone}
             selectionColor="black"
             placeholderTextColor="white"
@@ -150,6 +152,8 @@ const LoginScreen = ({navigation}) => {
           inputStyle={styles.overlayInputStyle}
           inputContainerStyle={styles.overlayInputContainerStyle}
           onChangeText={onForgotPasswordTypingPhone}
+          keyboardType="number-pad"
+          maxLength={10}
           placeholderTextColor="black"
           placeholder="Số điện thoại"
         />

@@ -7,12 +7,12 @@
  * @flow strict-local
  */
 
-import React, {useEffect, useCallback, useRef, useState} from 'react';
+import React, {useEffect, useCallback, useRef, useState, memo} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
   View,
-  Platform,
+  PermissionsAndroid,
   Dimensions,
   TouchableOpacity,
   Text,
@@ -23,6 +23,7 @@ import {JobItem} from '../components';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import DeviceInfo from 'react-native-device-info';
 import Carousel from 'react-native-snap-carousel';
+import Geolocation from 'react-native-geolocation-service';
 import {RecruitmentApi} from '../api';
 import {useDispatch, useSelector} from 'react-redux';
 import {actions} from '../app-redux';
@@ -42,8 +43,8 @@ const HomeScreen = ({navigation}) => {
   const userLocation = useSelector((state) => state.user.userLocation);
   const [search, setSearch] = useState('');
   const [paramFilter, setParamFilter] = useState('');
-  const [currentPosition, setCurentPosition] = useState(defaultPosition);
-  // const [currentPosition, setCurentPosition] = useState(userLocation);
+  // const [currentPosition, setCurentPosition] = useState(defaultPosition);
+  const [currentPosition, setCurentPosition] = useState(userLocation);
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [markerPressed, setMarkerPressed] = useState(null);
   const [isShowButtonPositionChange, setIsShowButtonPositionChange] = useState(
@@ -165,9 +166,7 @@ const HomeScreen = ({navigation}) => {
       const newPosition = {...currentPosition};
       newPosition.latitude = parseFloat(listJobs[index]?.company.latitude);
       newPosition.longitude = parseFloat(listJobs[index]?.company.longitude);
-      if (Platform.OS === 'android') {
-        setCurentPosition(newPosition);
-      }
+      setCurentPosition(newPosition);
       setSelectedMarker(listJobs[index]?.id);
       // mapRef.current?.animateCamera({center: newPosition, pitch: 45});
       markerRef.current[index].showCallout();
@@ -185,131 +184,197 @@ const HomeScreen = ({navigation}) => {
     setModalVisibleAlert(!isModalVisibleAlert);
   };
 
+  const onRelocatePosition = () => {
+    setCurentPosition(userLocation);
+  };
+
+  const requestLocationPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: 'Example App',
+          message: 'Example App access to your location ',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        Geolocation.getCurrentPosition((info) => {
+          console.log(info);
+          dispatch(
+            actions.user.saveCurrentLocation({
+              latitude: info.coords.latitude,
+              longitude: info.coords.longitude,
+              latitudeDelta: 0.1,
+              longitudeDelta: 0.1,
+            }),
+          );
+        });
+        console.log('You can use the location');
+      } else {
+        console.log('location permission denied');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
   return (
     <SafeAreaView style={{backgroundColor: 'white'}}>
-      {isShowButtonPositionChange && (
-        <Button
-          icon={
-            <Icon
-              name="my-location"
-              color="#517fa4"
-              size={17}
-              style={{paddingRight: 5, paddingTop: 2}}
-            />
-          }
-          title="Tìm kiếm khu vực này"
-          containerStyle={styles.changePositionButtonStyle}
-          buttonStyle={styles.changePositionButtonBackgroundStyle}
-          titleStyle={{fontSize: 13}}
-          onPress={onChangePostionButton}
-          type="clear"
-        />
+      {!userLocation && (
+        <View style={styles.requestLocationPermission}>
+          <Text>Bạn hãy bật tính năng định vị để sử dụng dịch vụ</Text>
+          <Button title="Bật định vị" onPress={requestLocationPermission} />
+        </View>
       )}
-      <Button
-        icon={
-          <Icon
-            name="list"
-            type="fsather"
-            color="#517fa4"
-            size={19}
-            style={{paddingRight: 5, paddingTop: 2}}
-          />
-        }
-        title="Danh sách"
-        containerStyle={styles.listButtonStyle}
-        buttonStyle={styles.listButtonBackgroundStyle}
-        onPress={onPressToList}
-        titleStyle={{fontSize: 13}}
-        type="clear"
-      />
-      <Button
-        icon={<Icon name="search1" type="antdesign" color="white" size={23} />}
-        containerStyle={styles.listButtonStyleSearch}
-        buttonStyle={styles.listButtonBackgroundStyleSearch}
-        onPress={toggleModalAlert}
-        type="clear"
-      />
-      <Icon
-        name="list"
-        type="fsather"
-        color="#517fa4"
-        size={19}
-        style={styles.relocateButton}
-      />
-      <MapView
-        ref={mapRef}
-        provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-        style={styles.map}
-        region={currentPosition}
-        showsUserLocation
-        followsUserLocation
-        moveOnMarkerPress={false}
-        mapPadding={{bottom: 300}}
-        paddingAdjustmentBehavior="automatic"
-        onRegionChangeComplete={onRegionChange}>
-        {listJobs?.map(
-          (
-            {company, id, title, description, distance, min_salary, max_salary},
-            index,
-          ) => (
-            <Marker
-              key={id}
-              ref={(el) => (markerRef.current[index] = el)}
-              onPress={() => onItemSelected(id)}
-              coordinate={{
-                latitude: parseFloat(company.latitude),
-                longitude: parseFloat(company.longitude),
-              }}
-              title={`Lương: ${formatCurrencyToSring(
-                min_salary,
-              )} - ${formatCurrencyToSring(max_salary)}tr`}
-              description={`Cách bạn: ${distance}km`}>
+      {userLocation && (
+        <>
+          {isShowButtonPositionChange && (
+            <Button
+              icon={
+                <Icon
+                  name="my-location"
+                  color="#517fa4"
+                  size={17}
+                  style={{paddingRight: 5, paddingTop: 2}}
+                />
+              }
+              title="Tìm kiếm khu vực này"
+              containerStyle={styles.changePositionButtonStyle}
+              buttonStyle={styles.changePositionButtonBackgroundStyle}
+              titleStyle={{fontSize: 13}}
+              onPress={onChangePostionButton}
+              type="clear"
+            />
+          )}
+          <Button
+            icon={
               <Icon
-                name="map-marker-alt"
-                type="font-awesome-5"
-                color={selectedMarker === id ? 'red' : '#3182ce'}
-                size={30}
+                name="list"
+                type="fsather"
+                color="#517fa4"
+                size={19}
                 style={{paddingRight: 5, paddingTop: 2}}
               />
-            </Marker>
-          ),
-        )}
-      </MapView>
-      <View style={{position: 'absolute', bottom: isNotch ? 80 : 50}}>
-        <Carousel
-          ref={carouselRef}
-          sliderWidth={width}
-          sliderHeight={height * 0.09}
-          itemWidth={width - 80}
-          data={listJobs}
-          onSnapToItem={onSwipeToItem}
-          renderItem={renderItem}
-        />
-      </View>
-      <Modal
-        isVisible={isModalVisibleAlert}
-        style={styles.modalView}
-        onBackdropPress={toggleModalAlert}
-        animationIn="slideInRight"
-        backdropColor="transparent">
-        <View style={[styles.modalContent]}>
-          <View style={styles.groupBtnDialog}>
-            <FlatList
-              style={styles.flatList}
-              data={occupation}
-              renderItem={renderRow}
-              keyExtractor={(item, index) => index.toString()}
-              onEndReachedThreshold={0}
+            }
+            title="Danh sách"
+            containerStyle={styles.listButtonStyle}
+            buttonStyle={styles.listButtonBackgroundStyle}
+            onPress={onPressToList}
+            titleStyle={{fontSize: 13}}
+            type="clear"
+          />
+          <Button
+            icon={
+              <Icon name="search1" type="antdesign" color="white" size={23} />
+            }
+            containerStyle={styles.listButtonStyleSearch}
+            buttonStyle={styles.listButtonBackgroundStyleSearch}
+            onPress={toggleModalAlert}
+            type="clear"
+          />
+          <Button
+            icon={
+              <Icon
+                name="navigation"
+                type="feather"
+                color="#517fa4"
+                size={23}
+              />
+            }
+            containerStyle={styles.relocateButtonStyle}
+            buttonStyle={styles.relocateButtonBackgroundStyle}
+            onPress={onRelocatePosition}
+            type="clear"
+          />
+          <MapView
+            ref={mapRef}
+            provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+            style={styles.map}
+            region={currentPosition}
+            showsUserLocation
+            followsUserLocation
+            // moveOnMarkerPress={false}
+            mapPadding={{bottom: 300}}
+            paddingAdjustmentBehavior="automatic"
+            onRegionChangeComplete={onRegionChange}>
+            {listJobs?.map(
+              (
+                {
+                  company,
+                  id,
+                  title,
+                  description,
+                  distance,
+                  min_salary,
+                  max_salary,
+                },
+                index,
+              ) => (
+                <Marker
+                  key={id}
+                  ref={(el) => (markerRef.current[index] = el)}
+                  onPress={() => onItemSelected(id)}
+                  coordinate={{
+                    latitude: parseFloat(company.latitude),
+                    longitude: parseFloat(company.longitude),
+                  }}
+                  title={`Lương: ${formatCurrencyToSring(
+                    min_salary,
+                  )} - ${formatCurrencyToSring(max_salary)}tr`}
+                  description={`Cách bạn: ${distance}km`}>
+                  <Icon
+                    name="map-marker-alt"
+                    type="font-awesome-5"
+                    color={selectedMarker === id ? 'red' : '#3182ce'}
+                    size={30}
+                    style={{paddingRight: 5, paddingTop: 2}}
+                  />
+                </Marker>
+              ),
+            )}
+          </MapView>
+          <View style={{position: 'absolute', bottom: isNotch ? 80 : 50}}>
+            <Carousel
+              ref={carouselRef}
+              sliderWidth={width}
+              sliderHeight={height * 0.09}
+              itemWidth={width - 80}
+              data={listJobs}
+              onSnapToItem={onSwipeToItem}
+              renderItem={renderItem}
             />
           </View>
-        </View>
-      </Modal>
+          <Modal
+            isVisible={isModalVisibleAlert}
+            style={styles.modalView}
+            onBackdropPress={toggleModalAlert}
+            animationIn="slideInRight"
+            backdropColor="transparent">
+            <View style={[styles.modalContent]}>
+              <View style={styles.groupBtnDialog}>
+                <FlatList
+                  style={styles.flatList}
+                  data={occupation}
+                  renderItem={renderRow}
+                  keyExtractor={(item, index) => index.toString()}
+                  onEndReachedThreshold={0}
+                />
+              </View>
+            </View>
+          </Modal>
+        </>
+      )}
     </SafeAreaView>
   );
 };
 
 const {width, height} = Dimensions.get('window');
 const styles = StyleSheet.create({
+  requestLocationPermission: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'column',
+  },
   occupationItemText: {
     fontSize: 18,
     color: '#4a5568',
@@ -367,6 +432,19 @@ const styles = StyleSheet.create({
   listButtonBackgroundStyleSearch: {
     backgroundColor: 'red',
     // paddingVertical: 5,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+  },
+  relocateButtonStyle: {
+    position: 'absolute',
+    zIndex: 10,
+    top: isNotch ? height / 2 - 40 : height / 2 - 80,
+    right: 0,
+    paddingRight: 10,
+  },
+  relocateButtonBackgroundStyle: {
+    backgroundColor: 'white',
     width: 40,
     height: 40,
     borderRadius: 20,
@@ -439,4 +517,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default memo(HomeScreen);
