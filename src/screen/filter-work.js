@@ -1,8 +1,17 @@
 import React, {useState, useCallback, useEffect} from 'react';
-import {SafeAreaView, ScrollView, View, Text, StyleSheet} from 'react-native';
+import {
+  SafeAreaView,
+  ScrollView,
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+} from 'react-native';
 import {Button} from 'react-native-elements';
 import {useSelector} from 'react-redux';
+import DeviceInfo from 'react-native-device-info';
 
+const isNotch = DeviceInfo.hasNotch();
 const FilterWork = ({navigation, route}) => {
   const occupation = useSelector(
     (state) => state.recruitment.listFilters?.occupation,
@@ -37,6 +46,14 @@ const FilterWork = ({navigation, route}) => {
 
   return (
     <SafeAreaView>
+      <Button
+        title="Đồng ý"
+        buttonStyle={styles.btnViewResult}
+        type="clear"
+        titleStyle={{color: 'white'}}
+        containerStyle={styles.acceptButtonStyle}
+        onPress={submitWork}
+      />
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.blockTitle}>
           <Text style={styles.blockTitleText}>Chọn tối đa 4 công việc</Text>
@@ -66,26 +83,17 @@ const FilterWork = ({navigation, route}) => {
               </View>
             ))}
         </View>
-
-        <View style={styles.blockTitle}>
-          <Button
-            title="Đồng ý"
-            buttonStyle={styles.btnViewResult}
-            type="clear"
-            titleStyle={{color: 'white'}}
-            onPress={submitWork}
-          />
-        </View>
       </ScrollView>
     </SafeAreaView>
   );
 };
 
+const {width, height} = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     width: '100%',
     paddingHorizontal: 10,
-    paddingBottom: 20,
+    paddingBottom: 70,
     backgroundColor: 'white',
   },
   row: {
@@ -125,7 +133,14 @@ const styles = StyleSheet.create({
   btnViewResult: {
     backgroundColor: '#48bb78',
     borderRadius: 20,
-    marginHorizontal: 17,
+    width: '80%',
+    paddingHorizontal: '20%',
+  },
+  acceptButtonStyle: {
+    position: 'absolute',
+    zIndex: 10,
+    bottom: 50,
+    right: '10%',
   },
 });
 

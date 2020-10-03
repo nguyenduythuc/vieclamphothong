@@ -291,7 +291,7 @@ const ProfileEdit = ({navigation}) => {
                   inputStyle={styles.inputStyleDob}
                   inputContainerStyle={styles.inputContainerStyleDob}
                   containerStyle={styles.containerStyle}
-                  keyboardType="numeric"
+                  keyboardType="number-pad"
                   onChangeText={onTypingDobDate}
                   value={dobDate}
                 />
@@ -301,7 +301,7 @@ const ProfileEdit = ({navigation}) => {
                   inputStyle={styles.inputStyleDob}
                   inputContainerStyle={styles.inputContainerStyleDob}
                   containerStyle={styles.containerStyle}
-                  keyboardType="numeric"
+                  keyboardType="number-pad"
                   onChangeText={onTypingDobMonth}
                   value={dobMonth}
                 />
@@ -311,7 +311,7 @@ const ProfileEdit = ({navigation}) => {
                   inputStyle={styles.inputStyleDob}
                   inputContainerStyle={styles.inputContainerStyleDob}
                   containerStyle={styles.containerStyle}
-                  keyboardType="numeric"
+                  keyboardType="number-pad"
                   onChangeText={onTypingDobYear}
                   value={dobYear}
                 />
@@ -417,7 +417,7 @@ const ProfileEdit = ({navigation}) => {
                 inputContainerStyle={styles.inputContainerStyle}
                 onChangeText={onTypingExperience}
                 value={experience}
-                keyboardType="numeric"
+                keyboardType="number-pad"
               />
             </View>
             <View style={styles.selectInner}>

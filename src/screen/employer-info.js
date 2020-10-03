@@ -24,7 +24,7 @@ import {RecruitmentApi} from '../api';
 import {useDispatch, useSelector} from 'react-redux';
 import {actions} from '../app-redux';
 
-const bg = require('../assets/samsung.jpg');
+const bg = require('../assets/image-recruitment.jpg');
 const JobRoute = () => (
   <View style={[styles.scene]}>
     <JobDetail />
@@ -75,7 +75,7 @@ const EmployerInfo = ({navigation, route}) => {
     <SafeAreaView>
       <ScrollView>
         <View style={styles.header}>
-          <Image source={{uri: avataSource}} style={styles.imageProfile} />
+          <Image source={bg} style={styles.imageProfile} />
         </View>
         <TabView
           navigationState={{index, routes}}

@@ -14,7 +14,14 @@ import Toast from 'react-native-toast-message';
 import {RecruitmentApi} from '../api';
 import moment from 'moment';
 
-const JobAppliedItem = ({item, navigation, isApplied, isSaved, deleteItem}) => {
+const JobAppliedItem = ({
+  item,
+  navigation,
+  isApplied,
+  isSaved,
+  deleteItem,
+  callBackFromItem,
+}) => {
   const calculatorDate = useCallback(() => {
     const start = moment(item.recruitment.created_at, 'YYYY-MM-DD');
     const end = moment(new Date(), 'YYYY-MM-DD');
@@ -25,16 +32,30 @@ const JobAppliedItem = ({item, navigation, isApplied, isSaved, deleteItem}) => {
   };
   const onPressApply = (id) => {
     RecruitmentApi.makeRecuitmentApplied(id).then((response) => {
+      // callBackFromItem(id, 'SEEN');
       Toast.show({
         type: 'success',
         position: 'top',
         text1: 'Thành công!',
-        text2:
-          'Đã ứng tuyển thành công bạn có thể kiểm tra ở danh sách công việc đã ứng tuyển.',
+        text2: 'Đã nộp hồ sơ thành công.',
         visibilityTime: 2000,
         autoHide: true,
         topOffset: 70,
       });
+    });
+  };
+  const onPressTitle = (id) => {
+    // callBackFromItem(id, 'SEEN');
+    navigation.navigate('EmployerInfo', {
+      id: item?.id,
+      indexSend: 0,
+    });
+  };
+  const onPressComment = (id) => {
+    // callBackFromItem(id, 'SEEN');
+    navigation.navigate('EmployerInfo', {
+      id: item?.id,
+      indexSend: 1,
     });
   };
   return (
@@ -42,13 +63,8 @@ const JobAppliedItem = ({item, navigation, isApplied, isSaved, deleteItem}) => {
       <View style={styles.cardHeader}>
         <View style={styles.col90}>
           <Text
-            onPress={() => {
-              navigation.navigate('EmployerInfo', {
-                id: item?.id,
-                indexSend: 0,
-              });
-            }}
-            style={styles.title}
+            onPress={() => onPressTitle(item?.recruitment?.id)}
+            style={item?.has_seen ? styles.titleSeen : styles.title}
             numberOfLines={2}>
             {item.recruitment.title}
           </Text>
@@ -70,7 +86,10 @@ const JobAppliedItem = ({item, navigation, isApplied, isSaved, deleteItem}) => {
             item.recruitment.min_salary,
           )}tr-${formatCurrencyToSring(item.recruitment.max_salary)}tr`}</Text>
         </View>
-        <Text>{`Số lượng: ${item.recruitment.quantity}`}</Text>
+        <Text style={styles.greyText}>
+          Số lượng:{' '}
+          <Text style={styles.quantityText}>{item?.recruitment?.quantity}</Text>
+        </Text>
       </View>
       <View style={styles.row}>
         <Text>{`Hạn nộp: ${moment(item.recruitment.expired_at).format(
@@ -92,12 +111,7 @@ const JobAppliedItem = ({item, navigation, isApplied, isSaved, deleteItem}) => {
         />
         <TouchableOpacity
           style={styles.comments}
-          onPress={() => {
-            navigation.navigate('EmployerInfo', {
-              id: item?.id,
-              indexSend: 1,
-            });
-          }}>
+          onPress={() => onPressComment(item?.id)}>
           <Icon name="comments" type="fontisto" color="red" size={10} />
           <Text style={styles.commentsText}> Xem nhận xét</Text>
         </TouchableOpacity>
@@ -125,7 +139,7 @@ const JobAppliedItem = ({item, navigation, isApplied, isSaved, deleteItem}) => {
         {isSaved && (
           <View style={styles.col}>
             <Button
-              title="Ứng tuyển"
+              title="Nộp hồ sơ"
               buttonStyle={styles.btnDeleteOptions}
               type="outline"
               titleStyle={{color: 'white'}}
@@ -212,6 +226,11 @@ const styles = StyleSheet.create({
   },
   greyText: {
     color: 'grey',
+    fontSize: 12,
+  },
+  quantityText: {
+    fontSize: 12,
+    color: 'black',
   },
 });
 

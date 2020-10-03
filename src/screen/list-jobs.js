@@ -73,6 +73,10 @@ const ListJobs = ({navigation}) => {
         const newItem = {...item, has_apply: true};
         return newItem;
       }
+      if (item.id === id && action === 'SEEN') {
+        const newItem = {...item, has_seen: true};
+        return newItem;
+      }
       return item;
     });
     setListJobs(newListJobs);

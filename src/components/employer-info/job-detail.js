@@ -29,8 +29,7 @@ const JobDetail = () => {
           type: 'success',
           position: 'top',
           text1: 'Thành công!',
-          text2:
-            'Đã ứng tuyển thành công, bạn có thể kiểm tra ở danh sách công việc đã ứng tuyển.',
+          text2: 'Đã nộp hồ sơ thành công.',
           visibilityTime: 2000,
           autoHide: true,
           topOffset: 70,
@@ -54,8 +53,7 @@ const JobDetail = () => {
           type: 'success',
           position: 'top',
           text1: 'Thành công!',
-          text2:
-            'Đã lưu thành công, bạn có thể kiểm tra ở danh sách công việc đã lưu.',
+          text2: 'Đã lưu thành công.',
           visibilityTime: 2000,
           autoHide: true,
           topOffset: 70,
@@ -109,6 +107,15 @@ const JobDetail = () => {
             <Text>
               {detailRecruitment?.min_age}-{detailRecruitment?.max_age}{' '}
             </Text>
+          </View>
+        </View>
+        <View style={styles.row}>
+          <View style={styles.col50}>
+            <Text>Kinh nghiệm: </Text>
+            {detailRecruitment.experience && (
+              <Text>{detailRecruitment.experience}</Text>
+            )}
+            {!detailRecruitment.experience && <Text>Không yêu cầu</Text>}
           </View>
         </View>
       </Card>

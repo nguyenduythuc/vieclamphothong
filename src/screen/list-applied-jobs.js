@@ -86,6 +86,25 @@ const ListAppliedJobs = ({navigation}) => {
     },
     [paramStatus, userLocation.latitude, userLocation.longitude],
   );
+  const callBackFromItem = (id, action) => {
+    const newListJobs = listAppliedJobs.map((item) => {
+      if (item.id === id && action === 'SAVE') {
+        const newItem = {...item, has_save: true};
+        return newItem;
+      }
+      if (item.id === id && action === 'APPLY') {
+        const newItem = {...item, has_apply: true};
+        return newItem;
+      }
+      if (item.id === id && action === 'SEEN') {
+        const newItem = {...item, has_seen: true};
+        console.log(newItem);
+        return newItem;
+      }
+      return item;
+    });
+    setListAppliedJobs(newListJobs);
+  };
   const onPressDeleteItem = (idRecuitment) => {
     toggleModalAlert();
     setIdForDelete(idRecuitment);
@@ -151,6 +170,7 @@ const ListAppliedJobs = ({navigation}) => {
                 isApplied
                 navigation={navigation}
                 deleteItem={onPressDeleteItem}
+                callBackFromItem={callBackFromItem}
               />
             ))}
           </View>
@@ -217,6 +237,7 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: '#f7fafc',
+    paddingBottom: 60,
   },
   item: {
     width: '100%',

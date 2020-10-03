@@ -126,7 +126,12 @@ const HomeScreen = ({navigation}) => {
   const renderItem = useCallback(({item, index}, parallaxProps) => {
     return (
       <View style={styles.item}>
-        <JobItem item={item} navigation={navigation} isHome />
+        <JobItem
+          item={item}
+          navigation={navigation}
+          callBackFromItem={callBackFromItem}
+          isHome
+        />
       </View>
     );
   }, []);
@@ -217,6 +222,25 @@ const HomeScreen = ({navigation}) => {
       console.warn(err);
     }
   };
+  const callBackFromItem = (paramSendLocal, param, id, action) => {
+    const newListJobs = listJobs.map((item) => {
+      if (item.id === id && action === 'SAVE') {
+        const newItem = {...item, has_save: true};
+        return newItem;
+      }
+      if (item.id === id && action === 'APPLY') {
+        const newItem = {...item, has_apply: true};
+        return newItem;
+      }
+      if (item.id === id && action === 'SEEN') {
+        const newItem = {...item, has_seen: true};
+        return newItem;
+      }
+      return item;
+    });
+    dispatch(actions.recruitment.saveListJobs(newListJobs));
+    // setListJobs(newListJobs);
+  };
 
   return (
     <SafeAreaView style={{backgroundColor: 'white'}}>
@@ -275,8 +299,8 @@ const HomeScreen = ({navigation}) => {
           <Button
             icon={
               <Icon
-                name="navigation"
-                type="feather"
+                name="dot-circle-o"
+                type="font-awesome"
                 color="#517fa4"
                 size={23}
               />
@@ -439,7 +463,7 @@ const styles = StyleSheet.create({
   relocateButtonStyle: {
     position: 'absolute',
     zIndex: 10,
-    top: isNotch ? height / 2 - 40 : height / 2 - 80,
+    top: isNotch ? height / 2 - 60 : height / 2 - 100,
     right: 0,
     paddingRight: 10,
   },

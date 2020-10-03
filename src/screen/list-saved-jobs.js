@@ -141,6 +141,7 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: '#f7fafc',
+    paddingBottom: 60,
   },
   item: {
     width: '100%',

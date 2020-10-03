@@ -29,8 +29,7 @@ const JobItem = ({
         type: 'success',
         position: 'top',
         text1: 'Thành công!',
-        text2:
-          'Đã ứng tuyển thành công bạn có thể kiểm tra ở danh sách công việc đã ứng tuyển.',
+        text2: 'Đã nộp hồ sơ thành công.',
         visibilityTime: 1000,
         autoHide: true,
         topOffset: 70,
@@ -44,12 +43,25 @@ const JobItem = ({
         type: 'success',
         position: 'top',
         text1: 'Thành công!',
-        text2:
-          'Đã lưu thành công bạn có thể kiểm tra ở danh sách công việc đã lưu.',
+        text2: 'Đã lưu thành công.',
         visibilityTime: 1000,
         autoHide: true,
         topOffset: 70,
       });
+    });
+  };
+  const onPressTitle = (id) => {
+    callBackFromItem(param, paramFilter, id, 'SEEN');
+    navigation.navigate('EmployerInfo', {
+      id: item?.id,
+      indexSend: 0,
+    });
+  };
+  const onPressComment = (id) => {
+    callBackFromItem(id, 'SEEN');
+    navigation.navigate('EmployerInfo', {
+      id: item?.id,
+      indexSend: 1,
     });
   };
   return (
@@ -60,12 +72,7 @@ const JobItem = ({
       ]}>
       <View style={styles.cardHeader}>
         <Text
-          onPress={() => {
-            navigation.navigate('EmployerInfo', {
-              id: item?.id,
-              indexSend: 0,
-            });
-          }}
+          onPress={() => onPressTitle(item?.id)}
           style={item?.has_seen ? styles.titleSeen : styles.title}
           numberOfLines={2}>
           {item?.title}
@@ -100,12 +107,7 @@ const JobItem = ({
         <Rating imageSize={12} startingValue={item?.company?.rating_point} />
         <TouchableOpacity
           style={styles.comments}
-          onPress={() => {
-            navigation.navigate('EmployerInfo', {
-              id: item?.id,
-              indexSend: 1,
-            });
-          }}>
+          onPress={() => onPressComment(item?.id)}>
           <Icon name="comments" type="fontisto" color="red" size={10} />
           <Text style={styles.commentsText}> Xem nhận xét</Text>
         </TouchableOpacity>
@@ -121,7 +123,7 @@ const JobItem = ({
         {!item?.has_apply && !isHome && (
           <View style={styles.col}>
             <Button
-              title="Ứng tuyển"
+              title="Nộp hồ sơ"
               buttonStyle={styles.btnDeleteOptions}
               type="outline"
               titleStyle={{color: 'white', fontSize: 13}}
@@ -164,13 +166,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     color: '#3182ce',
     fontSize: 17,
-    // width: '90%',
+    height: 50,
   },
   titleSeen: {
     marginBottom: 10,
     color: 'grey',
     fontSize: 17,
-    // width: '90%',
+    height: 50,
   },
   title2: {
     marginBottom: 10,

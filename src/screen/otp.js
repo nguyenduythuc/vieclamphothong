@@ -97,6 +97,7 @@ const OTPScreen = ({navigation, route}) => {
           selectionColor="black"
           placeholder="Nhập mã xác thực"
           placeholderTextColor="white"
+          keyboardType="number-pad"
         />
 
         <Button
