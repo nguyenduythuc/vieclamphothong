@@ -164,7 +164,7 @@ const JobDetail = () => {
         {!detailRecruitment?.has_apply && (
           <View style={styles.btnItem}>
             <Button
-              title="Ứng tuyển công việc này"
+              title="Nộp hồ sơ"
               titleStyle={{color: 'white'}}
               onPress={() => onPressApply()}
             />

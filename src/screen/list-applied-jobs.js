@@ -187,16 +187,21 @@ const ListAppliedJobs = ({navigation}) => {
       <Modal isVisible={isModalVisibleAlert} style={styles.modalView}>
         <View style={[styles.modalContent]}>
           <Text style={styles.textAlert}>
-            Bạn chắc chắn muốn xóa công việc này khỏi danh sách đã nộp?
+            Bạn muốn xóa công việc này khỏi danh sách?
           </Text>
 
           <View style={styles.groupBtnDialog}>
-            <TouchableOpacity onPress={toggleModalAlert}>
-              <Text style={styles.textBtnCancel}>Hủy</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={deleteItem}>
-              <Text style={styles.textAlertOk}>Đồng ý</Text>
-            </TouchableOpacity>
+            <Button
+              title="Hủy"
+              onPress={toggleModalAlert}
+              type="outline"
+              buttonStyle={styles.btnViewResult}
+            />
+            <Button
+              title="Đồng ý"
+              onPress={deleteItem}
+              buttonStyle={styles.btnViewResult}
+            />
           </View>
         </View>
       </Modal>
@@ -278,6 +283,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderColor: '#3c89ff',
     borderWidth: 1,
+  },
+  btnViewResult: {
+    paddingHorizontal: 30,
   },
 });
 

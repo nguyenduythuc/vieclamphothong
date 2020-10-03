@@ -92,9 +92,12 @@ const JobAppliedItem = ({
         </Text>
       </View>
       <View style={styles.row}>
-        <Text>{`Hạn nộp: ${moment(item.recruitment.expired_at).format(
-          'DD-MM-YYYY',
-        )}`}</Text>
+        <Text style={styles.greyText}>
+          Hạn nộp:{' '}
+          <Text style={styles.quantityText}>
+            {moment(item?.recruitment.expired_at).format('DD-MM-YYYY')}
+          </Text>
+        </Text>
         <Text
           style={
             styles.redText
@@ -106,7 +109,7 @@ const JobAppliedItem = ({
       </Text>
       <View style={styles.row}>
         <Rating
-          imageSize={14}
+          imageSize={12}
           startingValue={item.recruitment.company.rating_point}
         />
         <TouchableOpacity
@@ -195,7 +198,8 @@ const styles = StyleSheet.create({
   },
   commentsText: {
     fontStyle: 'italic',
-    color: 'gray',
+    color: 'black',
+    fontSize: 12,
   },
   divider: {backgroundColor: 'grey', marginBottom: 10},
   marginBottom: {marginBottom: 10},

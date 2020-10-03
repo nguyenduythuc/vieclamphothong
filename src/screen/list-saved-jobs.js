@@ -16,6 +16,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
+import {Button} from 'react-native-elements';
 import Toast from 'react-native-toast-message';
 import {JobAppliedItem} from '../components';
 import Modal from 'react-native-modal';
@@ -91,16 +92,21 @@ const ListSavedJobs = ({navigation}) => {
       <Modal isVisible={isModalVisibleAlert} style={styles.modalView}>
         <View style={[styles.modalContent]}>
           <Text style={styles.textAlert}>
-            Bạn chắc chắn muốn xóa công việc này khỏi danh sách đã nộp?
+            Bạn muốn xóa công việc này khỏi danh sách?
           </Text>
 
           <View style={styles.groupBtnDialog}>
-            <TouchableOpacity onPress={toggleModalAlert}>
-              <Text style={styles.textBtnCancel}>Hủy</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={deleteItem}>
-              <Text style={styles.textAlertOk}>Đồng ý</Text>
-            </TouchableOpacity>
+            <Button
+              title="Hủy"
+              onPress={toggleModalAlert}
+              type="outline"
+              buttonStyle={styles.btnViewResult}
+            />
+            <Button
+              title="Đồng ý"
+              onPress={deleteItem}
+              buttonStyle={styles.btnViewResult}
+            />
           </View>
         </View>
       </Modal>
@@ -118,9 +124,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   textAlertOk: {
-    paddingTop: 20,
+    // paddingTop: 20,
     fontSize: 20,
     color: 'blue',
+    backgroundColor: 'red',
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    borderWidth: 10,
+    borderRadius: 10,
   },
   groupBtnDialog: {
     flexDirection: 'row',
@@ -175,6 +186,9 @@ const styles = StyleSheet.create({
     // justifyContent: 'flex-end',
     // margin: 0,
     backgroundColor: 'white',
+  },
+  btnViewResult: {
+    paddingHorizontal: 30,
   },
 });
 

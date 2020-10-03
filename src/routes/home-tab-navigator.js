@@ -14,6 +14,7 @@ export default function HomeTabNavigator() {
       tabBarOptions={{
         labelStyle: {
           fontSize: 17,
+          // color: '#3182ce',
         },
         style: {
           paddingBottom: isNotch ? 30 : 10,
@@ -27,8 +28,9 @@ export default function HomeTabNavigator() {
         component={HomeScreen}
         options={{
           title: 'Việc làm',
-          tabBarIcon: () => {
-            return <Icon name="search1" type="antdesign" color="grey" />;
+          tabBarIcon: ({focused}) => {
+            let colorIcon = `${focused ? '#3182ce' : 'grey'}`;
+            return <Icon name="search1" type="antdesign" color={colorIcon} />;
           },
         }}
       />
@@ -38,9 +40,10 @@ export default function HomeTabNavigator() {
         component={LegalConsultantScreen}
         options={{
           title: 'Tư vấn luật',
-          tabBarIcon: () => {
+          tabBarIcon: ({focused}) => {
+            let colorIcon = `${focused ? '#3182ce' : 'grey'}`;
             return (
-              <Icon name="commenting-o" type="font-awesome" color="grey" />
+              <Icon name="commenting-o" type="font-awesome" color={colorIcon} />
             );
           },
         }}
@@ -51,8 +54,9 @@ export default function HomeTabNavigator() {
         component={AccountScreen}
         options={{
           title: 'Tài khoản',
-          tabBarIcon: () => {
-            return <Icon name="user" type="antdesign" color="grey" />;
+          tabBarIcon: ({focused}) => {
+            let colorIcon = `${focused ? '#3182ce' : 'grey'}`;
+            return <Icon name="user" type="antdesign" color={colorIcon} />;
           },
         }}
       />

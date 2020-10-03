@@ -18,7 +18,7 @@ import {
   Text,
   FlatList,
 } from 'react-native';
-import {Card, SearchBar, Icon, Button} from 'react-native-elements';
+import {Icon, Button} from 'react-native-elements';
 import {JobItem} from '../components';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import DeviceInfo from 'react-native-device-info';
@@ -89,18 +89,6 @@ const HomeScreen = ({navigation}) => {
     [currentPosition],
   );
 
-  const onSearch = useCallback((text) => {
-    setSearch(text);
-  }, []);
-
-  const onFilter = useCallback(() => {
-    navigation.navigate('Filter', {onFilterResult: onFilterResult});
-  }, [navigation]);
-
-  const onFilterResult = (param) => {
-    setParamFilter(param);
-    getListData(param);
-  };
   const onPressToList = useCallback(() => {
     navigation.navigate('ListJobs');
   }, [navigation]);
@@ -239,7 +227,6 @@ const HomeScreen = ({navigation}) => {
       return item;
     });
     dispatch(actions.recruitment.saveListJobs(newListJobs));
-    // setListJobs(newListJobs);
   };
 
   return (
@@ -511,14 +498,14 @@ const styles = StyleSheet.create({
   listButtonStyle: {
     position: 'absolute',
     zIndex: 10,
-    top: isNotch ? height / 2 + 20 : height / 2 - 70,
+    top: isNotch ? height / 2 + 0 : height / 2 - 70,
     right: 0,
     paddingRight: 10,
   },
   relocateButton: {
     position: 'absolute',
     zIndex: 10,
-    top: isNotch ? height / 2 - 15 : height / 2 - 50,
+    top: isNotch ? height / 2 - 25 : height / 2 - 50,
     right: 0,
     paddingRight: 10,
   },
