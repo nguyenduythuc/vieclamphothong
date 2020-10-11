@@ -30,9 +30,10 @@ const defaultAvatar = require('../assets/default-avatar.png');
 const Profile = ({navigation}) => {
   const dispatch = useDispatch();
   const userProfile = useSelector((state) => state.user?.userProfile);
+  console.log(userProfile);
 
   const [avatarSource, setAvatarSource] = useState(
-    userProfile?.profile_picture,
+    userProfile.profile_picture || null,
   );
   const selectPhotoTapped = () => {
     const options = {
@@ -94,12 +95,16 @@ const Profile = ({navigation}) => {
                   {marginBottom: 20},
                 ]}>
                 {avatarSource === null ? (
-                  <Text>Chọn ảnh</Text>
+                  <Icon
+                    name="camera"
+                    type="simple-line-icon"
+                    color="#517fa4"
+                    size={40}
+                  />
                 ) : (
                   <Image style={styles.avatar} source={{uri: avatarSource}} />
                 )}
               </View>
-              {/* <Text styles={styles.textUpload}>Chọn ảnh</Text> */}
             </TouchableOpacity>
             <View>
               <Text style={styles.headerText}>{userProfile.full_name}</Text>
@@ -123,8 +128,8 @@ const Profile = ({navigation}) => {
               <Divider style={styles.divider} />
             </View>
             <View>
-              <Text>{`Họ và tên: ${userProfile?.full_name}`}</Text>
-              <Text>{`Ngày sinh: ${moment(userProfile?.dob).format(
+              <Text>{`Họ và tên: ${userProfile?.full_name || ''}`}</Text>
+              <Text>{`Ngày sinh: ${moment(userProfile?.dob || moment()).format(
                 'DD/MM/YYYY',
               )}`}</Text>
               <Text>{`Giới tính: ${
@@ -140,7 +145,7 @@ const Profile = ({navigation}) => {
             </View>
             <View>
               <Text>{`Điện thoại: ${userProfile?.phone_number}`}</Text>
-              <Text>{`Email: ${userProfile?.email}`}</Text>
+              <Text>{`Email: ${userProfile?.email || ''}`}</Text>
             </View>
           </Card>
           <Card containerStyle={styles.cardContainer}>
@@ -149,8 +154,12 @@ const Profile = ({navigation}) => {
               <Divider style={styles.divider} />
             </View>
             <View>
-              <Text>{`Trình độ: ${userProfile?.resume?.educational_background_id}`}</Text>
-              <Text>{`Trường: ${userProfile?.resume?.education_description}`}</Text>
+              <Text>{`Trình độ: ${
+                userProfile?.resume?.educational_background_id || ''
+              }`}</Text>
+              <Text>{`Trường: ${
+                userProfile?.resume?.education_description || ''
+              }`}</Text>
             </View>
           </Card>
           <Card containerStyle={styles.cardContainer}>
@@ -159,8 +168,12 @@ const Profile = ({navigation}) => {
               <Divider style={styles.divider} />
             </View>
             <View>
-              <Text>{`Số năm làm việc: ${userProfile?.resume?.experience}`}</Text>
-              <Text>{`Công việc: ${userProfile?.resume?.experience_description}`}</Text>
+              <Text>{`Số năm làm việc: ${
+                userProfile?.resume?.experience || ''
+              }`}</Text>
+              <Text>{`Công việc: ${
+                userProfile?.resume?.experience_description || ''
+              }`}</Text>
             </View>
           </Card>
           <Card containerStyle={styles.cardContainer}>

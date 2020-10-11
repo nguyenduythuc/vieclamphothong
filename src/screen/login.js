@@ -37,7 +37,10 @@ const LoginScreen = ({navigation}) => {
         200,
       );
     } catch (error) {
-      alert(JSON.stringify(error));
+      alert(
+        'Số điện thoại hoặc mật khẩu đã nhập sai Bạn vui lòng đăng nhập lại!'
+      );
+      console.log(JSON.stringify(error));
     }
   }, [phoneNumber, password, navigation, dispatch]);
 

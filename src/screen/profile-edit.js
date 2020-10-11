@@ -20,7 +20,7 @@ const isNotch = DeviceInfo.hasNotch();
 const ProfileEdit = ({navigation}) => {
   const dispatch = useDispatch();
   const userProfile = useSelector((state) => state.user.userProfile);
-  const checkDob = moment(userProfile?.dob, 'YYYY-MM-DD');
+  const checkDob = moment(userProfile?.dob || moment(), 'YYYY-MM-DD');
   const educationBackground = useSelector(
     (state) => state.recruitment?.listFilters?.educationBackground,
   );
@@ -62,7 +62,7 @@ const ProfileEdit = ({navigation}) => {
   const [fullname, setFullname] = useState(userProfile?.full_name);
   const onTypingFullname = useCallback((text) => setFullname(text), []);
 
-  const [email, setEmail] = useState(userProfile?.email);
+  const [email, setEmail] = useState(userProfile?.email || '');
   const onTypingEmail = useCallback((text) => setEmail(text), []);
 
   const [gender, setGender] = useState(userProfile?.gender);
@@ -127,12 +127,14 @@ const ProfileEdit = ({navigation}) => {
     onTypingexpsetOccupationsWishPrimary(multi);
   };
   const occupationsOldPrimary = () => {
-    return [
-      {
-        label: userProfile?.resume?.primary_occupation.name,
-        value: userProfile?.resume?.primary_occupation.id,
-      },
-    ];
+    return userProfile.resume
+      ? [
+          {
+            label: userProfile?.resume?.primary_occupation.name,
+            value: userProfile?.resume?.primary_occupation.id,
+          },
+        ]
+      : [];
   };
 
   const [occupationsWishPrimary, setOccupationsWishPrimary] = useState(
@@ -145,7 +147,7 @@ const ProfileEdit = ({navigation}) => {
 
   const occupationResultSendPrimary = useCallback(
     (text) => {
-      return occupationsWishPrimary[0].value;
+      return occupationsWishPrimary[0]?.value || '';
     },
     [occupationsWishPrimary],
   );
@@ -162,12 +164,14 @@ const ProfileEdit = ({navigation}) => {
     onTypingexpsetOccupationsWishSecond(multi);
   };
   const occupationsOldSecond = () => {
-    return userProfile?.resume?.secondary_occupations.map((item) => {
-      return {
-        label: item.name,
-        value: item.id,
-      };
-    });
+    return userProfile.resume
+      ? userProfile?.resume?.secondary_occupations.map((item) => {
+          return {
+            label: item.name,
+            value: item.id,
+          };
+        })
+      : [];
   };
 
   const [occupationsWishSecond, setOccupationsWishSecond] = useState(
@@ -440,9 +444,9 @@ const ProfileEdit = ({navigation}) => {
               </View>
               <TouchableWithoutFeedback
                 onPress={onPressSelectOccupationPrimary}>
-                <View style={styles.buttonOccupation}>
-                  {occupationsWishPrimary &&
-                    occupationsWishPrimary?.map((item, idx) => (
+                {occupationsWishPrimary.length > 0 ? (
+                  <View style={styles.buttonOccupation}>
+                    {occupationsWishPrimary?.map((item, idx) => (
                       <View key={Math.random()}>
                         <Badge
                           value={item.label}
@@ -452,8 +456,13 @@ const ProfileEdit = ({navigation}) => {
                         />
                       </View>
                     ))}
-                  <Icon name="right" type="antdesign" color="#a0aec0" />
-                </View>
+                    <Icon name="right" type="antdesign" color="#a0aec0" />
+                  </View>
+                ) : (
+                  <View style={styles.buttonOccupationFlexEnd}>
+                    <Icon name="right" type="antdesign" color="#a0aec0" />
+                  </View>
+                )}
               </TouchableWithoutFeedback>
               <View style={styles.hairLine} />
             </View>
@@ -461,9 +470,9 @@ const ProfileEdit = ({navigation}) => {
             <View style={styles.selectInner}>
               <Text style={styles.titleSelect2}>Công việc phụ (Chọn 2)</Text>
               <TouchableWithoutFeedback onPress={onPressSelectOccupationSecond}>
-                <View style={styles.buttonOccupation}>
-                  {occupationsWishSecond &&
-                    occupationsWishSecond?.map((item, idx) => (
+                {occupationsWishSecond.length > 0 ? (
+                  <View style={styles.buttonOccupation}>
+                    {occupationsWishSecond?.map((item, idx) => (
                       <View key={Math.random()}>
                         <Badge
                           value={item.label}
@@ -473,8 +482,13 @@ const ProfileEdit = ({navigation}) => {
                         />
                       </View>
                     ))}
-                  <Icon name="right" type="antdesign" color="#a0aec0" />
-                </View>
+                    <Icon name="right" type="antdesign" color="#a0aec0" />
+                  </View>
+                ) : (
+                  <View style={styles.buttonOccupationFlexEnd}>
+                    <Icon name="right" type="antdesign" color="#a0aec0" />
+                  </View>
+                )}
               </TouchableWithoutFeedback>
               <View style={styles.hairLine} />
             </View>
@@ -604,6 +618,12 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 10,
     justifyContent: 'space-between',
+    flexDirection: 'row',
+  },
+  buttonOccupationFlexEnd: {
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    justifyContent: 'flex-end',
     flexDirection: 'row',
   },
   buttonOccupationText: {

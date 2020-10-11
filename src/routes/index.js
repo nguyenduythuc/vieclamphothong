@@ -119,7 +119,7 @@ export default function Route() {
       <Stack.Screen
         name="Settings"
         component={Settings}
-        options={{title: 'Cài đặt'}}
+        options={{title: 'Cài đặt mật khẩu'}}
       />
       <Stack.Screen
         name="FilterWork"

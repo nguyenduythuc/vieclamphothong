@@ -80,7 +80,7 @@ const HomeScreen = ({navigation}) => {
           currentPosition.latitude
         },${currentPosition.longitude},${distanceDefault}${
           paramFilterLocal || paramFilter
-        }&filter[title]=${keyword}`,
+        }`,
       ).then((response) => {
         dispatch(actions.recruitment.saveListJobs(response.data));
         setIsShowButtonPositionChange(false);

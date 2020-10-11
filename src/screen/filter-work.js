@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
   acceptButtonStyle: {
     position: 'absolute',
     zIndex: 10,
-    bottom: 50,
+    bottom: isNotch ? 50 : 10,
     right: '10%',
   },
 });

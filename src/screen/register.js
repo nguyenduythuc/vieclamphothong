@@ -5,6 +5,7 @@ import DeviceInfo from 'react-native-device-info';
 import {ScrollView} from 'react-native-gesture-handler';
 
 const bg = require('../assets/bg1.png');
+const isNotch = DeviceInfo.hasNotch();
 const RegisterScreen = ({route, navigation}) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [fullname, setFullname] = useState('');
@@ -171,6 +172,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingTop: 50,
+    marginTop: isNotch ? 30 : 0,
   },
   bgImage: {
     position: 'absolute',

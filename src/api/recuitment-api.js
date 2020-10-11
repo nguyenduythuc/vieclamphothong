@@ -34,6 +34,8 @@ const RecruitmentApi = {
   getAllInvitation: (filter) => config.delete(`/capi/invitations?${filter}`),
 
   getInvitationDetails: (id) => config.delete(`/capi/invitations/${id}`),
+
+  updatePassword: (body) => config.put('/capi/me/change-password', body),
 };
 
 export default RecruitmentApi;

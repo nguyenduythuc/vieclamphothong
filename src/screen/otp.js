@@ -70,14 +70,15 @@ const OTPScreen = ({navigation, route}) => {
       dispatch(actions.user.saveUser(response));
       navigation.reset({index: 0, routes: [{name: 'Home'}]});
     } catch (error) {
-      Toast.show({
-        type: 'error',
-        position: 'top',
-        text1: 'Xác nhận mã thất bại, vui lòng thử lại!',
-        visibilityTime: 6000,
-        autoHide: true,
-        topOffset: 70,
-      });
+      alert(error);
+      // Toast.show({
+      //   type: 'error',
+      //   position: 'top',
+      //   text1: 'Xác nhận mã thất bại, vui lòng thử lại!',
+      //   visibilityTime: 6000,
+      //   autoHide: true,
+      //   topOffset: 70,
+      // });
     }
   };
   return (

@@ -387,7 +387,7 @@ const Filter = ({navigation, route}) => {
           {listFilters?.ageRange.map((item, idx) => (
             <View style={styles.col}>
               <Button
-                title={item.min + '-' + item.max + ' tuổi'}
+                title={item.label}
                 type="outline"
                 buttonStyle={
                   checkBoxAge === item.id
