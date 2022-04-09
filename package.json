@@ -24,7 +24,7 @@
     "@react-navigation/bottom-tabs": "^5.5.2",
     "@react-navigation/native": "^5.5.1",
     "@react-navigation/stack": "^5.5.1",
-    "moment": "^2.27.0",
+    "moment": "^2.29.2",
     "querystringify": "^2.1.1",
     "radio-buttons-react-native": "^1.0.4",
     "react": "16.11.0",
